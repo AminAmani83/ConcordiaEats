@@ -1,10 +1,10 @@
-package com.jtspringproject.JtSpringProject;
+package ca.concordia.eats;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class JtSpringProjectApplicationTests {
+class ConcordiaEatsApplicationTests {
 
 	@Test
 	void contextLoads() {
