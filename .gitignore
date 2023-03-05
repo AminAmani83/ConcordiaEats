@@ -51,4 +51,4 @@ atlassian-ide-plugin.xml
 
 # VS Code
 .vscode/
-JtProject/target/classes/*
+*.class
