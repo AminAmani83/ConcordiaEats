@@ -1,10 +1,11 @@
 package ca.concordia.eats.dto;
 
 public class User {
-  private int userId;
-  private String username;
-  private String nameOfUser;
-  private boolean loginStatus;
+  
+    private int userId;
+    private String username;
+    private String nameOfUser;
+    private boolean loginStatus;
   
     public int getUserId() {
         return userId;
