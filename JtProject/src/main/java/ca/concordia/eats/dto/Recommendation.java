@@ -1,5 +1,7 @@
 package ca.concordia.eats.dto;
 
+import java.util.*;
+
 public class Recommendation {
   
     private List<Product> customerSearchedProducts;
