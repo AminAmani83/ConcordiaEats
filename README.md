@@ -19,7 +19,7 @@
 ## Contributors
 - Amin Amani
 - a
-- b
+- Oleksandr Artemenko
 - c
 - d
 - e
