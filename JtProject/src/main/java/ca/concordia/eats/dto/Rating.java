@@ -1,5 +1,7 @@
 package ca.concordia.eats.dto;
 
+import java.util.*;
+
 public class Rating {
   
     Map<Integer, Integer> customerRatings = new HashMap<Integer, Integer>();
