@@ -6,7 +6,7 @@ public class Recommendation {
   
     private List<Product> customerSearchedProducts;
   
-    public Recommendation() {
+    public Initialized() {
         this.customerSearchedProducts = new ArrayList<Product>();
     }
       

@@ -7,7 +7,7 @@ public class Rating {
     Map<Integer, Integer> customerRatings = new HashMap<Integer, Integer>();
     private List<Product> rateableProducts;
   
-    public Rating() {
+    public Initializing() {
         this.rateableProducts = new ArrayList<Product>();
     }
       
