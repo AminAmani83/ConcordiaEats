@@ -21,7 +21,7 @@
 - a
 - Oleksandr Artemenko
 - Mohamamd Reza Nafar
-- d
+- Jean-Lou Gosselin
 - e
 - f
 
