@@ -9,13 +9,14 @@ import org.springframework.web.bind.annotation.*;
 import com.mysql.cj.protocol.Resultset;
 
 @Controller
+
 public class AdminController {
-	int adminlogcheck = 0;
-	String usernameforclass = "";
+	int adminLogCheck = 0;
+	String usernameForClass = "";
 	@RequestMapping(value = {"/","/logout"})
 	public String returnIndex() {
-		adminlogcheck =0;
-		usernameforclass = "";
+		private adminLogCheck =0;
+		private usernameForClass = "";
 		return "userLogin";
 	}
 	
@@ -23,21 +24,21 @@ public class AdminController {
 	
 	@GetMapping("/index")
 	public String index(Model model) {
-		if(usernameforclass.equalsIgnoreCase(""))
+		if(usernameForClass.equalsIgnoreCase(""))
 			return "userLogin";
 		else {
-			model.addAttribute("username", usernameforclass);
+			model.addAttribute("username", usernameForClass);
 			return "index";
 		}
 			
 	}
 	@GetMapping("/userloginvalidate")
-	public String userlog(Model model) {
+	public String userLog(Model model) {
 		
 		return "userLogin";
 	}
 	@RequestMapping(value = "userloginvalidate", method = RequestMethod.POST)
-	public String userlogin( @RequestParam("username") String username, @RequestParam("password") String pass,Model model) {
+	public String userLogin(@RequestParam("username") String username, @RequestParam("password") String pass, Model model) {
 		
 		try
 		{
@@ -46,7 +47,7 @@ public class AdminController {
 			Statement stmt = con.createStatement();
 			ResultSet rst = stmt.executeQuery("select * from users where username = '"+username+"' and password = '"+ pass+"' ;");
 			if(rst.next()) {
-				usernameforclass = rst.getString(2);
+				usernameForClass = rst.getString(2);
 				return "redirect:/index";
 				}
 			else {
@@ -67,27 +68,27 @@ public class AdminController {
 	
 	
 	@GetMapping("/admin")
-	public String adminlogin(Model model) {
+	public String adminLogin(Model model) {
 		
 		return "adminlogin";
 	}
 	@GetMapping("/adminhome")
 	public String adminHome(Model model) {
-		if(adminlogcheck!=0)
+		if(adminLogCheck !=0)
 			return "adminHome";
 		else
 			return "redirect:/admin";
 	}
 	@GetMapping("/loginvalidate")
-	public String adminlog(Model model) {
+	public String adminLog(Model model) {
 		
 		return "adminlogin";
 	}
 	@RequestMapping(value = "loginvalidate", method = RequestMethod.POST)
-	public String adminlogin( @RequestParam("username") String username, @RequestParam("password") String pass,Model model) {
+	public String adminLogin(@RequestParam("username") String username, @RequestParam("password") String pass, Model model) {
 		
 		if(username.equalsIgnoreCase("admin") && pass.equalsIgnoreCase("123")) {
-			adminlogcheck=1;
+			adminLogCheck =1;
 			return "redirect:/adminhome";
 			}
 		else {
@@ -96,11 +97,11 @@ public class AdminController {
 		}
 	}
 	@GetMapping("/admin/categories")
-	public String getcategory() {
+	public String getCategory() {
 		return "categories";
 	}
 	@RequestMapping(value = "admin/sendcategory",method = RequestMethod.GET)
-	public String addcategorytodb(@RequestParam("categoryname") String catname)
+	public String addCategoryToDb(@RequestParam("categoryname") String catname)
 	{
 		try
 		{
@@ -164,16 +165,16 @@ public class AdminController {
 	}
 
 	@GetMapping("/admin/products")
-	public String getproduct(Model model) {
+	public String getProduct(Model model) {
 		return "products";
 	}
 	@GetMapping("/admin/products/add")
-	public String addproduct(Model model) {
+	public String addProduct(Model model) {
 		return "productsAdd";
 	}
 
 	@GetMapping("/admin/products/update")
-	public String updateproduct(@RequestParam("pid") int id,Model model) {
+	public String updateProduct(@RequestParam("pid") int id, Model model) {
 		String pname,pdescription,pimage;
 		int pid,pprice,pweight,pquantity,pcategory;
 		try
@@ -262,7 +263,7 @@ public class AdminController {
 	}
 	
 	@PostMapping("/admin/products")
-	public String postproduct() {
+	public String postProduct() {
 		return "redirect:/admin/categories";
 	}
 	@RequestMapping(value = "admin/products/sendData",method=RequestMethod.POST)
@@ -309,7 +310,7 @@ public class AdminController {
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
 			Statement stmt = con.createStatement();
-			ResultSet rst = stmt.executeQuery("select * from users where username = '"+usernameforclass+"';");
+			ResultSet rst = stmt.executeQuery("select * from users where username = '"+ usernameForClass +"';");
 			
 			if(rst.next())
 			{
@@ -349,7 +350,7 @@ public class AdminController {
 			pst.setString(4, address);
 			pst.setInt(5, userid);
 			int i = pst.executeUpdate();	
-			usernameforclass = username;
+			usernameForClass = username;
 		}
 		catch(Exception e)
 		{

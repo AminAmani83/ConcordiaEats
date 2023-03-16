@@ -30,7 +30,7 @@ public class UserController{
 	}
 	
 	@GetMapping("/user/products")
-	public String getproduct(Model model) {
+	public String getProduct(Model model) {
 		return "uproduct";
 	}
 	@RequestMapping(value = "newuserregister", method = RequestMethod.POST)
