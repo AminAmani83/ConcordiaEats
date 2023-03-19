@@ -11,11 +11,11 @@ import com.mysql.cj.protocol.Resultset;
 @Controller
 
 public class AdminController {
-	int adminLogCheck = 0;
+	int adminLogInCheck = 0;
 	String usernameForClass = "";
 	@RequestMapping(value = {"/","/logout"})
 	public String returnIndex() {
-		private adminLogCheck =0;
+		private adminLogInCheck =0;
 		private usernameForClass = "";
 		return "userLogin";
 	}
@@ -33,7 +33,7 @@ public class AdminController {
 			
 	}
 	@GetMapping("/userloginvalidate")
-	public String userLog(Model model) {
+	public String userLogin(Model model) {
 		
 		return "userLogin";
 	}
@@ -74,7 +74,7 @@ public class AdminController {
 	}
 	@GetMapping("/adminhome")
 	public String adminHome(Model model) {
-		if(adminLogCheck !=0)
+		if(adminLogInCheck !=0)
 			return "adminHome";
 		else
 			return "redirect:/admin";
@@ -88,7 +88,7 @@ public class AdminController {
 	public String adminLogin(@RequestParam("username") String username, @RequestParam("password") String pass, Model model) {
 		
 		if(username.equalsIgnoreCase("admin") && pass.equalsIgnoreCase("123")) {
-			adminLogCheck =1;
+			adminLogInCheck =1;
 			return "redirect:/adminhome";
 			}
 		else {
@@ -97,11 +97,11 @@ public class AdminController {
 		}
 	}
 	@GetMapping("/admin/categories")
-	public String getCategory() {
+	public String getAllCategories() {
 		return "categories";
 	}
 	@RequestMapping(value = "admin/sendcategory",method = RequestMethod.GET)
-	public String addCategoryToDb(@RequestParam("categoryname") String catname)
+	public String addCategory(@RequestParam("categoryname") String catname)
 	{
 		try
 		{
