@@ -6,7 +6,7 @@ public class Favorite {
   
     private List<Product> customerFavoritedProducts;
   
-    public Initialize() {
+    public Favorite() {
         this.customerFavoritedProducts = new ArrayList<Product>();
     }
       
