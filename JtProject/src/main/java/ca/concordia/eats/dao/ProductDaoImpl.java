@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.*;
+import java.util.LinkedList;
 import java.util.List;
 
 @Repository
@@ -57,7 +59,20 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public List<Category> fetchAllCategories() {
-        return null;
+        List<Category> allCategories = new LinkedList<>();
+
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject", "root", "");
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("select * from categories");
+            while (rs.next()) {
+                allCategories.add(new Category(rs.getInt(1), rs.getString(2)));
+            }
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+
+        return allCategories;
     }
 
     @Override
@@ -67,7 +82,16 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Category createCategory(Category category) {
-        return null;
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
+            PreparedStatement pst = con.prepareStatement("insert into categories(name) values(?);");
+            pst.setString(1, category.getName());
+            int i = pst.executeUpdate();
+        }
+        catch(Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+        return category;
     }
 
     @Override

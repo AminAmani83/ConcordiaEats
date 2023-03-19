@@ -1,26 +1,30 @@
 package ca.concordia.eats.controller;
 
-import java.sql.*;
-
+import ca.concordia.eats.dto.Category;
+import ca.concordia.eats.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import com.mysql.cj.protocol.Resultset;
+import java.sql.*;
+import java.util.List;
 
 @Controller
 
 public class AdminController {
+
+	@Autowired
+	ProductService productService;
 	int adminLogInCheck = 0;
 	String usernameForClass = "";
 	@RequestMapping(value = {"/","/logout"})
 	public String returnIndex() {
-		private adminLogInCheck =0;
-		private usernameForClass = "";
+		adminLogInCheck =0;
+		usernameForClass = "";
 		return "userLogin";
 	}
-	
-	
+
 	
 	@GetMapping("/index")
 	public String index(Model model) {
@@ -96,28 +100,19 @@ public class AdminController {
 			return "adminlogin";
 		}
 	}
+
 	@GetMapping("/admin/categories")
-	public String getAllCategories() {
+	public String getAllCategories(Model model) {
+		List<Category> allCategories = productService.fetchAllCategories();
+		model.addAttribute("allCategories", allCategories);
 		return "categories";
 	}
+
 	@RequestMapping(value = "admin/sendcategory",method = RequestMethod.GET)
-	public String addCategory(@RequestParam("categoryname") String catname)
-	{
-		try
-		{
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
-			Statement stmt = con.createStatement();
-			
-			PreparedStatement pst = con.prepareStatement("insert into categories(name) values(?);");
-			pst.setString(1,catname);
-			int i = pst.executeUpdate();
-			
-		}
-		catch(Exception e)
-		{
-			System.out.println("Exception:"+e);
-		}
+	public String createCategory(@RequestParam("categoryname") String categoryName) {
+		Category category = new Category();
+		category.setName(categoryName);
+		productService.createCategory(category);
 		return "redirect:/admin/categories";
 	}
 	
