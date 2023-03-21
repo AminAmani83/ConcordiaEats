@@ -1,5 +1,5 @@
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!doctype html>
-<%@page import="java.sql.*"%>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
@@ -94,24 +94,14 @@
 				</tr>
 			</thead>
 			<tbody>
-				<%
-				try {
-					String url = "jdbc:mysql://localhost:3306/springproject";
-					Class.forName("com.mysql.cj.jdbc.Driver");
-					Connection con = DriverManager.getConnection(url, "root", "");
-					Statement stmt = con.createStatement();
-					ResultSet rs = stmt.executeQuery("select * from categories");
-				%>
-				<%
-				while (rs.next()) {
-				%>
+				<c:forEach items="${allCategories}" var="category">
 				<tr>
-					<td><%=rs.getInt(1)%></td>
-					<td><%=rs.getString(2)%></td>
+					<td><c:out value="${category.id}" /></td>
+					<td><c:out value="${category.name}" /></td>
 
 					<td>
 						<form action="categories/delete" method="get">
-							<input type="hidden" name="id" value="<%=rs.getInt(1)%>">
+							<input type="hidden" name="id" value="<c:out value="${category.id}" />">
 							<input type="submit" value="Delete" class="btn btn-danger">
 						</form>
 					</td>
@@ -125,7 +115,7 @@
 							<!-- Button trigger modal -->
 							<button type="button" class="btn btn-warning" data-toggle="modal"
 								data-target="#exampleModalCenter2"
-								onclick="document.getElementById('categoryname').value =  '<%=rs.getString(2)%>'; document.getElementById('categoryid').value =  '<%=rs.getString(1)%>'; ">Update
+								onclick="document.getElementById('categoryname').value =  '<c:out value="${category.name}" />'; document.getElementById('categoryid').value =  '<c:out value="${category.id}" />'; ">Update
 							</button>
 
 							<!-- Modal -->
@@ -171,16 +161,9 @@
 					</td>
 
 				</tr>
-				<%
-				}
-				%>
+				</c:forEach>
 			</tbody>
 		</table>
-		<%
-		} catch (Exception ex) {
-		out.println("Exception Occurred:: " + ex.getMessage());
-		}
-		%>
 	</div>
 
 	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"

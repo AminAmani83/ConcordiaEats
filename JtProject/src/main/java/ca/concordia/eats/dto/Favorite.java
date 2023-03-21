@@ -9,7 +9,7 @@ public class Favorite {
     public Favorite() {
         this.customerFavoritedProducts = new ArrayList<Product>();
     }
-
+      
     public List<Product> getCustomerFavoritedProducts() {
         return new ArrayList(customerFavoritedProducts);
     }

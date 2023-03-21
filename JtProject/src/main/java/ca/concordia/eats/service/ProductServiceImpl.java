@@ -41,7 +41,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Category> fetchAllCategories() {
-        return null;
+        return productDao.fetchAllCategories();
     }
 
     @Override
@@ -51,7 +51,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Category createCategory(Category category) {
-        return null;
+        return productDao.createCategory(category);
     }
 
     @Override
