@@ -117,45 +117,14 @@ public class AdminController {
 	}
 	
 	@GetMapping("/admin/categories/delete")
-	public String removeCategoryDb(@RequestParam("id") int id)
-	{
-		try
-		{
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
-			Statement stmt = con.createStatement();
-			
-			PreparedStatement pst = con.prepareStatement("delete from categories where categoryid = ? ;");
-			pst.setInt(1, id);
-			int i = pst.executeUpdate();
-			
-		}
-		catch(Exception e)
-		{
-			System.out.println("Exception:"+e);
-		}
+	public String removeCategory(@RequestParam("id") int categoryId) {
+		productService.removeCategoryById(categoryId);
 		return "redirect:/admin/categories";
 	}
 	
 	@GetMapping("/admin/categories/update")
-	public String updateCategoryDb(@RequestParam("categoryid") int id, @RequestParam("categoryname") String categoryname)
-	{
-		try
-		{
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
-			Statement stmt = con.createStatement();
-			
-			PreparedStatement pst = con.prepareStatement("update categories set name = ? where categoryid = ?");
-			pst.setString(1, categoryname);
-			pst.setInt(2, id);
-			int i = pst.executeUpdate();
-			
-		}
-		catch(Exception e)
-		{
-			System.out.println("Exception:"+e);
-		}
+	public String updateCategory(@RequestParam("categoryid") int categoryId, @RequestParam("categoryname") String categoryName) {
+		productService.updateCategory(new Category(categoryId, categoryName));
 		return "redirect:/admin/categories";
 	}
 
