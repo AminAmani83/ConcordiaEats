@@ -6,6 +6,16 @@ public class User {
     private String username;
     private String nameOfUser;
     private boolean loginStatus;
+
+    public User() {
+    }
+
+    public User(Integer userId, String username, String nameOfUser, boolean loginStatus) {
+        this.userId = userId;
+        this.username = username;
+        this.nameOfUser = nameOfUser;
+        this.loginStatus = loginStatus;
+    }
   
     public int getUserId() {
         return userId;
