@@ -56,11 +56,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Category updateCategory(Category category) {
-        return null;
+        return productDao.updateCategory(category);
     }
 
     @Override
     public boolean removeCategoryById(int categoryId) {
-        return false;
+        return productDao.removeCategoryById(categoryId);
     }
 }

@@ -96,11 +96,28 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Category updateCategory(Category category) {
-        return null;
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
+            PreparedStatement pst = con.prepareStatement("update categories set name = ? where categoryid = ?");
+            pst.setString(1, category.getName());
+            pst.setInt(2, category.getId());
+            int i = pst.executeUpdate();
+        } catch(Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+        return category;
     }
 
     @Override
     public boolean removeCategoryById(int categoryId) {
-        return false;
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
+            PreparedStatement pst = con.prepareStatement("delete from categories where categoryid = ? ;");
+            pst.setInt(1, categoryId);
+            int i = pst.executeUpdate();
+        } catch(Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+        return true;
     }
 }
