@@ -25,7 +25,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public int createProduct(Product product) {
+    public Product createProduct(Product product) {
         return productDao.createProduct(product);
     }
 

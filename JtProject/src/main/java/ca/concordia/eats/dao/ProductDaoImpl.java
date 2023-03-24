@@ -14,7 +14,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Repository
-@Qualifier("productDaoImpl")
 public class ProductDaoImpl implements ProductDao {
 	
 	@Autowired
@@ -67,10 +66,10 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public int createProduct(Product product) {
-    	String sql = "insert into product(id, name, description, imagePath, categoryid, price, salesCount, isOnSale, discountPercent)value(?,?,?,?,?,?,?,?,?)";
-		return jdbcTemplate.update(sql,
-				new Object[] {product.getId(),
+    public Product createProduct(Product product) {
+    	String sql = "insert into product( name, description, imagePath, categoryid, price, salesCount, isOnSale, discountPercent)value(?,?,?,?,?,?,?,?)";
+		int update = jdbcTemplate.update(sql,
+				new Object[] {
 						product.getName(),
 						product.getDescription(),
 						product.getImagePath(),
@@ -79,6 +78,12 @@ public class ProductDaoImpl implements ProductDao {
 						product.getSalesCount(),
 						product.isOnSale(),
 						product.getDiscountPercent()});
+		if(update == 1) {
+			return product;
+		}else {
+			return null;
+		}
+		
     }
 
     @Override

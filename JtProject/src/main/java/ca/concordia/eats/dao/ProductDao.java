@@ -9,7 +9,7 @@ public interface ProductDao {
     // CRUD PRODUCT
     public List<Product> fetchAllProducts();
     public Product fetchProductById(int productId);
-    public int createProduct(Product product);
+    public Product createProduct(Product product);
     public Product updateProduct(Product product);
     public boolean removeProductById(int productId);
 

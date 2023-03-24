@@ -33,8 +33,8 @@ class ProductDaoImplTest {
 	void testCreateProduct() {
 		Category category = new Category(6, "category6");
 		Product product = new Product(17, "banana", "description", "1.jpg", 11.0f, 20, true, 4.2f, 0.8, category );
-		int updatedRow = productDaoImpl.createProduct(product);
-		assertTrue( updatedRow == 1, "the impacted row is equal to 1");
+		Product createdProduct = productDaoImpl.createProduct(product);
+		assertTrue( createdProduct != null, "the product is created successfully");
 	}
-
+	
 }
