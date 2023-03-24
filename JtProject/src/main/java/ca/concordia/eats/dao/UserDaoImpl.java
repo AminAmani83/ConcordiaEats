@@ -34,7 +34,7 @@ public class UserDaoImpl implements UserDao {
 
         try {
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject", "root", "");
-            PreparedStatement pst = con.prepareStatement("select * from users where userId = (?);");
+            PreparedStatement pst = con.prepareStatement("select * from users where user_id = (?);");
             pst.setInt(1, userId);
             ResultSet rs = pst.executeQuery();
 
