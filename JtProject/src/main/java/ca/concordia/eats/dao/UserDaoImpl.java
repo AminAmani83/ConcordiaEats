@@ -1,11 +1,6 @@
 package ca.concordia.eats.dao;
 
 import ca.concordia.eats.dto.User;
-
-import org.springframework.stereotype.Repository;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -15,9 +10,6 @@ import java.util.List;
 @Repository
 public class UserDaoImpl implements UserDao {
 
-    @Autowired
-//    private JdbcTemplate jdbcTemplate;
-
     @Override
     public List<User> getAllUsers() {
         List<User> allUsers = new LinkedList<>();
@@ -25,7 +17,7 @@ public class UserDaoImpl implements UserDao {
         try {
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject", "root", "");
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select * from user");
+            ResultSet rs = stmt.executeQuery("select * from users");
             while (rs.next()) {
                 allUsers.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getBoolean(4)));
             }
@@ -42,7 +34,7 @@ public class UserDaoImpl implements UserDao {
 
         try {
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject", "root", "");
-            PreparedStatement pst = con.prepareStatement("select * from users where userId = (?);");
+            PreparedStatement pst = con.prepareStatement("select * from users where user_id = (?);");
             pst.setInt(1, userId);
             ResultSet rs = pst.executeQuery();
 
