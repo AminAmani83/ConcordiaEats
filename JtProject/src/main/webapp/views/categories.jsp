@@ -14,38 +14,11 @@
           href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ"
           crossorigin="anonymous">
-    <title>Document</title>
+    <title>Category Management</title>
 </head>
 <body class="bg-light">
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#"> <img src="@{/images/logo.png}"
-                                               src="../static/images/logo.png" width="auto" height="40"
-                                               class="d-inline-block align-top" alt=""/>
-        </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse"
-                data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto"></ul>
-            <ul class="navbar-nav">
-                <li class="nav-item active"><a class="nav-link" href="/adminhome">Home
-                    Page</a></li>
-                <li class="nav-item active"><a class="nav-link" href="/logout">Logout</a>
-                </li>
-
-            </ul>
-
-        </div>
-    </div>
-</nav>
-<br>
+<%@include file="adminHeader.jsp" %>
 <div class="container">
-
     <!-- Button trigger modal -->
     <button type="button" style="margin: 20px 0" class="btn btn-primary"
             data-toggle="modal" data-target="#exampleModalCenter">Add
