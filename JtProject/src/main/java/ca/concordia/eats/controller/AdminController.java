@@ -1,6 +1,7 @@
 package ca.concordia.eats.controller;
 
 import ca.concordia.eats.dto.Category;
+import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -25,17 +27,18 @@ public class AdminController {
 		return "userLogin";
 	}
 
-	
 	@GetMapping("/index")
 	public String index(Model model) {
+		//List<Product> allProducts = productService.fetchAllProducts();
 		if(usernameForClass.equalsIgnoreCase(""))
 			return "userLogin";
 		else {
 			model.addAttribute("username", usernameForClass);
+			model.addAttribute("allProducts", new ArrayList<Product>()); // Todo
 			return "index";
 		}
-			
 	}
+
 	@GetMapping("/userloginvalidate")
 	public String userLogin(Model model) {
 		

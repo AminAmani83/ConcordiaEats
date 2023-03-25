@@ -22,7 +22,7 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public List<Product> fetchAllProducts() {
     	return jdbcTemplate.query(
-                "select p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, r.rating, c.id as categoryId, c.name as categoryName from product p join category c on p.categoryid = c.id join rating r on r.productId = p.id",
+                "select p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, r.rating, c.id as categoryId, c.name as categoryName from product p join category c on p.categoryid = c.id left join rating r on r.productId = p.id",
                 (rs, rowNum) ->
                         new Product(
                                 rs.getInt("id"),
