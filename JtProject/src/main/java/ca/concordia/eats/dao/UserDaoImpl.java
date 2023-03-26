@@ -28,6 +28,7 @@ public class UserDaoImpl implements UserDao {
         return allUsers;
     }
 
+
     @Override
     public User getUserById(int userId) {
         User user = new User();
@@ -47,18 +48,49 @@ public class UserDaoImpl implements UserDao {
         return user;
     }
 
+
     @Override
     public User updateUser(User user) {
-        return null;
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
+            PreparedStatement pst = con.prepareStatement("update users set username = ? where user_id = ?");
+            pst.setString(1, user.getUsername());
+            pst.setInt(2, user.getUserId());
+            pst.executeUpdate();
+
+        } catch(Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+        return user;
     }
+
 
     @Override
     public User createUser(User user) {
-        return null;
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
+            PreparedStatement pst = con.prepareStatement("insert into users (username) values(?);");
+            pst.setString(1, user.getUsername());
+            pst.executeUpdate();
+
+        } catch(Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+        return user;
     }
 
+
     @Override
-    public boolean removeUser(User user) {
+    public boolean removeUser(int userId) {
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
+            PreparedStatement pst = con.prepareStatement("delete from users where user_id = ? ;");
+            pst.setInt(1, userId);
+            pst.executeUpdate();
+        
+        } catch(Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
         return true;
     }
     
