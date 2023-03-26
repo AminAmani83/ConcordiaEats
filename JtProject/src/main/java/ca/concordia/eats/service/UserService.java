@@ -1,6 +1,6 @@
 package ca.concordia.eats.service;
 
-import ca.concordia.eats.dto.User;;
+import ca.concordia.eats.dto.User;
 
 import java.util.List;
 
