@@ -31,7 +31,7 @@
             <div class="card border border-info" style="background-color: white;">
                 <div class="card-body text-center">
                     <h4 class="card-title">Categories</h4>
-                    <p>---------------------------------------------</p>
+                    <hr>
                     <p class="card-text">Manage all categories here</p>
                     <a href="/admin/categories" class="card-link btn btn-primary">Manage</a>
 
@@ -42,7 +42,7 @@
             <div class="card" style="background-color: white;">
                 <div class="card-body text-center">
                     <h4 class="card-title">Products</h4>
-                    <p>---------------------------------------------</p>
+                    <hr>
                     <p class="card-text">Manage all products here</p>
                     <a href="/admin/products" class="card-link btn btn-primary">Manage</a>
 
@@ -53,7 +53,7 @@
             <div class="card" style="background-color: white;">
                 <div class="card-body text-center">
                     <h4 class="card-title">Customers</h4>
-                    <p>---------------------------------------------</p>
+                    <hr>
                     <p class="card-text">Manage all customers here</p>
                     <a href="/admin/customers" class="card-link btn btn-primary">Manage</a>
 
