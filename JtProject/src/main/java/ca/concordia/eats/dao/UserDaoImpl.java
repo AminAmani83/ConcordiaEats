@@ -1,7 +1,6 @@
 package ca.concordia.eats.dao;
 
 import ca.concordia.eats.dto.User;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
