@@ -21,36 +21,36 @@
 <%@include file="adminHeader.jsp" %>
 	<div class="jumbotron container border border-info">
 		<h3>Update an Existing Product</h3>
-		<form action="/admin/products/updateData" method="post">
+		<form action="/admin/products/updateData" method="post" enctype="multipart/form-data" modelAttribute="product">
 			<div class="row">
 				<div class="col-sm-5">
 					
 					<div class="form-group">
 						<label for="name">Id</label> 
-						<input type="number" readonly="readonly" class="form-control border border-success" name="id"  value="${ pid }">
+						<input type="number" readonly="readonly" class="form-control border border-success" name="id"  value="${ product.id }">
 						
 
 					</div>
 					<div class="form-group">
 						<label for="name">Name</label> 
-						<input type="text" class="form-control border border-success" required name="name" value="${pname }" placeholder="Enter name">
+						<input type="text" class="form-control border border-success" required name="name" value="${product.name }" placeholder="Enter name">
 					</div>
 					
 					<div class="form-group">
 					
 						<label for="category">Select Category</label> 
 						<select class="form-control border border-success" name="categoryid" readonly>
-							<option value="${pcategoryId}" name="${pcategoryName}">${pcategoryName}</option>
+							<option value="${product.id}" name="${product.name}">${product.name}</option>
 							
 						</select>
 					</div>
 					<div class="form-group">
 						<label for="price">Price</label> 
-						<input type="number" class="form-control border border-success" required name="price" value="${ pprice }" min="1" placeholder="Price">
+						<input type="number" class="form-control border border-success" required name="price" value="${ product.price }" min="1" placeholder="Price">
 					</div>				
 					<div class="form-group">
 						<label for="weight">Available Quantity</label> 
-						<input type="number" class="form-control border border-success" required name="quantity" value="${ pquantity }" min="1" placeholder="Quantity">
+						<input type="number" class="form-control border border-success" required name="salesCount" value="${ product.salesCount }" min="1" placeholder="Quantity">
 					</div>
 					
 					
@@ -59,11 +59,11 @@
 				<div class="col-sm-5">
 				<div class="form-group">
 						<label for="description">Product Description</label>
-						<textarea class="form-control border border-success" rows="4" name="description" placeholder="Product Details" value= "${ pdescription }"></textarea>
+						<textarea class="form-control border border-success" rows="4" name="description" placeholder="Product Details">${ product.description }</textarea>
 					</div>
 					<p>Product Image</p>
 					<div class="custom-file">
-						<input type="file" class="custom-file-input" name="productImage" value="${ pimage }" accept="image/jpeg, image/png" id="productImage"  onchange="loadfile(event)"/> 
+						<input type="file" class="custom-file-input" name="productImage" value="${ product.imagePath }" accept="image/jpeg, image/png" id="productImage"  onchange="loadfile(event)"/> 
 						<label class="custom-file-label border border-success" for="productImage">Choose file</label>
 						<script type="text/javascript">
 						var loadFile = function(event) {

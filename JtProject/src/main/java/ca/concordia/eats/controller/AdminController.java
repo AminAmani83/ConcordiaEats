@@ -4,13 +4,17 @@ import ca.concordia.eats.dto.Category;
 import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.service.ProductService;
 import ca.concordia.eats.service.ProductServiceImpl;
+import ca.concordia.eats.utils.FileUploadUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -135,7 +139,7 @@ public class AdminController {
 	}
 
 	@GetMapping("/admin/products")
-	public String getProduct(Model model) {
+	public String getAllProduct(Model model) {
 		List<Product> allProducts = productService.fetchAllProducts();
 		model.addAttribute("allProducts", allProducts);
 		return "products";
@@ -151,72 +155,40 @@ public class AdminController {
 	
 	@PostMapping("/admin/products/add")
 	public String addProduct(@ModelAttribute("product") Product product, @RequestParam("categoryid") int categoryId) {
-		final RedirectView redirectView = new RedirectView("/book/addBook", true);
-		Category fetchCategoryById = productService.fetchCategoryById(categoryId);
-		product.setCategory(fetchCategoryById);
+		Category categoryById = productService.fetchCategoryById(categoryId);
+		product.setCategory(categoryById);
 		productService.createProduct(product);
 		return "redirect:/admin/products";
 	}
 
 	@GetMapping("/admin/products/update")
 	public String updateProduct(@RequestParam("pid") int id, Model model) {
-		String pname,pdescription,pimage;
-		int pid,pweight,pquantity,pcategoryId;
-		float pprice;
-		String pcategoryName;
-		try
-		{
-			Product product = productService.fetchProductById(id);
-			pid = product.getId();
-			pname = product.getName();
-			pimage = product.getImagePath();
-			pcategoryId = product.getCategory().getId();
-			pcategoryName = product.getCategory().getName();
-			pquantity = product.getSalesCount();
-			pprice =  product.getPrice();
-			pdescription = product.getDescription();
-			model.addAttribute("pid",pid);
-			model.addAttribute("pname",pname);
-			model.addAttribute("pimage",pimage);
-			model.addAttribute("pquantity",pquantity);
-			model.addAttribute("pprice",pprice);
-			model.addAttribute("pdescription",pdescription);
-			model.addAttribute("pcategoryId", pcategoryId);
-			model.addAttribute("pcategoryName", pcategoryName);
-			
-		}
-		catch(Exception e)
-		{
-			System.out.println("Exception:"+e);
-		}
+		Product product = productService.fetchProductById(id);
+		model.addAttribute("product", product);
 		return "productsUpdate";
 	}
 	@RequestMapping(value = "/admin/products/updateData",method=RequestMethod.POST)
-	public String updateproducttodb(@RequestParam("id") int id,@RequestParam("name") String name, @RequestParam("price") float price, @RequestParam("quantity") int quantity, @RequestParam("description") String description, @RequestParam("productImage") String picture, @RequestParam("categoryid") int categoryId ) 
+	public String updateproduct(@ModelAttribute("product") Product product, @RequestParam("productImage") MultipartFile multipartFile, @RequestParam("categoryid") int categoryId ) 
 	
 	{
-		try
-		{
-			Product product = new Product(); //(id, name, description, picture, price, quantity);
-			product.setId(id);
-			product.setName(name);
-			product.setDescription(description);
-			product.setImagePath(picture);
-			product.setPrice(price);
-			product.setSalesCount(quantity);
-			Category fetchCategoryById = productService.fetchCategoryById(categoryId);
-			product.setCategory(fetchCategoryById);
-			productService.updateProduct(product);
-		}
-		catch(Exception e)
-		{
-			System.out.println("Exception:"+e);
+		Category category = productService.fetchCategoryById(categoryId);
+		product.setCategory(category);
+		String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+		product.setImagePath(fileName);
+		productService.updateProduct(product);
+		String uploadDir = "/resources/Product Images/";
+		 
+        try {
+			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new RuntimeException("upload file failed", e);
 		}
 		return "redirect:/admin/products";
 	}
 	
 	@GetMapping("/admin/products/delete")
-	public String removeProductDb(@RequestParam("id") int id)
+	public String removeProduct(@RequestParam("id") int id)
 	{
 		productService.removeProductById(id);
 		return "redirect:/admin/products";
@@ -226,35 +198,7 @@ public class AdminController {
 	public String postProduct() {
 		return "redirect:/admin/categories";
 	}
-	@RequestMapping(value = "admin/products/sendData",method=RequestMethod.POST)
-	public String addproducttodb(@RequestParam("name") String name, @RequestParam("categoryid") String catid, @RequestParam("price") int price, @RequestParam("weight") int weight, @RequestParam("quantity") int quantity, @RequestParam("description") String description, @RequestParam("productImage") String picture ) {
 		
-		try
-		{
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
-			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("select * from categories where name = '"+catid+"';");
-			if(rs.next())
-			{
-			int categoryid = rs.getInt(1);
-			
-			PreparedStatement pst = con.prepareStatement("insert into products(name,image,categoryid,quantity,price,weight,description) values(?,?,?,?,?,?,?);");
-			pst.setString(1,name);
-			pst.setString(2, picture);
-			pst.setInt(3, categoryid);
-			pst.setInt(4, quantity);
-			pst.setInt(5, price);
-			pst.setInt(6, weight);
-			pst.setString(7, description);
-			int i = pst.executeUpdate();
-			}
-		}
-		catch(Exception e)
-		{
-			System.out.println("Exception:"+e);
-		}
-		return "redirect:/admin/products";
-	}
 	
 	@GetMapping("/admin/customers")
 	public String getCustomerDetail() {
