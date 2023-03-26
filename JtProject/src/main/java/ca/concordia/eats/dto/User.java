@@ -4,7 +4,7 @@ public class User {
   
     private int userId;
     private String username;
-    private String nameOfUser;
+    private String nameOfUser;      // ie.: user type: 'Customer' or 'Admin'
     private boolean loginStatus;
 
     public User() {
