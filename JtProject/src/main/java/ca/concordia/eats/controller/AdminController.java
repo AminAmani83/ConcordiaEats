@@ -3,11 +3,18 @@ package ca.concordia.eats.controller;
 import ca.concordia.eats.dto.Category;
 import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.service.ProductService;
+import ca.concordia.eats.service.ProductServiceImpl;
+import ca.concordia.eats.utils.FileUploadUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.view.RedirectView;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -132,100 +139,58 @@ public class AdminController {
 	}
 
 	@GetMapping("/admin/products")
-	public String getProduct(Model model) {
+	public String getAllProduct(Model model) {
+		List<Product> allProducts = productService.fetchAllProducts();
+		model.addAttribute("allProducts", allProducts);
 		return "products";
 	}
+	
 	@GetMapping("/admin/products/add")
 	public String addProduct(Model model) {
+		List<Category> allCategories = productService.fetchAllCategories();
+		model.addAttribute("allCategories", allCategories);
+		model.addAttribute("product", new Product());
 		return "productsAdd";
+	}
+	
+	@PostMapping("/admin/products/add")
+	public String addProduct(@ModelAttribute("product") Product product, @RequestParam("categoryid") int categoryId) {
+		Category categoryById = productService.fetchCategoryById(categoryId);
+		product.setCategory(categoryById);
+		productService.createProduct(product);
+		return "redirect:/admin/products";
 	}
 
 	@GetMapping("/admin/products/update")
 	public String updateProduct(@RequestParam("pid") int id, Model model) {
-		String pname,pdescription,pimage;
-		int pid,pprice,pweight,pquantity,pcategory;
-		try
-		{
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
-			Statement stmt = con.createStatement();
-			Statement stmt2 = con.createStatement();
-			ResultSet rst = stmt.executeQuery("select * from products where id = "+id+";");
-			
-			if(rst.next())
-			{
-			pid = rst.getInt(1);
-			pname = rst.getString(2);
-			pimage = rst.getString(3);
-			pcategory = rst.getInt(4);
-			pquantity = rst.getInt(5);
-			pprice =  rst.getInt(6);
-			pweight =  rst.getInt(7);
-			pdescription = rst.getString(8);
-			model.addAttribute("pid",pid);
-			model.addAttribute("pname",pname);
-			model.addAttribute("pimage",pimage);
-			ResultSet rst2 = stmt.executeQuery("select * from categories where categoryid = "+pcategory+";");
-			if(rst2.next())
-			{
-				model.addAttribute("pcategory",rst2.getString(2));
-			}
-			model.addAttribute("pquantity",pquantity);
-			model.addAttribute("pprice",pprice);
-			model.addAttribute("pweight",pweight);
-			model.addAttribute("pdescription",pdescription);
-			}
-		}
-		catch(Exception e)
-		{
-			System.out.println("Exception:"+e);
-		}
+		Product product = productService.fetchProductById(id);
+		model.addAttribute("product", product);
 		return "productsUpdate";
 	}
-	@RequestMapping(value = "admin/products/updateData",method=RequestMethod.POST)
-	public String updateproducttodb(@RequestParam("id") int id,@RequestParam("name") String name, @RequestParam("price") int price, @RequestParam("weight") int weight, @RequestParam("quantity") int quantity, @RequestParam("description") String description, @RequestParam("productImage") String picture ) 
+	@RequestMapping(value = "/admin/products/updateData",method=RequestMethod.POST)
+	public String updateproduct(@ModelAttribute("product") Product product, @RequestParam("productImage") MultipartFile multipartFile, @RequestParam("categoryid") int categoryId ) 
 	
 	{
-		try
-		{
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
-			
-			PreparedStatement pst = con.prepareStatement("update products set name= ?,image = ?,quantity = ?, price = ?, weight = ?,description = ? where id = ?;");
-			pst.setString(1, name);
-			pst.setString(2, picture);
-			pst.setInt(3, quantity);
-			pst.setInt(4, price);
-			pst.setInt(5, weight);
-			pst.setString(6, description);
-			pst.setInt(7, id);
-			int i = pst.executeUpdate();			
-		}
-		catch(Exception e)
-		{
-			System.out.println("Exception:"+e);
+		Category category = productService.fetchCategoryById(categoryId);
+		product.setCategory(category);
+		String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+		product.setImagePath(fileName);
+		productService.updateProduct(product);
+		String uploadDir = "/resources/Product Images/";
+		 
+        try {
+			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new RuntimeException("upload file failed", e);
 		}
 		return "redirect:/admin/products";
 	}
 	
 	@GetMapping("/admin/products/delete")
-	public String removeProductDb(@RequestParam("id") int id)
+	public String removeProduct(@RequestParam("id") int id)
 	{
-		try
-		{
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
-			
-			
-			PreparedStatement pst = con.prepareStatement("delete from products where id = ? ;");
-			pst.setInt(1, id);
-			int i = pst.executeUpdate();
-			
-		}
-		catch(Exception e)
-		{
-			System.out.println("Exception:"+e);
-		}
+		productService.removeProductById(id);
 		return "redirect:/admin/products";
 	}
 	
@@ -233,35 +198,7 @@ public class AdminController {
 	public String postProduct() {
 		return "redirect:/admin/categories";
 	}
-	@RequestMapping(value = "admin/products/sendData",method=RequestMethod.POST)
-	public String addproducttodb(@RequestParam("name") String name, @RequestParam("categoryid") String catid, @RequestParam("price") int price, @RequestParam("weight") int weight, @RequestParam("quantity") int quantity, @RequestParam("description") String description, @RequestParam("productImage") String picture ) {
 		
-		try
-		{
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
-			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("select * from categories where name = '"+catid+"';");
-			if(rs.next())
-			{
-			int categoryid = rs.getInt(1);
-			
-			PreparedStatement pst = con.prepareStatement("insert into products(name,image,categoryid,quantity,price,weight,description) values(?,?,?,?,?,?,?);");
-			pst.setString(1,name);
-			pst.setString(2, picture);
-			pst.setInt(3, categoryid);
-			pst.setInt(4, quantity);
-			pst.setInt(5, price);
-			pst.setInt(6, weight);
-			pst.setString(7, description);
-			int i = pst.executeUpdate();
-			}
-		}
-		catch(Exception e)
-		{
-			System.out.println("Exception:"+e);
-		}
-		return "redirect:/admin/products";
-	}
 	
 	@GetMapping("/admin/customers")
 	public String getCustomerDetail() {
