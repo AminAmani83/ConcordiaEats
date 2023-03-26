@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * User Data Access Object.
- * Communica
+ * Interface implemented in UserDaoImpl.java
  */
 public interface UserDao {
     // CRUD USER
