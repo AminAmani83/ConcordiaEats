@@ -21,4 +21,9 @@ public interface ProductService {
     public Category updateCategory(Category category);
     public boolean removeCategoryById(int categoryId);
 
+    // OTHER
+    public void makeFavorite(int customerId, int productId);
+    public void removeFavorite(int customerId, int productId);
+    public List<Product> fetchCustomerFavoriteProducts(int customerId);
+
 }
