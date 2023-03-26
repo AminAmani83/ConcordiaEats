@@ -1,6 +1,7 @@
 package ca.concordia.eats.dao;
 
 import ca.concordia.eats.dto.User;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -10,12 +11,20 @@ import java.util.List;
 @Repository
 public class UserDaoImpl implements UserDao {
 
+    Connection con;
+    public UserDaoImpl() {
+        try {
+            this.con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject", "root", "");
+        } catch(Exception e) {
+            System.out.println("Error connecting to the DB: " + e.getMessage());
+        }
+    }
+
     @Override
     public List<User> getAllUsers() {
         List<User> allUsers = new LinkedList<>();
 
         try {
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject", "root", "");
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("select * from users");
             while (rs.next()) {
@@ -34,7 +43,6 @@ public class UserDaoImpl implements UserDao {
         User user = new User();
 
         try {
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject", "root", "");
             PreparedStatement pst = con.prepareStatement("select * from users where user_id = (?);");
             pst.setInt(1, userId);
             ResultSet rs = pst.executeQuery();
@@ -52,7 +60,6 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User updateUser(User user) {
         try {
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
             PreparedStatement pst = con.prepareStatement("update users set username = ? where user_id = ?");
             pst.setString(1, user.getUsername());
             pst.setInt(2, user.getUserId());
@@ -68,7 +75,6 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User createUser(User user) {
         try {
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
             PreparedStatement pst = con.prepareStatement("insert into users (username) values(?);");
             pst.setString(1, user.getUsername());
             pst.executeUpdate();
@@ -83,7 +89,6 @@ public class UserDaoImpl implements UserDao {
     @Override
     public boolean removeUser(int userId) {
         try {
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
             PreparedStatement pst = con.prepareStatement("delete from users where user_id = ? ;");
             pst.setInt(1, userId);
             pst.executeUpdate();

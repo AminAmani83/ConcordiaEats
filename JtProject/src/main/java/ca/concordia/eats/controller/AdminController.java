@@ -3,20 +3,16 @@ package ca.concordia.eats.controller;
 import ca.concordia.eats.dto.Category;
 import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.service.ProductService;
-import ca.concordia.eats.service.ProductServiceImpl;
 import ca.concordia.eats.utils.FileUploadUtil;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -25,8 +21,19 @@ public class AdminController {
 
 	@Autowired
 	ProductService productService;
+
+	Connection con;
+	public AdminController() {
+		try {
+			this.con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject", "root", "");
+		} catch(Exception e) {
+			System.out.println("Error connecting to the DB: " + e.getMessage());
+		}
+	}
+
 	int adminLogInCheck = 0;
 	String usernameForClass = "";
+
 	@RequestMapping(value = {"/","/logout"})
 	public String returnIndex() {
 		adminLogInCheck =0;
@@ -36,12 +43,20 @@ public class AdminController {
 
 	@GetMapping("/index")
 	public String index(Model model) {
-		//List<Product> allProducts = productService.fetchAllProducts();
-		if(usernameForClass.equalsIgnoreCase(""))
+		List<Product> allProducts = productService.fetchAllProducts();
+		if(usernameForClass.equalsIgnoreCase("")) {
 			return "userLogin";
+		}
 		else {
+			// Temp Products TODO: use actual results from DB
+			Product bestSellerProduct = new Product(1, "Hamburger", "Delicious", "https://tmbidigitalassetsazure.blob.core.windows.net/secure/RMS/attachments/37/1200x1200/Sausage-Sliders-with-Cran-Apple-Slaw_exps48783_SD2235819D06_24_2bC_RMS.jpg", 0f, 0, false, 0f, null, null);
+			Product highestRatedProduct = new Product(2, "Chicken Soup", "Delicious", "https://www.allrecipes.com/thmb/NgpgUebR7ixeEuToPd1c1TgaQmU=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/8814_HomemadeChickenSoup_SoupLovingNicole_LSH-2000-4ae7ff733c554fdab0796d15c8d1151f.jpg", 0f, 0, false, 0f, null, null);
+			Product recommendedProduct = new Product(3, "Hamburger", "Delicious", "https://tastesbetterfromscratch.com/wp-content/uploads/2017/04/Tiramisu-14.jpg", 0f, 0, false, 0f, null, null);
 			model.addAttribute("username", usernameForClass);
-			model.addAttribute("allProducts", new ArrayList<Product>()); // Todo
+			model.addAttribute("allProducts", allProducts);
+			model.addAttribute("bestSellerProduct", bestSellerProduct);
+			model.addAttribute("highestRatedProduct", highestRatedProduct);
+			model.addAttribute("recommendedProduct", recommendedProduct);
 			return "index";
 		}
 	}
@@ -53,11 +68,7 @@ public class AdminController {
 	}
 	@RequestMapping(value = "userloginvalidate", method = RequestMethod.POST)
 	public String userLogin(@RequestParam("username") String username, @RequestParam("password") String pass, Model model) {
-		
-		try
-		{
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
+		try {
 			Statement stmt = con.createStatement();
 			ResultSet rst = stmt.executeQuery("select * from users where username = '"+username+"' and password = '"+ pass+"' ;");
 			if(rst.next()) {
@@ -68,19 +79,13 @@ public class AdminController {
 				model.addAttribute("message", "Invalid Username or Password");
 				return "userLogin";
 			}
-			
 		}
-		catch(Exception e)
-		{
+		catch(Exception e) {
 			System.out.println("Exception:"+e);
 		}
 		return "userLogin";
-		
-		
-		
 	}
-	
-	
+
 	@GetMapping("/admin")
 	public String adminLogin(Model model) {
 		
@@ -198,21 +203,17 @@ public class AdminController {
 	public String postProduct() {
 		return "redirect:/admin/categories";
 	}
-		
-	
+
 	@GetMapping("/admin/customers")
 	public String getCustomerDetail() {
 		return "displayCustomers";
 	}
-	
-	
+
 	@GetMapping("profileDisplay")
 	public String profileDisplay(Model model) {
 		String displayusername,displaypassword,displayemail,displayaddress;
 		try
 		{
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
 			Statement stmt = con.createStatement();
 			ResultSet rst = stmt.executeQuery("select * from users where username = '"+ usernameForClass +"';");
 			
@@ -244,9 +245,6 @@ public class AdminController {
 	{
 		try
 		{
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
-			
 			PreparedStatement pst = con.prepareStatement("update users set username= ?,email = ?,password= ?, address= ? where uid = ?;");
 			pst.setString(1, username);
 			pst.setString(2, email);
