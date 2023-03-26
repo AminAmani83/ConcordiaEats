@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface UserService {
     // CRUD USER
-    public List<User> getAlUsers();
+    public List<User> getAllUsers();
     public User getUserById(int userId);
     public User updateUser(User user);
     public User createUser(User user);
