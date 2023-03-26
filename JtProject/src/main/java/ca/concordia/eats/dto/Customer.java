@@ -6,6 +6,13 @@ public class Customer extends User {
     private String email;
     private String phone;
     
+    public Customer(Integer userId, String username, String nameOfUser, String address, String email, String phone, boolean loginStatus) {
+        super(userId, username, nameOfUser, loginStatus);
+        this.address = address;
+        this.email = email;
+        this.phone = phone;
+    }
+
     public String getAddress() {
         return address;
     }
