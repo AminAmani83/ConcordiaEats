@@ -10,6 +10,6 @@ public interface UserService {
     public User getUserById(int userId);
     public User updateUser(User user);
     public User createUser(User user);
-    public boolean removeUser(User user);
+    public boolean removeUser(int userId);
 
 }
