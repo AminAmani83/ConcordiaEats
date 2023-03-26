@@ -2,9 +2,7 @@ package ca.concordia.eats.dao;
 
 import ca.concordia.eats.dto.Category;
 import ca.concordia.eats.dto.Product;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -19,6 +17,15 @@ public class ProductDaoImpl implements ProductDao {
 	
 	@Autowired
     private JdbcTemplate jdbcTemplate;
+
+    Connection con;
+    public ProductDaoImpl() {
+        try {
+            this.con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject", "root", "");
+        } catch(Exception e) {
+            System.out.println("Error connecting to the DB: " + e.getMessage());
+        }
+    }
 	
     @Override
     public List<Product> fetchAllProducts() {
