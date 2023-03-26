@@ -1,3 +1,4 @@
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
@@ -455,206 +456,35 @@
 
 <section class="wrapper">
     <div class="container-fostrap">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#">
-                    <img th:src="@{/images/logo.png}" src="../static/images/logo.png" width="auto" height="40"
-                         class="d-inline-block align-top" alt=""/>
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse"
-                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <h4>Welcome ${ username } </h4>
-                    <ul class="navbar-nav mr-auto"></ul>
-                    <ul class="navbar-nav">
-                        <li class="nav-item active">
-                            <a class="nav-link" th:href="@{/}" href="#">Home</a>
-                        </li>
-                        <li class="nav-item active">
-                            <a class="nav-link" href="profileDisplay">Profile</a>
-                        </li>
-                        <li class="nav-item active">
-                            <a class="nav-link" sec:authorize="isAuthenticated()" href="logout">Logout</a>
-                        </li>
-
-                    </ul>
-
-                </div>
-            </div>
-        </nav>
-        <div class="bg mt-5">
-            <div class="bg-product mt-5">
-                <div class="container product">
-                    <div class="row">
-                        <div id="sliderproduct" class="carousel slide " data-ride="carousel" data-interval="10000">
-                            <ol class="carousel-indicators">
-                                <li data-target="#sliderproduct" data-slide-to="0" class="active"></li>
-                                <li data-target="#sliderproduct" data-slide-to="1"></li>
-                                <li data-target="#sliderproduct" data-slide-to="2"></li>
-                            </ol>
-                            <div class="carousel-inner" role="listbox" data-interval="10000000">
-                                <div class="carousel-item active">
-                                    <div class="container text-center">
-                                        <div class="row">
-                                            <div class="col-sm-6 image">
-                                                <div class="item">
-                                                    <h1>Today's Deal</h1>
-                                                    <img class="img-fluid"
-                                                         src="https://tmbidigitalassetsazure.blob.core.windows.net/secure/RMS/attachments/37/1200x1200/Sausage-Sliders-with-Cran-Apple-Slaw_exps48783_SD2235819D06_24_2bC_RMS.jpg"
-                                                         alt="">
-                                                </div><!--enditem-->
-                                            </div><!--endcol-->
-                                            <div class="col-sm-6">
-                                                <div class="top d-flex justify-content-center">
-                                                    <a href=""><b>2</b> <br>days</a>
-                                                    <a href=""><b>20</b> <br> hours</a>
-                                                    <a href=""><b>15</b> <br>min</a>
-                                                    <a href=""><b>2</b> <br> sec</a>
-                                                </div><!--endtop-->
-                                                <div class="details">
-                                                    <h2 class="cr3"> Burger</h2>
-                                                    <p class="cr4"> tomato, green salad, pita,<br> ketchup, mayonnaise,
-                                                        ….</p>
-                                                    <div class="rating">
-                                                        <i class="fa fa-star"></i>
-                                                        <i class="fa fa-star"></i>
-                                                        <i class="fa fa-star"></i>
-                                                        <i class="fa fa-star"></i>
-                                                        <i class="fa fa-star"></i>
-                                                    </div><!--endrating-->
-                                                    <p class="cr1">$ 3.55-$ 5.55</p>
-                                                    <a href="/user/products" class="btn btn-food">Buy Now</a>
-                                                </div><!--enddetails-->
-                                            </div><!--endcol-->
-                                        </div><!--endrow-->
-                                    </div><!--endcontainer-->
-                                </div><!--endcarousel-item-->
-                                <div class="carousel-item">
-                                    <div class="container text-center">
-                                        <div class="row">
-                                            <div class="col-sm-6 image">
-                                                <div class="item">
-                                                    <h1>Today Deal</h1>
-                                                    <img class="img-fluid" src="https://tmbidigitalassetsazure.blob.core.windows.net/secure/RMS/attachments/37/1200x1200/Sausage-Sliders-with-Cran-Apple-Slaw_exps48783_SD2235819D06_24_2bC_RMS.jpg" alt="">
-                                                </div><!--enditem-->
-                                            </div><!--endcol-->
-                                            <div class="col-sm-6">
-                                                <div class="top d-flex justify-content-center">
-                                                    <a href=""><b>2</b> <br>days</a>
-                                                    <a href=""><b>20</b> <br> hours</a>
-                                                    <a href=""><b>15</b> <br>min</a>
-                                                    <a href=""><b>2</b> <br> sec</a>
-                                                </div><!--endtop-->
-                                                <div class="details">
-                                                    <h2 class="cr3">cheeze pizza</h2>
-                                                    <p class="cr4">margarita,<br> ketchup, maionese, ….</p>
-                                                    <div class="rating">
-                                                        <i class="fa fa-star"></i>
-                                                        <i class="fa fa-star"></i>
-                                                        <i class="fa fa-star"></i>
-                                                        <i class="fa fa-star"></i>
-                                                        <i class="fa fa-star"></i>
-                                                    </div><!--endrating-->
-                                                    <p class="cr1">$ 3.55-$ 5.55</p>
-                                                    <a href="/user/products" class="btn btn-food">Buy Now</a>
-                                                </div><!--enddetails-->
-                                            </div><!--endcol-->
-                                        </div><!--endrow-->
-                                    </div><!--endcontainer-->
-                                </div><!--endcarousel-item-->
-                                <div class="carousel-item">
-                                    <div class="container text-center">
-                                        <div class="row">
-                                            <div class="col-sm-6 image">
-                                                <div class="item">
-                                                    <h1></h1>
-                                                    <img class="img-fluid" src="https://tmbidigitalassetsazure.blob.core.windows.net/secure/RMS/attachments/37/1200x1200/Sausage-Sliders-with-Cran-Apple-Slaw_exps48783_SD2235819D06_24_2bC_RMS.jpg" alt="">
-                                                </div><!--enditem-->
-                                            </div><!--endcol-->
-                                            <div class="col-sm-6">
-                                                <div class="top d-flex justify-content-center">
-                                                    <a href=""><b>2</b> <br>days</a>
-                                                    <a href=""><b>20</b> <br> hours</a>
-                                                    <a href=""><b>15</b> <br>min</a>
-                                                    <a href=""><b>2</b> <br> sec</a>
-                                                </div><!--endtop-->
-                                                <div class="details">
-                                                    <h2 class="cr3">fruits</h2>
-                                                    <p class="cr4">margarita,<br> ketchup, maionese, ….</p>
-                                                    <div class="rating">
-                                                        <i class="fa fa-star"></i>
-                                                        <i class="fa fa-star"></i>
-                                                        <i class="fa fa-star"></i>
-                                                        <i class="fa fa-star"></i>
-                                                        <i class="fa fa-star"></i>
-                                                    </div><!--end rating-->
-                                                    <p class="cr1">$ 3.55-$ 5.55</p>
-                                                    <a href="/user/products" class="btn btn-food">Buy Now</a>
-                                                </div><!--enddetails-->
-                                            </div><!--endcol-->
-                                        </div><!--endrow-->
-                                    </div><!--endcontainer-->
-                                </div><!--endcarousel-item-->
-                                <a class="carousel-control-prev fa fa-angle-left" href="#sliderproduct" role="button"
-                                   data-slide="prev">
-                                </a>
-                                <a class="carousel-control-next fa fa-angle-right" href="#sliderproduct" role="button"
-                                   data-slide="next">
-                                </a>
-                            </div><!--endslidesliderproduct-->
-                        </div><!--endrow-->
-                    </div><!--endcontainer-->
-                </div><!--endbg-product-->
-            </div>
-        </div>
+        <%@include file="header.jsp" %>
+        <%@include file="carousel.jsp" %>
 
         <div class="row">
-            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" data-aos="zoom-in-down">
-                <div class="card">
-                    <a class="img-card">
-                        <img src="https://tmbidigitalassetsazure.blob.core.windows.net/secure/RMS/attachments/37/1200x1200/Sausage-Sliders-with-Cran-Apple-Slaw_exps48783_SD2235819D06_24_2bC_RMS.jpg"/>
-                    </a>
-                    <div class="card-content">
-                        <h4 class="card-title">
-                            Best deal's
-                        </h4>
-                        <p class="">
-                            Checkout out our products
-                            <br>
-                        </p>
-                    </div>
-                    <div class="card-read-more">
-                        <a href="/user/products" class="btn btn-link btn-block">
-                            GO
+
+            <c:forEach items="${allProducts}" var="product">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" data-aos="zoom-in-down">
+                    <div class="card">
+                        <a class="img-card">
+                            <img src="<c:out value="${product.imagePath}" />" />
                         </a>
+                        <div class="card-content">
+                            <h4 class="card-title">
+                                <c:out value="${product.name}"/>
+                            </h4>
+                            <p class="">
+                                <c:out value="${product.description}"/>
+                            </p>
+                        </div>
+                        <div class="card-read-more">
+                            <form action="basket/add" method="get">
+                                <input type="hidden" name="id" value="<c:out value="${product.id}" />">
+                                <input type="submit" value="Add to Basket" class="btn btn-danger">
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" data-aos="zoom-in-down">
-                <div class="card">
-                    <a class="img-card">
-                        <img src="https://tmbidigitalassetsazure.blob.core.windows.net/secure/RMS/attachments/37/1200x1200/Sausage-Sliders-with-Cran-Apple-Slaw_exps48783_SD2235819D06_24_2bC_RMS.jpg"/>
-                    </a>
-                    <div class="card-content">
-                        <h4 class="card-title">
-                            Contact us
-                        </h4>
-                        <p>
-                            find us.
-                            <br>
-                        </p>
-                    </div>
-                    <div class="card-read-more">
-                        <a href="/contact" class="btn btn-link btn-block">
-                            Contact
-                        </a>
-                    </div>
-                </div>
-            </div>
+            </c:forEach>
+
         </div>
     </div>
 </section>
