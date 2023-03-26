@@ -3,10 +3,13 @@ package ca.concordia.eats.controller;
 import ca.concordia.eats.dto.Category;
 import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.service.ProductService;
+import ca.concordia.eats.service.ProductServiceImpl;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -133,48 +136,54 @@ public class AdminController {
 
 	@GetMapping("/admin/products")
 	public String getProduct(Model model) {
+		List<Product> allProducts = productService.fetchAllProducts();
+		model.addAttribute("allProducts", allProducts);
 		return "products";
 	}
+	
 	@GetMapping("/admin/products/add")
 	public String addProduct(Model model) {
+		List<Category> allCategories = productService.fetchAllCategories();
+		model.addAttribute("allCategories", allCategories);
+		model.addAttribute("product", new Product());
 		return "productsAdd";
+	}
+	
+	@PostMapping("/admin/products/add")
+	public String addProduct(@ModelAttribute("product") Product product, @RequestParam("categoryid") int categoryId) {
+		final RedirectView redirectView = new RedirectView("/book/addBook", true);
+		Category fetchCategoryById = productService.fetchCategoryById(categoryId);
+		product.setCategory(fetchCategoryById);
+		productService.createProduct(product);
+		return "redirect:/admin/products";
 	}
 
 	@GetMapping("/admin/products/update")
 	public String updateProduct(@RequestParam("pid") int id, Model model) {
 		String pname,pdescription,pimage;
-		int pid,pprice,pweight,pquantity,pcategory;
+		int pid,pweight,pquantity,pcategoryId;
+		float pprice;
+		String pcategoryName;
 		try
 		{
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
-			Statement stmt = con.createStatement();
-			Statement stmt2 = con.createStatement();
-			ResultSet rst = stmt.executeQuery("select * from products where id = "+id+";");
-			
-			if(rst.next())
-			{
-			pid = rst.getInt(1);
-			pname = rst.getString(2);
-			pimage = rst.getString(3);
-			pcategory = rst.getInt(4);
-			pquantity = rst.getInt(5);
-			pprice =  rst.getInt(6);
-			pweight =  rst.getInt(7);
-			pdescription = rst.getString(8);
+			Product product = productService.fetchProductById(id);
+			pid = product.getId();
+			pname = product.getName();
+			pimage = product.getImagePath();
+			pcategoryId = product.getCategory().getId();
+			pcategoryName = product.getCategory().getName();
+			pquantity = product.getSalesCount();
+			pprice =  product.getPrice();
+			pdescription = product.getDescription();
 			model.addAttribute("pid",pid);
 			model.addAttribute("pname",pname);
 			model.addAttribute("pimage",pimage);
-			ResultSet rst2 = stmt.executeQuery("select * from categories where categoryid = "+pcategory+";");
-			if(rst2.next())
-			{
-				model.addAttribute("pcategory",rst2.getString(2));
-			}
 			model.addAttribute("pquantity",pquantity);
 			model.addAttribute("pprice",pprice);
-			model.addAttribute("pweight",pweight);
 			model.addAttribute("pdescription",pdescription);
-			}
+			model.addAttribute("pcategoryId", pcategoryId);
+			model.addAttribute("pcategoryName", pcategoryName);
+			
 		}
 		catch(Exception e)
 		{
@@ -182,24 +191,22 @@ public class AdminController {
 		}
 		return "productsUpdate";
 	}
-	@RequestMapping(value = "admin/products/updateData",method=RequestMethod.POST)
-	public String updateproducttodb(@RequestParam("id") int id,@RequestParam("name") String name, @RequestParam("price") int price, @RequestParam("weight") int weight, @RequestParam("quantity") int quantity, @RequestParam("description") String description, @RequestParam("productImage") String picture ) 
+	@RequestMapping(value = "/admin/products/updateData",method=RequestMethod.POST)
+	public String updateproducttodb(@RequestParam("id") int id,@RequestParam("name") String name, @RequestParam("price") float price, @RequestParam("quantity") int quantity, @RequestParam("description") String description, @RequestParam("productImage") String picture, @RequestParam("categoryid") int categoryId ) 
 	
 	{
 		try
 		{
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
-			
-			PreparedStatement pst = con.prepareStatement("update products set name= ?,image = ?,quantity = ?, price = ?, weight = ?,description = ? where id = ?;");
-			pst.setString(1, name);
-			pst.setString(2, picture);
-			pst.setInt(3, quantity);
-			pst.setInt(4, price);
-			pst.setInt(5, weight);
-			pst.setString(6, description);
-			pst.setInt(7, id);
-			int i = pst.executeUpdate();			
+			Product product = new Product(); //(id, name, description, picture, price, quantity);
+			product.setId(id);
+			product.setName(name);
+			product.setDescription(description);
+			product.setImagePath(picture);
+			product.setPrice(price);
+			product.setSalesCount(quantity);
+			Category fetchCategoryById = productService.fetchCategoryById(categoryId);
+			product.setCategory(fetchCategoryById);
+			productService.updateProduct(product);
 		}
 		catch(Exception e)
 		{
@@ -211,21 +218,7 @@ public class AdminController {
 	@GetMapping("/admin/products/delete")
 	public String removeProductDb(@RequestParam("id") int id)
 	{
-		try
-		{
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
-			
-			
-			PreparedStatement pst = con.prepareStatement("delete from products where id = ? ;");
-			pst.setInt(1, id);
-			int i = pst.executeUpdate();
-			
-		}
-		catch(Exception e)
-		{
-			System.out.println("Exception:"+e);
-		}
+		productService.removeProductById(id);
 		return "redirect:/admin/products";
 	}
 	

@@ -21,7 +21,7 @@
 <%@include file="adminHeader.jsp" %>
 	<div class="jumbotron container border border-info">
 		<h3>Update an Existing Product</h3>
-		<form action="updateData" method="post">
+		<form action="/admin/products/updateData" method="post">
 			<div class="row">
 				<div class="col-sm-5">
 					
@@ -40,18 +40,14 @@
 					
 						<label for="category">Select Category</label> 
 						<select class="form-control border border-success" name="categoryid" readonly>
+							<option value="${pcategoryId}" name="${pcategoryName}">${pcategoryName}</option>
 							
-							<option >${ pcategory }</option>
 						</select>
 					</div>
 					<div class="form-group">
 						<label for="price">Price</label> 
 						<input type="number" class="form-control border border-success" required name="price" value="${ pprice }" min="1" placeholder="Price">
-					</div>
-					<div class="form-group">
-						<label for="weight">Weight in grams</label> 
-						<input type="number" class="form-control border border-success" required name="weight" value="${ pweight }" min="1" placeholder="Weight">
-					</div>
+					</div>				
 					<div class="form-group">
 						<label for="weight">Available Quantity</label> 
 						<input type="number" class="form-control border border-success" required name="quantity" value="${ pquantity }" min="1" placeholder="Quantity">

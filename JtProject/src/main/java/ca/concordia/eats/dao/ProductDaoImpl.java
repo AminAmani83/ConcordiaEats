@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -22,7 +23,7 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public List<Product> fetchAllProducts() {
     	return jdbcTemplate.query(
-                "select p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, r.rating, c.id as categoryId, c.name as categoryName from product p join category c on p.categoryid = c.id left join rating r on r.productId = p.id",
+                "select p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, r.rating, c.id as categoryId, c.name as categoryName from product p join category c on p.categoryid = c.id left join rating r on r.productId = p.id order by p.id desc",
                 (rs, rowNum) ->
                         new Product(
                                 rs.getInt("id"),
@@ -41,7 +42,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Product fetchProductById(int productId) {
-    	String sql = "select p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, r.rating, c.id as categoryId, c.name as categoryName from product p join category c on p.categoryid = c.id join rating r on r.productId = p.id where p.id = ?";
+    	String sql = "select p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, r.rating, c.id as categoryId, c.name as categoryName from product p left join category c on p.categoryid = c.id left join rating r on r.productId = p.id where p.id = ?";
     	
 		return jdbcTemplate.queryForObject(
                 sql,
@@ -68,17 +69,31 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public Product createProduct(Product product) {
     	String sql = "insert into product( name, description, imagePath, categoryid, price, salesCount, isOnSale, discountPercent)value(?,?,?,?,?,?,?,?)";
-		int update = jdbcTemplate.update(sql,
-				new Object[] {
-						product.getName(),
-						product.getDescription(),
-						product.getImagePath(),
-						product.getCategory().getId(),
-						product.getPrice(),
-						product.getSalesCount(),
-						product.isOnSale(),
-						product.getDiscountPercent()});
+    	GeneratedKeyHolder generatedKeyHolder = new GeneratedKeyHolder();
+		int update = jdbcTemplate.update(
+				conn -> {
+		            // Pre-compiling SQL
+		            PreparedStatement preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+		            // Set parameters
+		            preparedStatement.setString(1, product.getName());
+		            preparedStatement.setString(2, product.getDescription());
+		            preparedStatement.setString(3, product.getImagePath()==null?"":product.getImagePath());
+		            Category category = product.getCategory();
+		            if(category!=null) {
+		            	preparedStatement.setInt(4, category.getId());
+		            }else {
+		            	preparedStatement.setInt(4, 6);
+		            }
+		            preparedStatement.setFloat(5, product.getPrice());
+		            preparedStatement.setInt(6, product.getSalesCount());
+		            preparedStatement.setBoolean(7, product.isOnSale());
+		            preparedStatement.setFloat(8, product.getDiscountPercent());
+		            return preparedStatement;
+		            
+		        }, generatedKeyHolder);
 		if(update == 1) {
+			Integer id = generatedKeyHolder.getKey().intValue();
+			product.setId(id);
 			return product;
 		}else {
 			return null;
@@ -88,12 +103,37 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Product updateProduct(Product product) {
-        return null;
+    	String sql = "update product set name =?, description = ?, imagePath=?, categoryid =?, price=?, salesCount=?, isOnSale=?, discountPercent=? where id = ?";
+		Category category = product.getCategory();
+		int update = jdbcTemplate.update(sql,
+				new Object[] {
+						product.getName(),
+						product.getDescription(),
+						product.getImagePath(),
+						category!=null?category.getId():6,
+						product.getPrice(),
+						product.getSalesCount(),
+						product.isOnSale(),
+						product.getDiscountPercent(),
+						product.getId()});
+		if(update == 1) {
+			return product;
+		}else {
+			return null;
+		}
+		
     }
 
     @Override
     public boolean removeProductById(int productId) {
-        return false;
+    	String sql = "delete from product where id = ?";
+		int deleted =  jdbcTemplate.update(sql,new Object[] {productId});
+		if(deleted==1) {
+			return true;
+		}else {
+			return false;
+		}
+		
     }
 
     @Override

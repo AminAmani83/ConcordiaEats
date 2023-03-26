@@ -21,7 +21,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product fetchProductById(int productId) {
-        return null;
+        return productDao.fetchProductById(productId);
     }
 
     @Override
@@ -31,12 +31,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product updateProduct(Product product) {
-        return null;
+    	return productDao.updateProduct(product);
     }
 
     @Override
     public boolean removeProductById(int productId) {
-        return false;
+        return productDao.removeProductById(productId);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Category fetchCategoryById(int categoryId) {
-        return null;
+        return productDao.fetchCategoryById(categoryId);
     }
 
     @Override
