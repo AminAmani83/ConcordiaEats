@@ -63,4 +63,19 @@ public class ProductServiceImpl implements ProductService {
     public boolean removeCategoryById(int categoryId) {
         return productDao.removeCategoryById(categoryId);
     }
+
+    @Override
+    public void makeFavorite(int customerId, int productId) {
+        productDao.makeFavorite(customerId, productId);
+    }
+
+    @Override
+    public void removeFavorite(int customerId, int productId) {
+        productDao.removeFavorite(customerId, productId);
+    }
+
+    @Override
+    public List<Product> fetchCustomerFavoriteProducts(int customerId) {
+        return productDao.fetchCustomerFavoriteProducts(customerId);
+    }
 }

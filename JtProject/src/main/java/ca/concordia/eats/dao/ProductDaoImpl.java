@@ -148,9 +148,8 @@ public class ProductDaoImpl implements ProductDao {
         List<Category> allCategories = new LinkedList<>();
 
         try {
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject", "root", "");
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select * from categories");
+            ResultSet rs = stmt.executeQuery("select * from category");
             while (rs.next()) {
                 allCategories.add(new Category(rs.getInt(1), rs.getString(2)));
             }
@@ -169,8 +168,7 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public Category createCategory(Category category) {
         try {
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
-            PreparedStatement pst = con.prepareStatement("insert into categories(name) values(?);");
+            PreparedStatement pst = con.prepareStatement("insert into category(name) values(?);");
             pst.setString(1, category.getName());
             int i = pst.executeUpdate();
         }
@@ -183,8 +181,7 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public Category updateCategory(Category category) {
         try {
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
-            PreparedStatement pst = con.prepareStatement("update categories set name = ? where categoryid = ?");
+            PreparedStatement pst = con.prepareStatement("update category set name = ? where categoryid = ?");
             pst.setString(1, category.getName());
             pst.setInt(2, category.getId());
             int i = pst.executeUpdate();
@@ -197,13 +194,41 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public boolean removeCategoryById(int categoryId) {
         try {
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
-            PreparedStatement pst = con.prepareStatement("delete from categories where categoryid = ? ;");
+            PreparedStatement pst = con.prepareStatement("delete from category where categoryid = ? ;");
             pst.setInt(1, categoryId);
             int i = pst.executeUpdate();
         } catch(Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
         return true;
+    }
+
+    @Override
+    public void makeFavorite(int customerId, int productId) {
+        try {
+            PreparedStatement pst = con.prepareStatement("insert into favorite values (?, ?);");
+            pst.setInt(1, customerId);
+            pst.setInt(2, productId);
+            int i = pst.executeUpdate();
+        } catch(Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+    }
+
+    @Override
+    public void removeFavorite(int customerId, int productId) {
+        try {
+            PreparedStatement pst = con.prepareStatement("delete from favorite where customerId=? and productId=?;");
+            pst.setInt(1, customerId);
+            pst.setInt(2, productId);
+            int i = pst.executeUpdate();
+        } catch(Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+    }
+
+    @Override
+    public List<Product> fetchCustomerFavoriteProducts(int customerId) {
+        return null; // todo
     }
 }

@@ -8,13 +8,13 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema springproject
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema springproject
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
+CREATE SCHEMA IF NOT EXISTS `springproject` DEFAULT CHARACTER SET utf8 ;
 -- -----------------------------------------------------
 -- Schema springproject
 -- -----------------------------------------------------
@@ -23,14 +23,14 @@ CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
 -- Schema springproject
 -- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `springproject` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
-USE `mydb` ;
+USE `springproject` ;
 
 -- -----------------------------------------------------
--- Table `mydb`.`promotion_type`
+-- Table `springproject`.`promotion_type`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`promotion_type` ;
+DROP TABLE IF EXISTS `springproject`.`promotion_type` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`promotion_type` (
+CREATE TABLE IF NOT EXISTS `springproject`.`promotion_type` (
   `id` INT NOT NULL,
   `type` VARCHAR(255) NULL,
   PRIMARY KEY (`id`))
@@ -38,11 +38,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`promotion`
+-- Table `springproject`.`promotion`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`promotion` ;
+DROP TABLE IF EXISTS `springproject`.`promotion` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`promotion` (
+CREATE TABLE IF NOT EXISTS `springproject`.`promotion` (
   `id` INT NOT NULL,
   `startDate` DATE NOT NULL,
   `endDate` DATE NULL,
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`promotion` (
   INDEX `promotions_promotion_type_idx` (`promotionTypeId` ASC) VISIBLE,
   CONSTRAINT `promotions_promotion_type`
     FOREIGN KEY (`promotionTypeId`)
-    REFERENCES `mydb`.`promotion_type` (`id`)
+    REFERENCES `springproject`.`promotion_type` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS `springproject`.`user` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(45) NOT NULL,
   `password` VARCHAR(64) NOT NULL,
-  `role` ENUM('CUSTOMER', 'ADMIN') NOT NULL DEFAULT 'ROLE_USERS',
+  `role` ENUM('CUSTOMER', 'ADMIN') NOT NULL DEFAULT 'CUSTOMER',
   `email` VARCHAR(320) NOT NULL,
   `address` VARCHAR(1000) NULL,
   `phone` VARCHAR(20) NULL,
@@ -80,14 +80,14 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`purchase`
+-- Table `springproject`.`parchase`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`purchase` ;
+DROP TABLE IF EXISTS `springproject`.`parchase` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`purchase` (
+CREATE TABLE IF NOT EXISTS `springproject`.`parchase` (
   `id` INT NOT NULL,
   `userId` INT NOT NULL,
-  `timeStamp` TIMESTAMP(20) NOT NULL,
+  `timeStamp` TIMESTAMP(6) NOT NULL,
   `total_price` DECIMAL(6,2) NOT NULL,
   `promotionId` INT NULL,
   PRIMARY KEY (`id`),
@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`purchase` (
     ON UPDATE NO ACTION,
   CONSTRAINT `FK_purchase_promotions`
     FOREIGN KEY (`promotionId`)
-    REFERENCES `mydb`.`promotion` (`id`)
+    REFERENCES `springproject`.`promotion` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -139,7 +139,7 @@ CREATE TABLE IF NOT EXISTS `springproject`.`product` (
   `discountPercent` DECIMAL NULL,
   PRIMARY KEY (`id`),
   INDEX `products_ibfk_1` (`categoryid` ASC) VISIBLE,
-  CONSTRAINT `products_ibfk_1`
+  CONSTRAINT `products_ibfk_2`
     FOREIGN KEY (`categoryid`)
     REFERENCES `springproject`.`category` (`id`)
     ON DELETE CASCADE)
@@ -150,11 +150,11 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`purchase_details`
+-- Table `springproject`.`purchase_details`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`purchase_details` ;
+DROP TABLE IF EXISTS `springproject`.`purchase_details` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`purchase_details` (
+CREATE TABLE IF NOT EXISTS `springproject`.`purchase_details` (
   `id` INT NOT NULL,
   `purchaseId` INT NULL,
   `productId` INT NULL,
@@ -167,7 +167,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`purchase_details` (
   INDEX `FK_purchase_products_idx` (`productId` ASC) VISIBLE,
   CONSTRAINT `FK_purchase_details_purchase`
     FOREIGN KEY (`purchaseId`)
-    REFERENCES `mydb`.`purchase` (`id`)
+    REFERENCES `springproject`.`parchase` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `FK_purchase_products`
@@ -179,11 +179,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`favorite`
+-- Table `springproject`.`favorite`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`favorite` ;
+DROP TABLE IF EXISTS `springproject`.`favorite` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`favorite` (
+CREATE TABLE IF NOT EXISTS `springproject`.`favorite` (
   `userId` INT NOT NULL,
   `productId` INT NOT NULL,
   INDEX `FK_favorites_users_idx` (`userId` ASC) VISIBLE,
@@ -203,11 +203,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`rating`
+-- Table `springproject`.`rating`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`rating` ;
+DROP TABLE IF EXISTS `springproject`.`rating` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`rating` (
+CREATE TABLE IF NOT EXISTS `springproject`.`rating` (
   `userId` INT NOT NULL,
   `productId` INT NOT NULL,
   `rating` TINYINT(5) NULL,
@@ -227,15 +227,15 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`search_history`
+-- Table `springproject`.`search_history`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`search_history` ;
+DROP TABLE IF EXISTS `springproject`.`search_history` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`search_history` (
+CREATE TABLE IF NOT EXISTS `springproject`.`search_history` (
   `id` INT NOT NULL,
   `userId` INT NOT NULL,
   `phrase` VARCHAR(255) NOT NULL,
-  `timeStamp` TIMESTAMP(20) NOT NULL,
+  `timeStamp` TIMESTAMP(6) NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `FK_search_history_users`
     FOREIGN KEY (`userId`)
