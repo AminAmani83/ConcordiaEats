@@ -27,6 +27,9 @@ public class AdminController {
 	@Autowired
 	ProductService productService;
 
+	@Autowired
+	private UserService userService;
+
 	Connection con;
 	public AdminController() {
 		try {
@@ -75,8 +78,6 @@ public class AdminController {
 	public String userLogin(@RequestParam("username") String username, @RequestParam("password") String password, Model model) {
 
 		try {
-			UserDao user = new UserDaoImpl();
-			UserService userService = new UserServiceImpl(user);
 			boolean isValid = userService.validateUserLogin(username, password);
 			if (isValid) {
 				usernameForClass = username;

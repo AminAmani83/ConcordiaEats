@@ -15,6 +15,6 @@ public interface UserDao {
     public User updateUser(User user);
     public User createUser(User user);
     public boolean removeUser(int userId);
-    public User getUserByUsernameAndPassword(String username, String password);
+    public boolean getUserByUsernameAndPassword(String username, String password);
 
 }

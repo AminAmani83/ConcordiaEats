@@ -18,10 +18,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;
 
-    public UserServiceImpl(UserDao userDao) {
-        this.userDao = userDao;
-    }
-
     @Override
     public List<User> getAlUsers() {
         return userDao.getAllUsers();
@@ -48,8 +44,8 @@ public class UserServiceImpl implements UserService {
     }
 
     public boolean validateUserLogin(String username, String password) {
-        User user = userDao.getUserByUsernameAndPassword(username, password);
-        if (user != null) {
+        boolean userExists = userDao.getUserByUsernameAndPassword(username, password);
+        if (userExists) {
             return true;
         } else {
             return false;

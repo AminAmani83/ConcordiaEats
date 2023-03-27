@@ -1,9 +1,7 @@
 package ca.concordia.eats.dao;
 
 import ca.concordia.eats.dto.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jdbc.core.JdbcTemplate;
+import ca.concordia.eats.dto.UserCredentials;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -101,23 +99,20 @@ public class UserDaoImpl implements UserDao {
         return true;
     }
 
-    public User getUserByUsernameAndPassword(String username, String password) {
-        User user = null;
+    public boolean getUserByUsernameAndPassword(String username, String password) {
+        boolean userExists = false;
         try {
             PreparedStatement stmt = con.prepareStatement("SELECT * FROM users WHERE username = ? AND password = ?");
             stmt.setString(1, username);
             stmt.setString(2, password);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                user = new User();
-                //user.setId(rs.getInt("id"));
-                user.setUsername(rs.getString("username"));
-                user.setPassword(rs.getString("password"));
+                userExists = true;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return user;
+        return userExists;
     }
 
 }
