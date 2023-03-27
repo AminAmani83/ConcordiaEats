@@ -48,9 +48,9 @@ public class UserServiceImpl implements UserService {
         return userDao.checkUserByCredentials(userCredentials);
     }
 
-
-
-
+    public User fetchUserFromDatabase(UserCredentials userCredentials) {
+        return userDao.fetchUserByCredentials(userCredentials);
+    }
 
 
 }

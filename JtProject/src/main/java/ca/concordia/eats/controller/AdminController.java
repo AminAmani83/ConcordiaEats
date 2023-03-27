@@ -83,13 +83,14 @@ public class AdminController {
 
 		try {
 			UserCredentials userCredentials = new UserCredentials();
+			User user = new User();
 			userCredentials.setUsername(username);
 			userCredentials.setPassword(password);
 			boolean isValid = userService.validateUserLogin(userCredentials);
 			if (isValid) {
 				usernameForClass = username;
-				// TODO: attach user object to session for user session management
-				// session.setAttribute("user", user);
+				user = userService.fetchUserFromDatabase(userCredentials);
+				session.setAttribute("user", user);
 				return "redirect:/index";
 			} else {
 				model.addAttribute("message", "Invalid Username or Password");

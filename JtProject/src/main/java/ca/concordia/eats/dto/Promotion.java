@@ -1,9 +1,13 @@
 package ca.concordia.eats.dto;
 
+import java.time.LocalDateTime;
+
 public class Promotion {
   
     private int promotionId;
-    private int promotionTypeId; 
+    private int promotionTypeId;
+    private LocalDateTime promotionStartDate;
+    private LocalDateTime promotionEndDate;
   
     public int getPromotionId() {
         return promotionId;
@@ -19,5 +23,18 @@ public class Promotion {
 
     public void setPromotionTypeId(int promotionTypeId) {
         this.promotionTypeId = promotionTypeId;
+    }
+
+    public LocalDateTime getPromotionStartDate() {
+        return promotionStartDate;
+    }
+    public void setPromotionStartDate(LocalDateTime promotionStartDate) {
+        this.promotionStartDate = promotionStartDate;
+    }
+    public LocalDateTime getPromotionEndDate() {
+        return promotionEndDate;
+    }
+    public void setPromotionEndDate(LocalDateTime promotionEndDate) {
+        this.promotionEndDate = promotionEndDate;
     }
 }
