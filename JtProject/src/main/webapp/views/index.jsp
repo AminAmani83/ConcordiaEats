@@ -42,6 +42,12 @@
                             <h4 class="card-title">
                                 <c:out value="${product.name}"/>
                             </h4>
+                            <div class="rating">
+                                <i class="fa fa-star text-warning"></i>
+                                <i class="fa fa-star text-warning"></i>
+                                <i class="fa fa-star text-warning"></i>
+                                <i class="fas fa-star-half-alt text-warning"></i>
+                            </div>
                             <p class="card-text">
                                 <c:out value="${product.description}"/>
                             </p>
@@ -51,7 +57,7 @@
                             </form>
                         </div>
                         <div class="card-footer">
-                            <small class="text-muted"><c:out value="${product.price}"/> CAD</small>
+                            <small class="text-muted">$<c:out value="${product.price}"/> CAD</small>
                         </div>
                     </div>
                 </div>
