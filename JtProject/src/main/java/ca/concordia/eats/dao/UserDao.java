@@ -1,6 +1,7 @@
 package ca.concordia.eats.dao;
 
 import ca.concordia.eats.dto.User;
+import ca.concordia.eats.dto.UserCredentials;
 
 import java.util.List;
 
@@ -15,6 +16,6 @@ public interface UserDao {
     public User updateUser(User user);
     public User createUser(User user);
     public boolean removeUser(int userId);
-    public boolean getUserByUsernameAndPassword(String username, String password);
+    public boolean getUserByCredentials(UserCredentials userCredentials);
 
 }

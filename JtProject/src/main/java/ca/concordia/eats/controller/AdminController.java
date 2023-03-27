@@ -5,6 +5,7 @@ import ca.concordia.eats.dao.UserDaoImpl;
 import ca.concordia.eats.dto.Category;
 import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.User;
+import ca.concordia.eats.dto.UserCredentials;
 import ca.concordia.eats.service.ProductService;
 import ca.concordia.eats.service.UserService;
 import ca.concordia.eats.service.UserServiceImpl;
@@ -29,6 +30,8 @@ public class AdminController {
 
 	@Autowired
 	private UserService userService;
+	//@Autowired
+	//private UserCredentials userCredentials;
 
 	Connection con;
 	public AdminController() {
@@ -78,7 +81,10 @@ public class AdminController {
 	public String userLogin(@RequestParam("username") String username, @RequestParam("password") String password, Model model) {
 
 		try {
-			boolean isValid = userService.validateUserLogin(username, password);
+			UserCredentials userCredentials = new UserCredentials();
+			userCredentials.setUsername(username);
+			userCredentials.setPassword(password);
+			boolean isValid = userService.validateUserLogin(userCredentials);
 			if (isValid) {
 				usernameForClass = username;
 				return "redirect:/index";

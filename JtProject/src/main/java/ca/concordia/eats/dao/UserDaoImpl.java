@@ -99,12 +99,12 @@ public class UserDaoImpl implements UserDao {
         return true;
     }
 
-    public boolean getUserByUsernameAndPassword(String username, String password) {
+    public boolean getUserByCredentials(UserCredentials userCredentials) {
         boolean userExists = false;
         try {
             PreparedStatement stmt = con.prepareStatement("SELECT * FROM users WHERE username = ? AND password = ?");
-            stmt.setString(1, username);
-            stmt.setString(2, password);
+            stmt.setString(1, userCredentials.getUsername());
+            stmt.setString(2, userCredentials.getPassword());
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 userExists = true;

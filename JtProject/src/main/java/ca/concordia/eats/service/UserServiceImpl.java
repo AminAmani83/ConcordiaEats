@@ -1,5 +1,6 @@
 package ca.concordia.eats.service;
 
+import ca.concordia.eats.dto.UserCredentials;
 import org.springframework.stereotype.Service;
 
 import ca.concordia.eats.dao.UserDao;
@@ -43,13 +44,8 @@ public class UserServiceImpl implements UserService {
         return userDao.removeUser(userId);
     }
 
-    public boolean validateUserLogin(String username, String password) {
-        boolean userExists = userDao.getUserByUsernameAndPassword(username, password);
-        if (userExists) {
-            return true;
-        } else {
-            return false;
-        }
+    public boolean validateUserLogin(UserCredentials userCredentials) {
+        return userDao.getUserByCredentials(userCredentials);
     }
 
 
