@@ -17,6 +17,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.*;
 import java.util.List;
@@ -78,7 +79,7 @@ public class AdminController {
 		return "userLogin";
 	}
 	@RequestMapping(value = "userloginvalidate", method = RequestMethod.POST)
-	public String userLogin(@RequestParam("username") String username, @RequestParam("password") String password, Model model) {
+	public String userLogin(@RequestParam("username") String username, @RequestParam("password") String password, Model model, HttpSession session) {
 
 		try {
 			UserCredentials userCredentials = new UserCredentials();
@@ -87,6 +88,8 @@ public class AdminController {
 			boolean isValid = userService.validateUserLogin(userCredentials);
 			if (isValid) {
 				usernameForClass = username;
+				// TODO: attach user object to session for user session management
+				// session.setAttribute("user", user);
 				return "redirect:/index";
 			} else {
 				model.addAttribute("message", "Invalid Username or Password");

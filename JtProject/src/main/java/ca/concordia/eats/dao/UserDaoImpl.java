@@ -115,4 +115,34 @@ public class UserDaoImpl implements UserDao {
         return userExists;
     }
 
+    @Override
+    public User fetchUserByCredentials(UserCredentials userCredentials) {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        User user = null;
+        try {
+            stmt = con.prepareStatement("SELECT * FROM users WHERE username = ? AND password = ?");
+            stmt.setString(1, userCredentials.getUsername());
+            stmt.setString(2, userCredentials.getPassword());
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                // TODO: get all user data for user sesseion management
+                user = new User();
+                user.setUsername(rs.getString("username"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Close the database resources
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                if (con != null) con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return user;
+        }
+    }
+
 }
