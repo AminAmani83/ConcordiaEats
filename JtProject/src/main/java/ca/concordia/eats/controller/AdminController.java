@@ -1,8 +1,14 @@
 package ca.concordia.eats.controller;
 
+import ca.concordia.eats.dao.UserDao;
+import ca.concordia.eats.dao.UserDaoImpl;
 import ca.concordia.eats.dto.Category;
 import ca.concordia.eats.dto.Product;
+import ca.concordia.eats.dto.User;
+import ca.concordia.eats.dto.UserCredentials;
 import ca.concordia.eats.service.ProductService;
+import ca.concordia.eats.service.UserService;
+import ca.concordia.eats.service.UserServiceImpl;
 import ca.concordia.eats.utils.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,6 +27,11 @@ public class AdminController {
 
 	@Autowired
 	ProductService productService;
+
+	@Autowired
+	private UserService userService;
+	//@Autowired
+	//private UserCredentials userCredentials;
 
 	Connection con;
 	public AdminController() {
@@ -67,15 +78,17 @@ public class AdminController {
 		return "userLogin";
 	}
 	@RequestMapping(value = "userloginvalidate", method = RequestMethod.POST)
-	public String userLogin(@RequestParam("username") String username, @RequestParam("password") String pass, Model model) {
+	public String userLogin(@RequestParam("username") String username, @RequestParam("password") String password, Model model) {
+
 		try {
-			Statement stmt = con.createStatement();
-			ResultSet rst = stmt.executeQuery("select * from users where username = '"+username+"' and password = '"+ pass+"' ;");
-			if(rst.next()) {
-				usernameForClass = rst.getString(2);
+			UserCredentials userCredentials = new UserCredentials();
+			userCredentials.setUsername(username);
+			userCredentials.setPassword(password);
+			boolean isValid = userService.validateUserLogin(userCredentials);
+			if (isValid) {
+				usernameForClass = username;
 				return "redirect:/index";
-				}
-			else {
+			} else {
 				model.addAttribute("message", "Invalid Username or Password");
 				return "userLogin";
 			}

@@ -6,12 +6,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import ca.concordia.eats.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 @Controller
 public class UserController{
+
+	private UserService userService;
 
 	@GetMapping("/register")
 	public String registerUser()
@@ -56,4 +62,6 @@ public class UserController{
 		}
 		return "redirect:/";
 	}
+
+
 }

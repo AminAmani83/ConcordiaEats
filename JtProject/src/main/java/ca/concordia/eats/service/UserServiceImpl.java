@@ -1,5 +1,6 @@
 package ca.concordia.eats.service;
 
+import ca.concordia.eats.dto.UserCredentials;
 import org.springframework.stereotype.Service;
 
 import ca.concordia.eats.dao.UserDao;
@@ -16,7 +17,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    UserDao userDao;
+    private UserDao userDao;
 
     @Override
     public List<User> getAlUsers() {
@@ -42,6 +43,11 @@ public class UserServiceImpl implements UserService {
     public boolean removeUser(int userId) {
         return userDao.removeUser(userId);
     }
+
+    public boolean validateUserLogin(UserCredentials userCredentials) {
+        return userDao.checkUserByCredentials(userCredentials);
+    }
+
 
 
 
