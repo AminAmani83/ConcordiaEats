@@ -16,7 +16,11 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    UserDao userDao;
+    private UserDao userDao;
+
+    public UserServiceImpl(UserDao userDao) {
+        this.userDao = userDao;
+    }
 
     @Override
     public List<User> getAlUsers() {
@@ -42,6 +46,16 @@ public class UserServiceImpl implements UserService {
     public boolean removeUser(int userId) {
         return userDao.removeUser(userId);
     }
+
+    public boolean validateUserLogin(String username, String password) {
+        User user = userDao.getUserByUsernameAndPassword(username, password);
+        if (user != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
 
 

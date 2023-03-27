@@ -1,8 +1,13 @@
 package ca.concordia.eats.controller;
 
+import ca.concordia.eats.dao.UserDao;
+import ca.concordia.eats.dao.UserDaoImpl;
 import ca.concordia.eats.dto.Category;
 import ca.concordia.eats.dto.Product;
+import ca.concordia.eats.dto.User;
 import ca.concordia.eats.service.ProductService;
+import ca.concordia.eats.service.UserService;
+import ca.concordia.eats.service.UserServiceImpl;
 import ca.concordia.eats.utils.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -67,15 +72,16 @@ public class AdminController {
 		return "userLogin";
 	}
 	@RequestMapping(value = "userloginvalidate", method = RequestMethod.POST)
-	public String userLogin(@RequestParam("username") String username, @RequestParam("password") String pass, Model model) {
+	public String userLogin(@RequestParam("username") String username, @RequestParam("password") String password, Model model) {
+
 		try {
-			Statement stmt = con.createStatement();
-			ResultSet rst = stmt.executeQuery("select * from users where username = '"+username+"' and password = '"+ pass+"' ;");
-			if(rst.next()) {
-				usernameForClass = rst.getString(2);
+			UserDao user = new UserDaoImpl();
+			UserService userService = new UserServiceImpl(user);
+			boolean isValid = userService.validateUserLogin(username, password);
+			if (isValid) {
+				usernameForClass = username;
 				return "redirect:/index";
-				}
-			else {
+			} else {
 				model.addAttribute("message", "Invalid Username or Password");
 				return "userLogin";
 			}

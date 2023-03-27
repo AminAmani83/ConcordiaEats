@@ -4,6 +4,7 @@ public class User {
   
     private int userId;
     private String username;
+    private String password;
     private String nameOfUser;
     private boolean loginStatus;
 
@@ -31,6 +32,12 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    public void setId(int userId) {
+        this.userId = userId;
     }
     
     public String getNameOfUser() {
