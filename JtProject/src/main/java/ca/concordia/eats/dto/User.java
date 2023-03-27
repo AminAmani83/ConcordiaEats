@@ -10,6 +10,12 @@ public class User {
     public User() {
     }
 
+    public User(Integer userId, String username, String nameOfUser) {
+        this.userId = userId;
+        this.username = username;
+        this.nameOfUser = nameOfUser;
+    }
+
     public User(Integer userId, String username, String nameOfUser, boolean loginStatus) {
         this.userId = userId;
         this.username = username;
