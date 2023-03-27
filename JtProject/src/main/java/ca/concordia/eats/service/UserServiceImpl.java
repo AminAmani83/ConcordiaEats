@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public boolean validateUserLogin(UserCredentials userCredentials) {
-        return userDao.getUserByCredentials(userCredentials);
+        return userDao.checkUserByCredentials(userCredentials);
     }
 
 

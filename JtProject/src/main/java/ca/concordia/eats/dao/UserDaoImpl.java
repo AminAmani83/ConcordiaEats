@@ -99,7 +99,7 @@ public class UserDaoImpl implements UserDao {
         return true;
     }
 
-    public boolean getUserByCredentials(UserCredentials userCredentials) {
+    public boolean checkUserByCredentials(UserCredentials userCredentials) {
         boolean userExists = false;
         try {
             PreparedStatement stmt = con.prepareStatement("SELECT * FROM users WHERE username = ? AND password = ?");
