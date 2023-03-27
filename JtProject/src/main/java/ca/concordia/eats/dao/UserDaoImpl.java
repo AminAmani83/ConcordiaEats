@@ -1,6 +1,7 @@
 package ca.concordia.eats.dao;
 
 import ca.concordia.eats.dto.User;
+import ca.concordia.eats.dto.Customer;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -25,9 +26,9 @@ public class UserDaoImpl implements UserDao {
 
         try {
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select * from users");
+            ResultSet rs = stmt.executeQuery("select id, username, role, email from user");
             while (rs.next()) {
-                allUsers.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getBoolean(4)));
+                allUsers.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4)));
             }
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
@@ -42,11 +43,11 @@ public class UserDaoImpl implements UserDao {
         User user = new User();
 
         try {
-            PreparedStatement pst = con.prepareStatement("select * from users where user_id = (?);");
+            PreparedStatement pst = con.prepareStatement("select id, username, role, email from user where id = (?);");
             pst.setInt(1, userId);
             ResultSet rs = pst.executeQuery();
 
-            user = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getBoolean(4));
+            user = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4));
 
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
@@ -56,12 +57,17 @@ public class UserDaoImpl implements UserDao {
     }
 
 
+    /**
+     * - Cannot change role from 'Customer' to 'Admin'
+     * - Cannot change password.
+     */
     @Override
     public User updateUser(User user) {
         try {
-            PreparedStatement pst = con.prepareStatement("update users set username = ? where user_id = ?");
+            PreparedStatement pst = con.prepareStatement("update user set username = ?, email = ? where id = ?");
             pst.setString(1, user.getUsername());
-            pst.setInt(2, user.getUserId());
+            pst.setString(2, user.getEmail());
+            pst.setInt(3, user.getUserId());
             pst.executeUpdate();
 
         } catch(Exception ex) {
@@ -71,11 +77,16 @@ public class UserDaoImpl implements UserDao {
     }
 
 
+    /**
+     * Address and Phone are not set here.
+     */
     @Override
     public User createUser(User user) {
         try {
-            PreparedStatement pst = con.prepareStatement("insert into users (username) values(?);");
+            PreparedStatement pst = con.prepareStatement("insert into user (username, password, email) values(?,?,?);");
             pst.setString(1, user.getUsername());
+            pst.setString(2, "some_password");
+            pst.setString(3, user.getEmail());
             pst.executeUpdate();
 
         } catch(Exception ex) {
@@ -88,7 +99,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public boolean removeUser(int userId) {
         try {
-            PreparedStatement pst = con.prepareStatement("delete from users where user_id = ? ;");
+            PreparedStatement pst = con.prepareStatement("delete from user where id = ? ;");
             pst.setInt(1, userId);
             pst.executeUpdate();
         
@@ -97,5 +108,97 @@ public class UserDaoImpl implements UserDao {
         }
         return true;
     }
+ 
     
+    /**
+     * Need to retrieve this information for all Customers:
+     * - userId (int), username (string), email (string), address (string), phone (string).
+     * 
+     * Important: make sure to only select users whose role is 'customer'
+     */
+    @Override
+    public List<Customer> getAllCustomers() {
+        List<Customer> allCustomers = new LinkedList<>();
+
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("select * from user where role='CUSTOMER';");
+            while (rs.next()) {
+                allCustomers.add(new Customer(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getBoolean(7)));
+            }
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+
+        return allCustomers;
+    }
+
+
+    @Override
+    public Customer getCustomerById(int userId) {
+        Customer customer = new Customer();
+
+        try {
+            PreparedStatement pst = con.prepareStatement("select * from user where id = (?);");
+            pst.setInt(1, userId);
+            ResultSet rs = pst.executeQuery();
+
+            customer = new Customer(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getBoolean(7));
+
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+
+        return customer;
+    }
+
+
+    @Override
+    public Customer updateCustomer(Customer customer) {
+        try {
+            PreparedStatement pst = con.prepareStatement("update user set username = ?, set email = ?, set address = ?, set phone = ?  where id = ?;");
+            pst.setString(1, customer.getUsername());
+            pst.setString(2, customer.getEmail());
+            pst.setString(3, customer.getAddress());
+            pst.setString(4, customer.getPhone());
+            pst.setInt(5, customer.getUserId());
+            pst.executeUpdate();
+
+        } catch(Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+        return customer;
+    }
+
+
+    @Override
+    public Customer createCustomer(Customer customer) {
+        try {
+            PreparedStatement pst = con.prepareStatement("insert into users (username, role, email, address, phone) values(?,'CUSTOMER',?,?,?);");
+            pst.setString(1, customer.getUsername());
+            pst.setString(2, customer.getEmail());
+            pst.setString(3, customer.getAddress());
+            pst.setString(4, customer.getPhone());
+            pst.executeUpdate();
+
+        } catch(Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+        return customer;
+    }
+
+
+    @Override
+    public boolean removeCustomer(int userId) {
+        try {
+            PreparedStatement pst = con.prepareStatement("delete from user where id = ? ;");
+            pst.setInt(1, userId);
+            pst.executeUpdate();
+        
+        } catch(Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+        return true;
+    }
+
 }

@@ -5,21 +5,24 @@ public class User {
     private int userId;
     private String username;
     private String nameOfUser;      // ie.: user type: 'Customer' or 'Admin'
+    private String email;           // this is a NOT NULL column in DB.
     private boolean loginStatus;
 
     public User() {
     }
 
-    public User(Integer userId, String username, String nameOfUser) {
+    public User(Integer userId, String username, String nameOfUser, String email) {
         this.userId = userId;
         this.username = username;
         this.nameOfUser = nameOfUser;
+        this.email = email;
     }
 
-    public User(Integer userId, String username, String nameOfUser, boolean loginStatus) {
+    public User(Integer userId, String username, String nameOfUser, String email, boolean loginStatus) {
         this.userId = userId;
         this.username = username;
         this.nameOfUser = nameOfUser;
+        this.email = email;
         this.loginStatus = loginStatus;
     }
   
@@ -54,4 +57,12 @@ public class User {
     public void setLoginStatus(boolean loginStatus) {
         this.loginStatus = loginStatus;
     } 
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

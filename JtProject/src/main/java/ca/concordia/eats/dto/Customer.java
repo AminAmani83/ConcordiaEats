@@ -3,16 +3,14 @@ package ca.concordia.eats.dto;
 public class Customer extends User {
   
     private String address;
-    private String email;
     private String phone;
     
     public Customer() {
     }
 
     public Customer(Integer userId, String username, String nameOfUser, String address, String email, String phone, boolean loginStatus) {
-        super(userId, username, nameOfUser, loginStatus);
+        super(userId, username, nameOfUser, email, loginStatus);
         this.address = address;
-        this.email = email;
         this.phone = phone;
     }
 
@@ -22,14 +20,6 @@ public class Customer extends User {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
     
     public String getPhone() {
