@@ -79,12 +79,17 @@ DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
+INSERT INTO `user` (`username`, `password`, `role`, `email`, `address`, `phone`) VALUES
+('jay', '123', 'CUSTOMER', 'gajerajay9@gmail.com', '4 Privet Drive', '999-999-9999'),
+('admin', '123', 'ADMIN', '20ceuos042@ddu.ac.in', '10 Sussex Drive', '888-888-8888');
+
+
 -- -----------------------------------------------------
 -- Table `springproject`.`parchase`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `springproject`.`parchase` ;
+DROP TABLE IF EXISTS `springproject`.`purchase` ;
 
-CREATE TABLE IF NOT EXISTS `springproject`.`parchase` (
+CREATE TABLE IF NOT EXISTS `springproject`.`purchase` (
   `id` INT NOT NULL,
   `userId` INT NOT NULL,
   `timeStamp` TIMESTAMP(6) NOT NULL,
@@ -167,7 +172,7 @@ CREATE TABLE IF NOT EXISTS `springproject`.`purchase_details` (
   INDEX `FK_purchase_products_idx` (`productId` ASC) VISIBLE,
   CONSTRAINT `FK_purchase_details_purchase`
     FOREIGN KEY (`purchaseId`)
-    REFERENCES `springproject`.`parchase` (`id`)
+    REFERENCES `springproject`.`purchase` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `FK_purchase_products`
