@@ -2,6 +2,7 @@ package ca.concordia.eats.dao;
 
 import ca.concordia.eats.dto.User;
 import ca.concordia.eats.dto.Customer;
+import ca.concordia.eats.dto.UserCredentials;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -11,7 +12,7 @@ import java.util.List;
 @Repository
 public class UserDaoImpl implements UserDao {
 
-    Connection con;
+    private Connection con;
     public UserDaoImpl() {
         try {
             this.con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject", "root", "");
@@ -108,6 +109,7 @@ public class UserDaoImpl implements UserDao {
         }
         return true;
     }
+<<<<<<< HEAD
  
     
     /**
@@ -199,6 +201,23 @@ public class UserDaoImpl implements UserDao {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
         return true;
+=======
+
+    public boolean checkUserByCredentials(UserCredentials userCredentials) {
+        boolean userExists = false;
+        try {
+            PreparedStatement stmt = con.prepareStatement("SELECT * FROM users WHERE username = ? AND password = ?");
+            stmt.setString(1, userCredentials.getUsername());
+            stmt.setString(2, userCredentials.getPassword());
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                userExists = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return userExists;
+>>>>>>> main
     }
 
 }

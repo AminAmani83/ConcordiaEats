@@ -22,14 +22,16 @@
 
 		
 		<table class="table">
-
+			<thead class="thead-light">
 			<tr>
 				<th scope="col">UserId</th>
 				<th scope="col">Customer Name</th>
 				<th scope="col">Email</th>
 				<th scope="col">Address</th>
 			</tr>
+			</thead>
 			<tbody>
+			<c:forEach
 				<tr>
 
 					<%

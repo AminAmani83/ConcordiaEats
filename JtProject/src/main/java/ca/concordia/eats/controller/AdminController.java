@@ -1,17 +1,20 @@
 package ca.concordia.eats.controller;
 
+import ca.concordia.eats.dao.UserDao;
+import ca.concordia.eats.dao.UserDaoImpl;
 import ca.concordia.eats.dto.Category;
 import ca.concordia.eats.dto.Product;
+import ca.concordia.eats.dto.User;
+import ca.concordia.eats.dto.UserCredentials;
 import ca.concordia.eats.service.ProductService;
+import ca.concordia.eats.service.UserService;
+import ca.concordia.eats.service.UserServiceImpl;
 import ca.concordia.eats.utils.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.sql.*;
 import java.util.List;
 
@@ -21,6 +24,11 @@ public class AdminController {
 
 	@Autowired
 	ProductService productService;
+
+	@Autowired
+	private UserService userService;
+	//@Autowired
+	//private UserCredentials userCredentials;
 
 	Connection con;
 	public AdminController() {
@@ -33,7 +41,6 @@ public class AdminController {
 
 	int adminLogInCheck = 0;
 	String usernameForClass = "";
-
 	@RequestMapping(value = {"/","/logout"})
 	public String returnIndex() {
 		adminLogInCheck =0;
@@ -41,51 +48,50 @@ public class AdminController {
 		return "userLogin";
 	}
 
+	
 	@GetMapping("/index")
 	public String index(Model model) {
-		List<Product> allProducts = productService.fetchAllProducts();
-		if(usernameForClass.equalsIgnoreCase("")) {
+		if(usernameForClass.equalsIgnoreCase(""))
 			return "userLogin";
-		}
 		else {
-			// Temp Products TODO: use actual results from DB
-			Product bestSellerProduct = new Product(1, "Hamburger", "Delicious", "https://tmbidigitalassetsazure.blob.core.windows.net/secure/RMS/attachments/37/1200x1200/Sausage-Sliders-with-Cran-Apple-Slaw_exps48783_SD2235819D06_24_2bC_RMS.jpg", 0f, 0, false, 0f, null, null);
-			Product highestRatedProduct = new Product(2, "Chicken Soup", "Delicious", "https://www.allrecipes.com/thmb/NgpgUebR7ixeEuToPd1c1TgaQmU=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/8814_HomemadeChickenSoup_SoupLovingNicole_LSH-2000-4ae7ff733c554fdab0796d15c8d1151f.jpg", 0f, 0, false, 0f, null, null);
-			Product recommendedProduct = new Product(3, "Hamburger", "Delicious", "https://tastesbetterfromscratch.com/wp-content/uploads/2017/04/Tiramisu-14.jpg", 0f, 0, false, 0f, null, null);
 			model.addAttribute("username", usernameForClass);
-			model.addAttribute("allProducts", allProducts);
-			model.addAttribute("bestSellerProduct", bestSellerProduct);
-			model.addAttribute("highestRatedProduct", highestRatedProduct);
-			model.addAttribute("recommendedProduct", recommendedProduct);
 			return "index";
 		}
+			
 	}
-
 	@GetMapping("/userloginvalidate")
 	public String userLogin(Model model) {
 		
 		return "userLogin";
 	}
 	@RequestMapping(value = "userloginvalidate", method = RequestMethod.POST)
-	public String userLogin(@RequestParam("username") String username, @RequestParam("password") String pass, Model model) {
+	public String userLogin(@RequestParam("username") String username, @RequestParam("password") String password, Model model) {
+
 		try {
-			Statement stmt = con.createStatement();
-			ResultSet rst = stmt.executeQuery("select * from users where username = '"+username+"' and password = '"+ pass+"' ;");
-			if(rst.next()) {
-				usernameForClass = rst.getString(2);
+			UserCredentials userCredentials = new UserCredentials();
+			userCredentials.setUsername(username);
+			userCredentials.setPassword(password);
+			boolean isValid = userService.validateUserLogin(userCredentials);
+			if (isValid) {
+				usernameForClass = username;
 				return "redirect:/index";
-				}
-			else {
+			} else {
 				model.addAttribute("message", "Invalid Username or Password");
 				return "userLogin";
 			}
+			
 		}
-		catch(Exception e) {
+		catch(Exception e)
+		{
 			System.out.println("Exception:"+e);
 		}
 		return "userLogin";
+		
+		
+		
 	}
-
+	
+	
 	@GetMapping("/admin")
 	public String adminLogin(Model model) {
 		
@@ -144,58 +150,100 @@ public class AdminController {
 	}
 
 	@GetMapping("/admin/products")
-	public String getAllProduct(Model model) {
-		List<Product> allProducts = productService.fetchAllProducts();
-		model.addAttribute("allProducts", allProducts);
+	public String getProduct(Model model) {
 		return "products";
 	}
-	
 	@GetMapping("/admin/products/add")
 	public String addProduct(Model model) {
-		List<Category> allCategories = productService.fetchAllCategories();
-		model.addAttribute("allCategories", allCategories);
-		model.addAttribute("product", new Product());
 		return "productsAdd";
-	}
-	
-	@PostMapping("/admin/products/add")
-	public String addProduct(@ModelAttribute("product") Product product, @RequestParam("categoryid") int categoryId) {
-		Category categoryById = productService.fetchCategoryById(categoryId);
-		product.setCategory(categoryById);
-		productService.createProduct(product);
-		return "redirect:/admin/products";
 	}
 
 	@GetMapping("/admin/products/update")
 	public String updateProduct(@RequestParam("pid") int id, Model model) {
-		Product product = productService.fetchProductById(id);
-		model.addAttribute("product", product);
+		String pname,pdescription,pimage;
+		int pid,pprice,pweight,pquantity,pcategory;
+		try
+		{
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
+			Statement stmt = con.createStatement();
+			Statement stmt2 = con.createStatement();
+			ResultSet rst = stmt.executeQuery("select * from products where id = "+id+";");
+			
+			if(rst.next())
+			{
+			pid = rst.getInt(1);
+			pname = rst.getString(2);
+			pimage = rst.getString(3);
+			pcategory = rst.getInt(4);
+			pquantity = rst.getInt(5);
+			pprice =  rst.getInt(6);
+			pweight =  rst.getInt(7);
+			pdescription = rst.getString(8);
+			model.addAttribute("pid",pid);
+			model.addAttribute("pname",pname);
+			model.addAttribute("pimage",pimage);
+			ResultSet rst2 = stmt.executeQuery("select * from categories where categoryid = "+pcategory+";");
+			if(rst2.next())
+			{
+				model.addAttribute("pcategory",rst2.getString(2));
+			}
+			model.addAttribute("pquantity",pquantity);
+			model.addAttribute("pprice",pprice);
+			model.addAttribute("pweight",pweight);
+			model.addAttribute("pdescription",pdescription);
+			}
+		}
+		catch(Exception e)
+		{
+			System.out.println("Exception:"+e);
+		}
 		return "productsUpdate";
 	}
-	@RequestMapping(value = "/admin/products/updateData",method=RequestMethod.POST)
-	public String updateproduct(@ModelAttribute("product") Product product, @RequestParam("productImage") MultipartFile multipartFile, @RequestParam("categoryid") int categoryId ) 
+	@RequestMapping(value = "admin/products/updateData",method=RequestMethod.POST)
+	public String updateproducttodb(@RequestParam("id") int id,@RequestParam("name") String name, @RequestParam("price") int price, @RequestParam("weight") int weight, @RequestParam("quantity") int quantity, @RequestParam("description") String description, @RequestParam("productImage") String picture ) 
 	
 	{
-		Category category = productService.fetchCategoryById(categoryId);
-		product.setCategory(category);
-		String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-		product.setImagePath(fileName);
-		productService.updateProduct(product);
-		String uploadDir = "/resources/Product Images/";
-		 
-        try {
-			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new RuntimeException("upload file failed", e);
+		try
+		{
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
+			
+			PreparedStatement pst = con.prepareStatement("update products set name= ?,image = ?,quantity = ?, price = ?, weight = ?,description = ? where id = ?;");
+			pst.setString(1, name);
+			pst.setString(2, picture);
+			pst.setInt(3, quantity);
+			pst.setInt(4, price);
+			pst.setInt(5, weight);
+			pst.setString(6, description);
+			pst.setInt(7, id);
+			int i = pst.executeUpdate();			
+		}
+		catch(Exception e)
+		{
+			System.out.println("Exception:"+e);
 		}
 		return "redirect:/admin/products";
 	}
 	
 	@GetMapping("/admin/products/delete")
-	public String removeProduct(@RequestParam("id") int id)
+	public String removeProductDb(@RequestParam("id") int id)
 	{
-		productService.removeProductById(id);
+		try
+		{
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
+			
+			
+			PreparedStatement pst = con.prepareStatement("delete from products where id = ? ;");
+			pst.setInt(1, id);
+			int i = pst.executeUpdate();
+			
+		}
+		catch(Exception e)
+		{
+			System.out.println("Exception:"+e);
+		}
 		return "redirect:/admin/products";
 	}
 	
@@ -203,17 +251,49 @@ public class AdminController {
 	public String postProduct() {
 		return "redirect:/admin/categories";
 	}
-
+	@RequestMapping(value = "admin/products/sendData",method=RequestMethod.POST)
+	public String addproducttodb(@RequestParam("name") String name, @RequestParam("categoryid") String catid, @RequestParam("price") int price, @RequestParam("weight") int weight, @RequestParam("quantity") int quantity, @RequestParam("description") String description, @RequestParam("productImage") String picture ) {
+		
+		try
+		{
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("select * from categories where name = '"+catid+"';");
+			if(rs.next())
+			{
+			int categoryid = rs.getInt(1);
+			
+			PreparedStatement pst = con.prepareStatement("insert into products(name,image,categoryid,quantity,price,weight,description) values(?,?,?,?,?,?,?);");
+			pst.setString(1,name);
+			pst.setString(2, picture);
+			pst.setInt(3, categoryid);
+			pst.setInt(4, quantity);
+			pst.setInt(5, price);
+			pst.setInt(6, weight);
+			pst.setString(7, description);
+			int i = pst.executeUpdate();
+			}
+		}
+		catch(Exception e)
+		{
+			System.out.println("Exception:"+e);
+		}
+		return "redirect:/admin/products";
+	}
+	
 	@GetMapping("/admin/customers")
 	public String getCustomerDetail() {
 		return "displayCustomers";
 	}
-
+	
+	
 	@GetMapping("profileDisplay")
 	public String profileDisplay(Model model) {
 		String displayusername,displaypassword,displayemail,displayaddress;
 		try
 		{
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
 			Statement stmt = con.createStatement();
 			ResultSet rst = stmt.executeQuery("select * from users where username = '"+ usernameForClass +"';");
 			
@@ -245,6 +325,9 @@ public class AdminController {
 	{
 		try
 		{
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
+			
 			PreparedStatement pst = con.prepareStatement("update users set username= ?,email = ?,password= ?, address= ? where uid = ?;");
 			pst.setString(1, username);
 			pst.setString(2, email);
