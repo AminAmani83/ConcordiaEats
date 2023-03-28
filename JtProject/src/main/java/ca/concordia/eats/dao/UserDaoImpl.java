@@ -109,7 +109,6 @@ public class UserDaoImpl implements UserDao {
         }
         return true;
     }
-<<<<<<< HEAD
  
     
     /**
@@ -201,7 +200,6 @@ public class UserDaoImpl implements UserDao {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
         return true;
-=======
 
     public boolean checkUserByCredentials(UserCredentials userCredentials) {
         boolean userExists = false;
@@ -217,7 +215,6 @@ public class UserDaoImpl implements UserDao {
             e.printStackTrace();
         }
         return userExists;
->>>>>>> main
     }
 
 }
