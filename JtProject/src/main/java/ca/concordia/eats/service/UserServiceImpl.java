@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
+    // Below are Customer related service classes.
     @Override
     public List<Customer> getAllCustomers() {
         return userDao.getAllCustomers();
