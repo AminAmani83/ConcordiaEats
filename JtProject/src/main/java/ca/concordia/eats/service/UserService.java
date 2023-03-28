@@ -1,6 +1,7 @@
 package ca.concordia.eats.service;
 
 import ca.concordia.eats.dto.User;
+import ca.concordia.eats.dto.Customer;
 
 import java.util.List;
 
@@ -12,4 +13,11 @@ public interface UserService {
     public User createUser(User user);
     public boolean removeUser(int userId);
 
+    // CRUD CUSTOMER
+    public List<Customer> getAllCustomers();
+    public Customer getCustomerById(int userId);
+    public Customer updateCustomer(Customer customer);
+    public Customer createCustomer(Customer customer);
+    public boolean removeCustomer(int userId);
+   
 }

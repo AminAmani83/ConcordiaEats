@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import ca.concordia.eats.dao.UserDao;
 import ca.concordia.eats.dto.User;
+import ca.concordia.eats.dto.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -44,7 +45,28 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    @Override
+    public List<Customer> getAllCustomers() {
+        return userDao.getAllCustomers();
+    }
 
+    @Override
+    public Customer getCustomerById(int userId) {
+        return userDao.getCustomerById(userId);
+    }
 
+    @Override
+    public Customer updateCustomer(Customer customer) {
+        return userDao.updateCustomer(customer);
+    }
 
+    @Override
+    public Customer createCustomer(Customer customer) {
+        return userDao.createCustomer(customer);
+    }
+
+    @Override
+    public boolean removeCustomer(int userId) {
+        return userDao.removeCustomer(userId);
+    }
 }
