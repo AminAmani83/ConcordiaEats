@@ -1,6 +1,6 @@
 package ca.concordia.eats.dto;
 
-public class UserCredentials {
+public class UserCredentials extends User {
     private String username;
     private String password;
 
