@@ -14,22 +14,23 @@ import java.util.List;
 
 @Repository
 public class ProductDaoImpl implements ProductDao {
-	
-	@Autowired
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     Connection con;
+
     public ProductDaoImpl() {
         try {
             this.con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject", "root", "");
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println("Error connecting to the DB: " + e.getMessage());
         }
     }
-	
+
     @Override
     public List<Product> fetchAllProducts() {
-    	return jdbcTemplate.query(
+        return jdbcTemplate.query(
                 "select p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, r.rating, c.id as categoryId, c.name as categoryName from product p join category c on p.categoryid = c.id left join rating r on r.productId = p.id order by p.id desc",
                 (rs, rowNum) ->
                         new Product(
@@ -49,98 +50,98 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Product fetchProductById(int productId) {
-    	String sql = "select p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, r.rating, c.id as categoryId, c.name as categoryName from product p left join category c on p.categoryid = c.id left join rating r on r.productId = p.id where p.id = ?";
-    	
-		return jdbcTemplate.queryForObject(
+        String sql = "select p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, r.rating, c.id as categoryId, c.name as categoryName from product p left join category c on p.categoryid = c.id left join rating r on r.productId = p.id where p.id = ?";
+
+        return jdbcTemplate.queryForObject(
                 sql,
                 new RowMapper<Product>() {
-                	public Product mapRow(ResultSet rs, int rowNum) throws SQLException {
-                		Product product = new Product(
-                				rs.getInt("id"), 
-                				rs.getString("name"), 
-                				rs.getString("description"),
-                				rs.getString("imagePath"), 
-                				rs.getFloat("price"), 
-                				rs.getInt("salesCount"), 
-                				rs.getBoolean("isOnSale"),
-                				rs.getFloat("discountPercent"), 
-                				rs.getDouble("rating"),
-                				new Category(rs.getInt("categoryId"), rs.getString("categoryName")));
-                		return product;
-                	}
+                    public Product mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        Product product = new Product(
+                                rs.getInt("id"),
+                                rs.getString("name"),
+                                rs.getString("description"),
+                                rs.getString("imagePath"),
+                                rs.getFloat("price"),
+                                rs.getInt("salesCount"),
+                                rs.getBoolean("isOnSale"),
+                                rs.getFloat("discountPercent"),
+                                rs.getDouble("rating"),
+                                new Category(rs.getInt("categoryId"), rs.getString("categoryName")));
+                        return product;
+                    }
                 },
-                new Object[] { productId }
+                new Object[]{productId}
         );
     }
 
     @Override
     public Product createProduct(Product product) {
-    	String sql = "insert into product( name, description, imagePath, categoryid, price, salesCount, isOnSale, discountPercent)value(?,?,?,?,?,?,?,?)";
-    	GeneratedKeyHolder generatedKeyHolder = new GeneratedKeyHolder();
-		int update = jdbcTemplate.update(
-				conn -> {
-		            // Pre-compiling SQL
-		            PreparedStatement preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-		            // Set parameters
-		            preparedStatement.setString(1, product.getName());
-		            preparedStatement.setString(2, product.getDescription());
-		            preparedStatement.setString(3, product.getImagePath()==null?"":product.getImagePath());
-		            Category category = product.getCategory();
-		            if(category!=null) {
-		            	preparedStatement.setInt(4, category.getId());
-		            }else {
-		            	preparedStatement.setInt(4, 6);
-		            }
-		            preparedStatement.setFloat(5, product.getPrice());
-		            preparedStatement.setInt(6, product.getSalesCount());
-		            preparedStatement.setBoolean(7, product.isOnSale());
-		            preparedStatement.setFloat(8, product.getDiscountPercent());
-		            return preparedStatement;
-		            
-		        }, generatedKeyHolder);
-		if(update == 1) {
-			Integer id = generatedKeyHolder.getKey().intValue();
-			product.setId(id);
-			return product;
-		}else {
-			return null;
-		}
-		
+        String sql = "insert into product( name, description, imagePath, categoryid, price, salesCount, isOnSale, discountPercent)value(?,?,?,?,?,?,?,?)";
+        GeneratedKeyHolder generatedKeyHolder = new GeneratedKeyHolder();
+        int update = jdbcTemplate.update(
+                conn -> {
+                    // Pre-compiling SQL
+                    PreparedStatement preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                    // Set parameters
+                    preparedStatement.setString(1, product.getName());
+                    preparedStatement.setString(2, product.getDescription());
+                    preparedStatement.setString(3, product.getImagePath() == null ? "" : product.getImagePath());
+                    Category category = product.getCategory();
+                    if (category != null) {
+                        preparedStatement.setInt(4, category.getId());
+                    } else {
+                        preparedStatement.setInt(4, 6);
+                    }
+                    preparedStatement.setFloat(5, product.getPrice());
+                    preparedStatement.setInt(6, product.getSalesCount());
+                    preparedStatement.setBoolean(7, product.isOnSale());
+                    preparedStatement.setFloat(8, product.getDiscountPercent());
+                    return preparedStatement;
+
+                }, generatedKeyHolder);
+        if (update == 1) {
+            Integer id = generatedKeyHolder.getKey().intValue();
+            product.setId(id);
+            return product;
+        } else {
+            return null;
+        }
+
     }
 
     @Override
     public Product updateProduct(Product product) {
-    	String sql = "update product set name =?, description = ?, imagePath=?, categoryid =?, price=?, salesCount=?, isOnSale=?, discountPercent=? where id = ?";
-		Category category = product.getCategory();
-		int update = jdbcTemplate.update(sql,
-				new Object[] {
-						product.getName(),
-						product.getDescription(),
-						product.getImagePath(),
-						category!=null?category.getId():6,
-						product.getPrice(),
-						product.getSalesCount(),
-						product.isOnSale(),
-						product.getDiscountPercent(),
-						product.getId()});
-		if(update == 1) {
-			return product;
-		}else {
-			return null;
-		}
-		
+        String sql = "update product set name =?, description = ?, imagePath=?, categoryid =?, price=?, salesCount=?, isOnSale=?, discountPercent=? where id = ?";
+        Category category = product.getCategory();
+        int update = jdbcTemplate.update(sql,
+                new Object[]{
+                        product.getName(),
+                        product.getDescription(),
+                        product.getImagePath(),
+                        category != null ? category.getId() : 6,
+                        product.getPrice(),
+                        product.getSalesCount(),
+                        product.isOnSale(),
+                        product.getDiscountPercent(),
+                        product.getId()});
+        if (update == 1) {
+            return product;
+        } else {
+            return null;
+        }
+
     }
 
     @Override
     public boolean removeProductById(int productId) {
-    	String sql = "delete from product where id = ?";
-		int deleted =  jdbcTemplate.update(sql,new Object[] {productId});
-		if(deleted==1) {
-			return true;
-		}else {
-			return false;
-		}
-		
+        String sql = "delete from product where id = ?";
+        int deleted = jdbcTemplate.update(sql, new Object[]{productId});
+        if (deleted == 1) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     @Override
@@ -171,8 +172,7 @@ public class ProductDaoImpl implements ProductDao {
             PreparedStatement pst = con.prepareStatement("insert into category(name) values(?);");
             pst.setString(1, category.getName());
             int i = pst.executeUpdate();
-        }
-        catch(Exception ex) {
+        } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
         return category;
@@ -185,7 +185,7 @@ public class ProductDaoImpl implements ProductDao {
             pst.setString(1, category.getName());
             pst.setInt(2, category.getId());
             int i = pst.executeUpdate();
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
         return category;
@@ -197,7 +197,7 @@ public class ProductDaoImpl implements ProductDao {
             PreparedStatement pst = con.prepareStatement("delete from category where categoryid = ? ;");
             pst.setInt(1, categoryId);
             int i = pst.executeUpdate();
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
         return true;
@@ -210,7 +210,7 @@ public class ProductDaoImpl implements ProductDao {
             pst.setInt(1, customerId);
             pst.setInt(2, productId);
             int i = pst.executeUpdate();
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
     }
@@ -218,17 +218,30 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public void removeFavorite(int customerId, int productId) {
         try {
-            PreparedStatement pst = con.prepareStatement("delete from favorite where customerId=? and productId=?;");
+            PreparedStatement pst = con.prepareStatement("delete from favorite where userId=? and productId=?;");
             pst.setInt(1, customerId);
             pst.setInt(2, productId);
             int i = pst.executeUpdate();
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
     }
 
     @Override
     public List<Product> fetchCustomerFavoriteProducts(int customerId) {
-        return null; // todo
+        List<Product> customerFavoriteProducts = new LinkedList<>();
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("select * from favorite join product on favorite.productId = product.id join category on product.categoryId = category.id where userId=" + customerId + ";");
+            while (rs.next()) {
+                customerFavoriteProducts.add(new Product(rs.getInt(3), rs.getString(4),
+                        rs.getString(5), rs.getString(6), rs.getFloat(7),
+                        rs.getInt(8), rs.getBoolean(9), rs.getFloat(10), rs.getDouble(11),
+                        new Category(rs.getInt(12), rs.getString(13))));
+            }
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+        return customerFavoriteProducts;
     }
 }
