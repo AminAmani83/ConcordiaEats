@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class ProductDaoImpl implements ProductDao {
@@ -231,4 +232,22 @@ public class ProductDaoImpl implements ProductDao {
     public List<Product> fetchCustomerFavoriteProducts(int customerId) {
         return null; // todo
     }
+
+    @Override
+    public void rateProduct(int customerId, int productId) {
+
+    }
+
+    @Override
+    public Map<Integer, Integer> fetchAllCustomerRatings(int customerId) {
+        return null;
+        
+    }
+
+    @Override
+    public List<Product> fetchPastPurchasedProducts(int customerId) {
+        return null;
+
+    }
 }
+

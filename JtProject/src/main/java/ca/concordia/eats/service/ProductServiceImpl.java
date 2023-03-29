@@ -3,10 +3,12 @@ package ca.concordia.eats.service;
 import ca.concordia.eats.dao.ProductDao;
 import ca.concordia.eats.dto.Category;
 import ca.concordia.eats.dto.Product;
+import ca.concordia.eats.dto.Rating;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -77,5 +79,23 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> fetchCustomerFavoriteProducts(int customerId) {
         return productDao.fetchCustomerFavoriteProducts(customerId);
+    }
+
+    @Override
+    public void rateProduct(int customerId, int productId) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'rateProduct'");
+    }
+
+    @Override
+    public Map<Integer, Integer> fetchAllCustomerRatings(int customerId) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'fetchAllCustomerRatings'");
+    }
+
+    @Override
+    public List<Product> fetchPastPurchasedProducts(int customerId) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'fetchPastPurchasedProducts'");
     }
 }
