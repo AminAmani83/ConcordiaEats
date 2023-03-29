@@ -8,8 +8,14 @@ public class Customer extends User {
     public Customer() {
     }
 
-    public Customer(Integer userId, String username, String nameOfUser, String address, String email, String phone, boolean loginStatus) {
-        super(userId, username, nameOfUser, email, loginStatus);
+    public Customer(Integer userId, String username, String role, String address, String email, String phone) {
+        super(userId, username, role, email);
+        this.address = address;
+        this.phone = phone;
+    }
+
+    public Customer(Integer userId, String username, String role, String address, String email, String phone, boolean loginStatus) {
+        super(userId, username, role, email, loginStatus);
         this.address = address;
         this.phone = phone;
     }
