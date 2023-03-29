@@ -22,8 +22,9 @@ public interface UserDao {
     // CRUD CUSTOMER
     public List<Customer> getAllCustomers();
     public Customer getCustomerById(int userId);
-    public Customer updateCustomer(Customer customer);
-    public Customer createCustomer(Customer customer);
+    public Customer updateCustomer(Customer customer);      // equivalent to updateProfile() in our class diagram
+    public Customer createCustomer(Customer customer);      // equivalent to register() in our class diagram
     public boolean removeCustomer(int userId);
+
 
 }
