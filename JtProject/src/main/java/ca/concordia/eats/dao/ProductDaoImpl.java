@@ -12,6 +12,7 @@ import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 @Repository
 public class ProductDaoImpl implements ProductDao {
@@ -264,7 +265,7 @@ public class ProductDaoImpl implements ProductDao {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
 
-        return 0;
+        return -1;
     }
 
 
@@ -309,23 +310,39 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public void rateProduct(int customerId, int productId, int rating) {
         try {
+            int currentRating = fetchRatingByProductIdAndCustomerId(customerId, productId);
 
+            if (currentRating==-1) {
+                insertNewRating(customerId, productId, currentRating);
+            } else if (currentRating>=0 & currentRating<=5) {
+                updateCurrentRating(customerId, productId, currentRating);
+            } else {
+                System.out.println("currentRating value is outside valid bounds.");
+            }
 
-            PreparedStatement pst = con.prepareStatement("insert into favorite values (?, ?);");
-            pst.setInt(1, customerId);
-            pst.setInt(2, productId);
-            int i = pst.executeUpdate();
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
-
     }
 
 
+    /**
+     * customerRatings is defined as <productId, rating> for a specified customer.
+     */
     @Override
     public Map<Integer, Integer> fetchAllCustomerRatings(int customerId) {
-        return null;
-        
+
+        Map<Integer, Integer> customerRatings = new HashMap<Integer, Integer>();    
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("select productId, rating from rating where userId=" + customerId + ";");
+            while (rs.next()) {
+                customerRatings.put(rs.getInt(1), rs.getInt(2));
+            }
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+        return customerRatings;
     }
 
     @Override
