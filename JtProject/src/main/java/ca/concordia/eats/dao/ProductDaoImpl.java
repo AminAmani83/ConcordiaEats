@@ -246,6 +246,9 @@ public class ProductDaoImpl implements ProductDao {
         return customerFavoriteProducts;
     }
 
+    /**
+     * Helper method used in rateProduct.
+     */
     @Override 
     public int fetchRatingByProductIdAndCustomerId(int customerId, int productId) {
         try {
@@ -264,9 +267,50 @@ public class ProductDaoImpl implements ProductDao {
         return 0;
     }
 
+
+    /**
+     * Helper method used in rateProduct - used to insert a new rating if 
+     * this is the first time this customer rates this product.
+     */
     @Override
-    public void rateProduct(int customerId, int productId) {
+    public void insertNewRating(int customerId, int productId, int rating) {
         try {
+            PreparedStatement pst = con.prepareStatement("insert into rating (userId, productId, rating) values (?, ?, ?);");
+            pst.setInt(1, customerId);
+            pst.setInt(2, productId);
+            pst.setInt(3, rating);
+            pst.executeUpdate();
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+    } 
+
+    
+    /**
+     * Helper method used in rateProduct - used to update a rating if one
+     * exists already for this product and this customer.
+     */
+    @Override
+    public void updateCurrentRating(int customerId, int productId, int rating) {
+        try {
+            PreparedStatement pst = con.prepareStatement("update rating set rating = ? where userId = ? and productId = ?;");
+            pst.setInt(1, rating);
+            pst.setInt(2, customerId);
+            pst.setInt(3, productId);
+            pst.executeUpdate();
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+    }
+
+    /**
+     * rateProduct either updates a current rating or inserts a new rating.
+     */
+    @Override
+    public void rateProduct(int customerId, int productId, int rating) {
+        try {
+
+
             PreparedStatement pst = con.prepareStatement("insert into favorite values (?, ?);");
             pst.setInt(1, customerId);
             pst.setInt(2, productId);
