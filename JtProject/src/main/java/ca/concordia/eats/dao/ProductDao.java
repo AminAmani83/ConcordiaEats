@@ -27,10 +27,12 @@ public interface ProductDao {
     public List<Product> fetchCustomerFavoriteProducts(int customerId);
 
     // OTHER : RATING
-    public void rateProduct(int customerId, int productId);
+    public void rateProduct(int customerId, int productId, int rating);
     public Map<Integer, Integer> fetchAllCustomerRatings(int customerId);
     public int fetchRatingByProductIdAndCustomerId(int customerId, int productId);
     public List<Product> fetchPastPurchasedProducts(int customerId);
+    public void updateCurrentRating(int customerId, int productId, int rating);         // helper for rateProduct
+    public void insertNewRating(int customerId, int productId, int rating);             // helper for rateProduct
 
 }
 
