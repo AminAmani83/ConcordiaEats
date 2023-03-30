@@ -348,7 +348,6 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public List<Product> fetchPastPurchasedProducts(int customerId) {
         return null;
-
     }
 }
 
