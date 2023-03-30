@@ -29,6 +29,7 @@ public interface ProductDao {
     // OTHER : RATING
     public void rateProduct(int customerId, int productId);
     public Map<Integer, Integer> fetchAllCustomerRatings(int customerId);
+    public int fetchRatedProductByCustomerId(int customerId, int productId);
     public List<Product> fetchPastPurchasedProducts(int customerId);
 
 }
