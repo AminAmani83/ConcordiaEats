@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Rating {
   
-    Map<Integer, Integer> customerRatings = new HashMap<Integer, Integer>();
+    Map<Integer, Integer> customerRatings = new HashMap<Integer, Integer>();        // <productId, rating>
     private List<Product> rateableProducts;
   
     public Rating() {
