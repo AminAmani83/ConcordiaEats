@@ -6,9 +6,10 @@ public class Promotion {
   
     private int promotionId;
     private int promotionTypeId;
+    private String promotionType;
     private LocalDateTime promotionStartDate;
     private LocalDateTime promotionEndDate;
-  
+
     public int getPromotionId() {
         return promotionId;
     }
@@ -36,5 +37,9 @@ public class Promotion {
     }
     public void setPromotionEndDate(LocalDateTime promotionEndDate) {
         this.promotionEndDate = promotionEndDate;
+    }
+
+    public String getPromotionType(int promotionTypeId){
+        return promotionType;
     }
 }

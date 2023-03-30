@@ -1,14 +1,11 @@
 package ca.concordia.eats.controller;
 
-import ca.concordia.eats.dao.UserDao;
-import ca.concordia.eats.dao.UserDaoImpl;
 import ca.concordia.eats.dto.Category;
 import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.User;
 import ca.concordia.eats.dto.UserCredentials;
 import ca.concordia.eats.service.ProductService;
 import ca.concordia.eats.service.UserService;
-import ca.concordia.eats.service.UserServiceImpl;
 import ca.concordia.eats.utils.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,8 +28,6 @@ public class AdminController {
 
 	@Autowired
 	private UserService userService;
-	//@Autowired
-	//private UserCredentials userCredentials;
 
 	Connection con;
 	public AdminController() {
@@ -89,7 +84,7 @@ public class AdminController {
 			boolean isValid = userService.validateUserLogin(userCredentials);
 			if (isValid) {
 				usernameForClass = username;
-				user = userService.fetchUserFromDatabase(userCredentials);
+				user = userService.fetchUserData(userCredentials);
 				session.setAttribute("user", user);
 				return "redirect:/index";
 			} else {

@@ -13,6 +13,6 @@ public interface UserService {
     public User createUser(User user);
     public boolean removeUser(int userId);
     public boolean validateUserLogin(UserCredentials userCredentials);
-    public User fetchUserFromDatabase(UserCredentials userCredentials);
+    public User fetchUserData(UserCredentials userCredentials);
 
 }
