@@ -81,16 +81,15 @@ public class ProductServiceImpl implements ProductService {
         return productDao.fetchCustomerFavoriteProducts(customerId);
     }
 
+
     @Override
-    public void rateProduct(int customerId, int productId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'rateProduct'");
+    public void rateProduct(int customerId, int productId, int rating) {
+        productDao.rateProduct(customerId, productId, rating);
     }
 
     @Override
     public Map<Integer, Integer> fetchAllCustomerRatings(int customerId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'fetchAllCustomerRatings'");
+        return productDao.fetchAllCustomerRatings(customerId);
     }
 
     @Override
