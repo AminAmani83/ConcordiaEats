@@ -98,12 +98,12 @@ CREATE TABLE IF NOT EXISTS `springproject`.`purchase` (
   PRIMARY KEY (`id`),
   INDEX `purchase_users_idx` (`userId` ASC) INVISIBLE,
   INDEX `FK_purchase_promotions_idx` (`promotionId` ASC) INVISIBLE,
-  CONSTRAINT `FK_purchase_users`
+  CONSTRAINT `FK_purchase_users_2`
     FOREIGN KEY (`userId`)
     REFERENCES `springproject`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `FK_purchase_promotions`
+  CONSTRAINT `FK_purchase_promotions_2`
     FOREIGN KEY (`promotionId`)
     REFERENCES `springproject`.`promotion` (`id`)
     ON DELETE NO ACTION
