@@ -246,10 +246,37 @@ public class ProductDaoImpl implements ProductDao {
         return customerFavoriteProducts;
     }
 
+    @Override 
+    public int fetchRatingByProductIdAndCustomerId(int customerId, int productId) {
+        try {
+            PreparedStatement pst = con.prepareStatement("select rating from rating where userId = ? and productId = ?;");
+            pst.setInt(1, customerId);
+            pst.setInt(2, productId);
+            ResultSet rs = pst.executeQuery();
+
+            int currentRating = rs.getInt(1);
+            return currentRating;
+
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+
+        return 0;
+    }
+
     @Override
     public void rateProduct(int customerId, int productId) {
+        try {
+            PreparedStatement pst = con.prepareStatement("insert into favorite values (?, ?);");
+            pst.setInt(1, customerId);
+            pst.setInt(2, productId);
+            int i = pst.executeUpdate();
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
 
     }
+
 
     @Override
     public Map<Integer, Integer> fetchAllCustomerRatings(int customerId) {
