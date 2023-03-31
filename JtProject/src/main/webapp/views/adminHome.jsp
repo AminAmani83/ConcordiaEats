@@ -60,6 +60,17 @@
                 </div>
             </div>
         </div>
+        <div class="col-sm-3 pt-4">
+            <div class="card" style="background-color: white;">
+                <div class="card-body text-center">
+                    <h4 class="card-title">Promotions</h4>
+                    <hr>
+                    <p class="card-text">Manage all promotions here</p>
+                    <a href="/admin/promotions" class="card-link btn btn-primary">Manage</a>
+
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
