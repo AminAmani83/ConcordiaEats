@@ -153,6 +153,11 @@ AUTO_INCREMENT = 18
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
+INSERT INTO `springproject`.`product`
+(`name`, `description`, `imagePath`, `categoryid`, `price`, `salesCount`, `isOnSale`, `discountPercent`)
+VALUES
+('Sample Product', 'This is a sample product description.', '/images/sample-product.jpg', 1, 24.99, 0, 1, 0.10);
+
 
 -- -----------------------------------------------------
 -- Table `springproject`.`purchase_details`

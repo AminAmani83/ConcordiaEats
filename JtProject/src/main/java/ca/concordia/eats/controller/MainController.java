@@ -1,10 +1,14 @@
 package ca.concordia.eats.controller;
 
+import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Controller
 public class MainController {
@@ -22,5 +26,12 @@ public class MainController {
     public String removeFavorite(@RequestParam("customerid") int customerId, @RequestParam("productid") int productId) {
         productService.removeFavorite(customerId, productId);
         return "redirect:/product/";
+    }
+
+    @GetMapping("/search")
+    public String search(@RequestParam("query") String query, Model model) {
+        List<Product> products = productService.search(query);
+        model.addAttribute("products", products);
+        return "search-results";
     }
 }

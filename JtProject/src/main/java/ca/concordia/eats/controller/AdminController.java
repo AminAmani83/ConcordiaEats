@@ -86,6 +86,7 @@ public class AdminController {
 				usernameForClass = username;
 				user = userService.fetchUserData(userCredentials);
 				session.setAttribute("user", user);
+				//User u = (User) session.getAttribute("user");
 				return "redirect:/index";
 			} else {
 				model.addAttribute("message", "Invalid Username or Password");

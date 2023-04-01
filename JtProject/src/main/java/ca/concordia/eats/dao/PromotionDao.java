@@ -1,5 +1,6 @@
 package ca.concordia.eats.dao;
 
+import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.Promotion;
 
 import java.util.List;
@@ -11,4 +12,5 @@ public interface PromotionDao {
     public Promotion updatePromotion(Promotion promotion);
     public boolean removePromotionById(int PromotionId);
     public String getPromotionTypeByTypeId(int PromotionTypeId);
+
 }
