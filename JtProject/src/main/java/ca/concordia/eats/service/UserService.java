@@ -14,6 +14,7 @@ public interface UserService {
     public User createUser(User user);
     public boolean removeUser(int userId);
     public boolean validateUserLogin(UserCredentials userCredentials);
+    public User fetchUserData(UserCredentials userCredentials);
 
     // CRUD CUSTOMER
     public List<Customer> getAllCustomers();
