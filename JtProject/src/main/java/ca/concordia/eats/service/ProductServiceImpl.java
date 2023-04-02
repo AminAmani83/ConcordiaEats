@@ -7,6 +7,7 @@ import ca.concordia.eats.dto.Rating;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -97,4 +98,8 @@ public class ProductServiceImpl implements ProductService {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'fetchPastPurchasedProducts'");
     }
+    public List<Product> search(String query) {
+        return productDao.search(query);
+    }
+
 }

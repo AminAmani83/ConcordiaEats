@@ -34,5 +34,6 @@ public interface ProductDao {
     public void updateCurrentRating(int customerId, int productId, int rating);         // helper for rateProduct
     public void insertNewRating(int customerId, int productId, int rating);             // helper for rateProduct
 
+    public List<Product> search(String query);
 }
 
