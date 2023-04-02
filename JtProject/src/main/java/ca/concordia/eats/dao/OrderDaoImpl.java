@@ -67,10 +67,10 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public float calculateTotalPrice(HttpSession session, float deliveryFee) {
+    public float calculateTotalPrice(HttpSession session, float deliveryFees) {
         float subtotal = sumBasketItemPrices(session);
         float tax = 0.15f * subtotal; // calculate 15% tax on subtotal
-        float total = subtotal + tax + deliveryFee; // add tax and delivery fee to subtotal
+        float total = subtotal + tax + deliveryFees; // add tax and delivery fee to subtotal
         return total;
     }
 
