@@ -12,7 +12,6 @@ public interface UserService {
     public User getUserById(int userId);
     public User updateUser(User user);
     public User createUser(User user);
-    public boolean removeUser(int userId);
     public boolean validateUserLogin(UserCredentials userCredentials);
     public User fetchUserData(UserCredentials userCredentials);
 

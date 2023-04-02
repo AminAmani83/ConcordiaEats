@@ -40,11 +40,6 @@ public class UserServiceImpl implements UserService {
         return userDao.createUser(user);
     }
 
-    @Override
-    public boolean removeUser(int userId) {
-        return userDao.removeUser(userId);
-    }
-
     public boolean validateUserLogin(UserCredentials userCredentials) {
         return userDao.checkUserByCredentials(userCredentials);
     }
@@ -65,7 +60,7 @@ public class UserServiceImpl implements UserService {
     public Customer updateCustomer(Customer customer) {
         return userDao.updateCustomer(customer);
     }
-    
+
     public User fetchUserData(UserCredentials userCredentials) {
         return userDao.fetchUserByCredentials(userCredentials);
     }

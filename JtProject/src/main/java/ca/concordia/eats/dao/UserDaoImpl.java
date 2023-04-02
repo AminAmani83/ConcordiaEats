@@ -96,20 +96,6 @@ public class UserDaoImpl implements UserDao {
         }
         return user;
     }
-
-
-    @Override
-    public boolean removeUser(int userId) {
-        try {
-            PreparedStatement pst = con.prepareStatement("delete from user where id = ? ;");
-            pst.setInt(1, userId);
-            pst.executeUpdate();
-        
-        } catch(Exception ex) {
-            System.out.println("Exception Occurred: " + ex.getMessage());
-        }
-        return true;
-    }
  
     
     /**

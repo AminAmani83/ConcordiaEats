@@ -16,7 +16,6 @@ public interface UserDao {
     public User getUserById(int userId);
     public User updateUser(User user);
     public User createUser(User user);
-    public boolean removeUser(int userId);
     public boolean checkUserByCredentials(UserCredentials userCredentials);
     public User fetchUserByCredentials (UserCredentials userCredentials);
 
