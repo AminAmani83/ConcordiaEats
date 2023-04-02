@@ -143,7 +143,8 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Customer getCustomerById(int userId) {
-        Customer customer = new Customer();
+
+        Customer customer = null; 
 
         try {
             PreparedStatement pst = con.prepareStatement("select id, username, role, email, address, phone from user where id = (?);");
