@@ -17,5 +17,8 @@
                 </li>
             </ul>
         </div>
+
+        <%@ include file="search-form.jsp" %>
+
     </div>
 </nav>

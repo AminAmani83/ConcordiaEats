@@ -1,5 +1,6 @@
 package ca.concordia.eats.dao;
 
+import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.Promotion;
 import org.springframework.stereotype.Repository;
 
@@ -26,7 +27,7 @@ public class PromotionDaoImpl implements PromotionDao {
             ResultSet rs = stmt.executeQuery();
             ResultSet rs2 = stmt2.executeQuery();
 
-            if (rs.next()) {
+            while (rs.next()) {
                 Promotion promotion = new Promotion();
                 promotion.setPromotionId(rs.getInt(1));
                 Date startDate = rs.getDate(2);
@@ -80,4 +81,5 @@ public class PromotionDaoImpl implements PromotionDao {
         }
         return null;
     }
+
 }
