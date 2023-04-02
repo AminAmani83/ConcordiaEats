@@ -4,6 +4,7 @@ import ca.concordia.eats.dto.Category;
 import ca.concordia.eats.dto.Product;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ProductService {
 
@@ -21,10 +22,15 @@ public interface ProductService {
     public Category updateCategory(Category category);
     public boolean removeCategoryById(int categoryId);
 
-    // OTHER
+    // OTHER : FAVORITE
     public void makeFavorite(int customerId, int productId);
     public void removeFavorite(int customerId, int productId);
     public List<Product> fetchCustomerFavoriteProducts(int customerId);
     public List<Product> search(String query);
+
+    // OTHER : RATING
+    public void rateProduct(int customerId, int productId, int rating);
+    public Map<Integer, Integer> fetchAllCustomerRatings(int customerId);
+    public List<Product> fetchPastPurchasedProducts(int customerId);
 
 }

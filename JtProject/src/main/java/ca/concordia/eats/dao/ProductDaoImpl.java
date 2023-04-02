@@ -12,6 +12,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 @Repository
 public class ProductDaoImpl implements ProductDao {
@@ -246,6 +248,113 @@ public class ProductDaoImpl implements ProductDao {
         return customerFavoriteProducts;
     }
 
+    /**
+     * Helper method used in rateProduct.
+     */
+    @Override 
+    public int fetchRatingByProductIdAndCustomerId(int customerId, int productId) {
+
+        int currentRating = -1;     // default value
+
+        try {
+            PreparedStatement pst = con.prepareStatement("select rating from rating where userId = ? and productId = ?;");
+            pst.setInt(1, customerId);
+            pst.setInt(2, productId);
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+                currentRating = rs.getInt(1);
+            }
+            
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+
+        return currentRating;
+    }
+
+
+    /**
+     * Helper method used in rateProduct - used to insert a new rating if 
+     * this is the first time this customer rates this product.
+     */
+    @Override
+    public void insertNewRating(int customerId, int productId, int rating) {
+        try {
+            PreparedStatement pst = con.prepareStatement("insert into rating (userId, productId, rating) values (?, ?, ?);");
+            pst.setInt(1, customerId);
+            pst.setInt(2, productId);
+            pst.setInt(3, rating);
+            pst.executeUpdate();
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+    } 
+
+    
+    /**
+     * Helper method used in rateProduct - used to update a rating if one
+     * exists already for this product and this customer.
+     */
+    @Override
+    public void updateCurrentRating(int customerId, int productId, int rating) {
+        try {
+            PreparedStatement pst = con.prepareStatement("update rating set rating = ? where userId = ? and productId = ?;");
+            pst.setInt(1, rating);
+            pst.setInt(2, customerId);
+            pst.setInt(3, productId);
+            pst.executeUpdate();
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+    }
+
+    /**
+     * rateProduct either updates a current rating or inserts a new rating.
+     */
+    @Override
+    public void rateProduct(int customerId, int productId, int rating) {
+        try {
+            int currentRating = fetchRatingByProductIdAndCustomerId(customerId, productId);
+
+            if (currentRating==-1) {
+                insertNewRating(customerId, productId, currentRating);
+            } else if (currentRating>=0 & currentRating<=5) {
+                updateCurrentRating(customerId, productId, currentRating);
+            } else {
+                System.out.println("currentRating value is outside valid bounds.");
+            }
+
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+    }
+
+
+    /**
+     * customerRatings is defined as <productId, rating> for a specified customer.
+     */
+    @Override
+    public Map<Integer, Integer> fetchAllCustomerRatings(int customerId) {
+
+        Map<Integer, Integer> customerRatings = new HashMap<Integer, Integer>();    
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("select productId, rating from rating where userId=" + customerId + ";");
+            while (rs.next()) {
+                customerRatings.put(rs.getInt(1), rs.getInt(2));
+            }
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+        return customerRatings;
+    }
+
+    @Override
+    public List<Product> fetchPastPurchasedProducts(int customerId) {
+        return null;
+    }
+
     @Override
     public List<Product> search(String query) {
         List<Product> products = new ArrayList<>();
@@ -266,3 +375,4 @@ public class ProductDaoImpl implements ProductDao {
         return products;
     }
 }
+
