@@ -3,18 +3,20 @@ package ca.concordia.eats.dao;
 import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.Purchase;
 import ca.concordia.eats.dto.LineItem;
+import javax.servlet.http.HttpSession;
 
 public interface OrderDao {
 
-    float calculateBasketItemPrice();
+    public float calculateBasketItemPrice(int productId, HttpSession session);
 
-    float sumBasketItemPrices();
+    public float sumBasketItemPrices(HttpSession session);
 
-    float calculateTotalPrice();
+    public float calculateTotalPrice(HttpSession session, float deliveryFee);
 
-    Purchase checkout();
+    public Purchase checkout(HttpSession session);
 
-    boolean addToBasket(Product product, int quantity);
+    public boolean addToBasket(Product product, int quantity, HttpSession session);
 
-    boolean updateBasket(Product product, int quantity);
+    public boolean updateBasket(Product product, int quantity, HttpSession session);
 }
+

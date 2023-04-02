@@ -1,5 +1,6 @@
 package ca.concordia.eats.dao;
 
+import ca.concordia.eats.dto.Basket;
 import ca.concordia.eats.dto.Purchase;
 import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.LineItem;
@@ -9,6 +10,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.servlet.http.HttpSession;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -30,103 +33,104 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public float calculateBasketItemPrice() {
+    public float calculateBasketItemPrice(int productId, HttpSession session) {
+        Basket basket = (Basket) session.getAttribute("basket");
+        if (basket == null) {
+            return 0; // basket not found
+        }
 
-        float totalPrice = 0.0f;
-
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject", "root", "");
-             PreparedStatement stmt = con.prepareStatement("SELECT p.price, pd.quantity FROM product p JOIN purchase_details pd ON p.id = pd.productId")) {
-
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                float price = rs.getFloat("price");
-                int quantity = rs.getInt("quantity");
-                totalPrice += price * quantity;
+        List<Product> lineItems = basket.getLineItems();
+        for (Product p : lineItems) {
+            if (p.getId() == productId) {
+                return p.getPrice() * p.getQuantity();
             }
-        } catch (SQLException ex) {
-            System.out.println("Error calculating basket item price: " + ex.getMessage());
+        }
+
+        return 0; // product not found in basket
+    }
+
+
+    @Override
+    public float sumBasketItemPrices(HttpSession session) {
+        Basket basket = (Basket) session.getAttribute("basket");
+        if (basket == null) {
+            return 0; // basket not found
+        }
+
+        List<Product> lineItems = basket.getLineItems();
+        float totalPrice = 0;
+        for (Product p : lineItems) {
+            totalPrice += p.getPrice() * p.getQuantity();
         }
 
         return totalPrice;
     }
 
     @Override
-    public float sumBasketItemPrices() {
-
-        return 0;
+    public float calculateTotalPrice(HttpSession session, float deliveryFee) {
+        float subtotal = sumBasketItemPrices(session);
+        float tax = 0.15f * subtotal; // calculate 15% tax on subtotal
+        float total = subtotal + tax + deliveryFee; // add tax and delivery fee to subtotal
+        return total;
     }
 
     @Override
-    public float calculateTotalPrice() {
-
-        return 0;
-    }
-
-    @Override
-    public Purchase checkout() {
+    public Purchase checkout(HttpSession session) {
 
         return null;
     }
 
-    private int generateNewPurchaseDetailsId() {
-        int newId = 0;
-        try (PreparedStatement stmt = con.prepareStatement("SELECT MAX(id) AS max_id FROM purchase_details")) {
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                newId = rs.getInt("max_id") + 1;
-            } else {
-                newId = 1;
-            }
-        } catch (SQLException e) {
-            System.out.println("Error generating new purchase details id: " + e.getMessage());
-        }
-        return newId;
+    public int generateUniqueBasketId() {
+        // Get the current time in milliseconds
+        long currentTime = System.currentTimeMillis();
+
+        // Concatenate the current time with a random number to get a unique ID
+        int uniqueId = (int) (currentTime % 1000000) * 100 + (int) (Math.random() * 100);
+
+        return uniqueId;
     }
 
     @Override
-    public boolean addToBasket(Product product, int quantity) {
-
-        int newId = generateNewPurchaseDetailsId();
-
-        try (PreparedStatement stmt = con.prepareStatement("INSERT INTO purchase_details (id, productId, quantity) VALUES (?, ?, ?)")) {
-            stmt.setInt(1, newId);
-            stmt.setInt(2, product.getId());
-            stmt.setInt(3, quantity);
-            int rowsAffected = stmt.executeUpdate();
-            return rowsAffected == 1;
-        } catch (SQLException e) {
-            System.out.println("Error adding product to basket: " + e.getMessage());
-            return false;
+    public boolean addToBasket(Product product, int quantity, HttpSession session) {
+        Basket basket = (Basket) session.getAttribute("basket");
+        if (basket == null) {
+            basket = new Basket();
+            basket.setBasketId(generateUniqueBasketId()); // set a unique basketId
+            session.setAttribute("basket", basket);
         }
+
+        List<Product> lineItems = basket.getLineItems();
+        for (Product p : lineItems) {
+            if (p.getId() == product.getId()) {
+                p.setQuantity(p.getQuantity() + quantity);
+                basket.setTotalPrice(basket.getTotalPrice() + (p.getPrice() * quantity)); // update totalPrice
+                return true;
+            }
+        }
+        lineItems.add(product);
+        product.setQuantity(quantity);
+        basket.setTotalPrice(basket.getTotalPrice() + (product.getPrice() * quantity)); // update totalPrice
+        return true;
     }
 
     @Override
-    public boolean updateBasket(Product product, int quantity) {
-
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject", "root", "");
-             PreparedStatement stmt = con.prepareStatement("UPDATE purchase_details SET quantity = ? WHERE productId = ?")) {
-
-            stmt.setInt(1, quantity);
-            stmt.setInt(2, product.getId());
-
-            int rowsUpdated = stmt.executeUpdate();
-
-            if (quantity == 0) {
-                // If quantity is 0, delete the row from purchase_details
-                try (PreparedStatement deleteStmt = con.prepareStatement("DELETE FROM purchase_details WHERE productId = ?")) {
-                    deleteStmt.setInt(1, product.getId());
-                    deleteStmt.executeUpdate();
-                } catch (SQLException ex) {
-                    System.out.println("Error deleting row from purchase_details: " + ex.getMessage());
-                    return false;
-                }
-            }
-
-            return rowsUpdated > 0; // returns true if at least one row was updated
-        } catch (SQLException ex) {
-            System.out.println("Error updating basket: " + ex.getMessage());
-            return false;
+    public boolean updateBasket(Product product, int quantity, HttpSession session) {
+        Basket basket = (Basket) session.getAttribute("basket");
+        if (basket == null) {
+            return false; // basket not found
         }
+
+        List<Product> lineItems = basket.getLineItems();
+        float productTotalPrice = product.getPrice() * quantity;
+        for (Product p : lineItems) {
+            if (p.getId() == product.getId()) {
+                p.setQuantity(quantity);
+                basket.setTotalPrice(basket.getTotalPrice() + (p.getPrice() * (quantity - p.getQuantity()))); // update totalPrice
+                p.setPrice(productTotalPrice); // set the total price for the product to the newly calculated value
+                return true;
+            }
+        }
+
+        return false; // product not found in basket
     }
 }
