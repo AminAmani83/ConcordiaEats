@@ -20,6 +20,6 @@ public interface UserService {
     public Customer getCustomerById(int userId);
     public Customer updateCustomer(Customer customer);
     public Customer createCustomer(Customer customer);
-    public boolean removeCustomer(int userId);
+    public boolean removeCustomer(UserCredentials userCredentials);
    
 }

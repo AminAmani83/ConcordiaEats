@@ -191,11 +191,43 @@ public class UserDaoImpl implements UserDao {
         return customer;
     }
 
+    /**
+     * Helper method to removeCustomer
+     */
+    @Override
+    public boolean checkUserIsCustomer(UserCredentials userCredentials) {
+        
+        boolean isCustomer = true;
+        User user = fetchUserByCredentials(userCredentials);
+
+        if (user.getRole().equalsIgnoreCase("ADMIN")) {
+            isCustomer = false;
+        }
+        return isCustomer;
+    }
+
 
     @Override
-    public boolean removeCustomer(int userId) {
-        return removeUser(userId);
-    }
+    public boolean removeCustomer(UserCredentials userCredentials) {
+
+        boolean customerRemoved = false;
+        boolean isCustomer = checkUserIsCustomer(userCredentials);
+
+        if (isCustomer) {
+            try {
+
+                PreparedStatement pst = con.prepareStatement("delete from user where username = ? and password = ?;");
+                pst.setString(1, userCredentials.getUsername());
+                pst.setString(1, userCredentials.getPassword());
+                pst.executeUpdate();
+    
+                customerRemoved = true;
+    
+            } catch(Exception ex) {
+                System.out.println("Exception Occurred: " + ex.getMessage());
+            }    
+        }
+        return customerRemoved;    }
 
 
     public boolean checkUserByCredentials(UserCredentials userCredentials) {

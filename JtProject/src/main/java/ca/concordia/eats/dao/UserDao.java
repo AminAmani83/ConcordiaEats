@@ -18,13 +18,14 @@ public interface UserDao {
     public User createUser(User user);
     public boolean checkUserByCredentials(UserCredentials userCredentials);
     public User fetchUserByCredentials (UserCredentials userCredentials);
+    public boolean checkUserIsCustomer(UserCredentials userCredentials);    // helper method for checking that the User is indeed a customer and not an admin.
 
     // CRUD CUSTOMER
     public List<Customer> getAllCustomers();
     public Customer getCustomerById(int userId);
     public Customer updateCustomer(Customer customer);      // equivalent to updateProfile() in our class diagram
     public Customer createCustomer(Customer customer);      // equivalent to register() in our class diagram
-    public boolean removeCustomer(int userId);
+    public boolean removeCustomer(UserCredentials userCredentials);
 
 
 }
