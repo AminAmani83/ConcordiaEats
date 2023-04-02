@@ -102,7 +102,7 @@ public class UserDaoImpl implements UserDao {
     public boolean checkUserByCredentials(UserCredentials userCredentials) {
         boolean userExists = false;
         try {
-            PreparedStatement stmt = con.prepareStatement("SELECT * FROM users WHERE username = ? AND password = ?");
+            PreparedStatement stmt = con.prepareStatement("SELECT * FROM user WHERE username = ? AND password = ?");
             stmt.setString(1, userCredentials.getUsername());
             stmt.setString(2, userCredentials.getPassword());
             ResultSet rs = stmt.executeQuery();
@@ -112,7 +112,26 @@ public class UserDaoImpl implements UserDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return userExists;
+            return userExists;
+    }
+
+    @Override
+    public User fetchUserByCredentials(UserCredentials userCredentials) {
+        User user = null;
+        try {
+            PreparedStatement stmt = con.prepareStatement("SELECT * FROM user WHERE username = ? AND password = ?");
+            stmt.setString(1, userCredentials.getUsername());
+            stmt.setString(2, userCredentials.getPassword());
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                // TODO: get all user data for user session management
+                user = new User();
+                user.setUsername(rs.getString("username"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+            return user;
     }
 
 }

@@ -6,6 +6,7 @@ import ca.concordia.eats.dto.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @Service
@@ -78,4 +79,8 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> fetchCustomerFavoriteProducts(int customerId) {
         return productDao.fetchCustomerFavoriteProducts(customerId);
     }
+    public List<Product> search(String query) {
+        return productDao.search(query);
+    }
+
 }

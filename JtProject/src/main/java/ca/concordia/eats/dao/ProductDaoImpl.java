@@ -9,6 +9,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -243,5 +244,25 @@ public class ProductDaoImpl implements ProductDao {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
         return customerFavoriteProducts;
+    }
+
+    @Override
+    public List<Product> search(String query) {
+        List<Product> products = new ArrayList<>();
+        String sql = "SELECT * FROM product WHERE name LIKE ?";
+        try {
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, "%" + query + "%");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Product product = new Product();
+                product.setId(rs.getInt("id"));
+                product.setName(rs.getString("name"));
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return products;
     }
 }

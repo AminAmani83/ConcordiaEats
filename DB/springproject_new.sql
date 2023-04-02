@@ -98,12 +98,12 @@ CREATE TABLE IF NOT EXISTS `springproject`.`purchase` (
   PRIMARY KEY (`id`),
   INDEX `purchase_users_idx` (`userId` ASC) INVISIBLE,
   INDEX `FK_purchase_promotions_idx` (`promotionId` ASC) INVISIBLE,
-  CONSTRAINT `FK_purchase_users`
+  CONSTRAINT `FK_purchase_users_2`
     FOREIGN KEY (`userId`)
     REFERENCES `springproject`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `FK_purchase_promotions`
+  CONSTRAINT `FK_purchase_promotions_2`
     FOREIGN KEY (`promotionId`)
     REFERENCES `springproject`.`promotion` (`id`)
     ON DELETE NO ACTION
@@ -152,6 +152,11 @@ ENGINE = InnoDB
 AUTO_INCREMENT = 18
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
+
+INSERT INTO `springproject`.`product`
+(`name`, `description`, `imagePath`, `categoryid`, `price`, `salesCount`, `isOnSale`, `discountPercent`)
+VALUES
+('Sample Product', 'This is a sample product description.', '/images/sample-product.jpg', 1, 24.99, 0, 1, 0.10);
 
 
 -- -----------------------------------------------------
