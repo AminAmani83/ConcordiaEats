@@ -42,4 +42,11 @@ public class Promotion {
     public String getPromotionType(int promotionTypeId){
         return promotionType;
     }
+    public String getPromotionType() {
+        return promotionType;
+    }
+    public void setPromotionType(String promotionType) {
+        this.promotionType = promotionType;
+    }
+
 }
