@@ -253,20 +253,24 @@ public class ProductDaoImpl implements ProductDao {
      */
     @Override 
     public int fetchRatingByProductIdAndCustomerId(int customerId, int productId) {
+
+        int currentRating = -1;     // default value
+
         try {
             PreparedStatement pst = con.prepareStatement("select rating from rating where userId = ? and productId = ?;");
             pst.setInt(1, customerId);
             pst.setInt(2, productId);
             ResultSet rs = pst.executeQuery();
 
-            int currentRating = rs.getInt(1);
-            return currentRating;
-
+            if (rs.next()) {
+                currentRating = rs.getInt(1);
+            }
+            
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
 
-        return -1;
+        return currentRating;
     }
 
 
@@ -350,7 +354,7 @@ public class ProductDaoImpl implements ProductDao {
     public List<Product> fetchPastPurchasedProducts(int customerId) {
         return null;
     }
-    
+
     @Override
     public List<Product> search(String query) {
         List<Product> products = new ArrayList<>();
