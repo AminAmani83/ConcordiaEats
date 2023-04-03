@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import ca.concordia.eats.dao.UserDao;
 import ca.concordia.eats.dto.User;
+import ca.concordia.eats.dto.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Override
-    public List<User> getAlUsers() {
+    public List<User> getAllUsers() {
         return userDao.getAllUsers();
     }
 
@@ -39,18 +40,38 @@ public class UserServiceImpl implements UserService {
         return userDao.createUser(user);
     }
 
-    @Override
-    public boolean removeUser(int userId) {
-        return userDao.removeUser(userId);
-    }
-
     public boolean validateUserLogin(UserCredentials userCredentials) {
         return userDao.checkUserByCredentials(userCredentials);
+    }
+
+
+    // Below are Customer related service classes.
+    @Override
+    public List<Customer> getAllCustomers() {
+        return userDao.getAllCustomers();
+    }
+
+    @Override
+    public Customer getCustomerById(int userId) {
+        return userDao.getCustomerById(userId);
+    }
+
+    @Override
+    public Customer updateCustomer(Customer customer) {
+        return userDao.updateCustomer(customer);
     }
 
     public User fetchUserData(UserCredentials userCredentials) {
         return userDao.fetchUserByCredentials(userCredentials);
     }
 
+    @Override
+    public Customer createCustomer(Customer customer) {
+        return userDao.createCustomer(customer);
+    }
 
+    @Override
+    public boolean removeCustomer(UserCredentials userCredentials) {
+        return userDao.removeCustomer(userCredentials);
+    }
 }
