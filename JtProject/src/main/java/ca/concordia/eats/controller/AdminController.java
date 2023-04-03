@@ -33,6 +33,13 @@ public class AdminController {
 	private UserService userService;
 
 	Connection con;
+
+	/**
+     * Uses the db.properties file in resources to retrieve db connection parameters
+     * username=<my-username>
+     * password=<my-secret-password>
+     * @throws IOException
+     */
 	public AdminController() throws IOException {
 		String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
 		String dbConfigPath = rootPath + "db.properties";

@@ -42,6 +42,13 @@ public class UserController{
 	public String getProduct(Model model) {
 		return "uproduct";
 	}
+
+	/**
+     * Uses the db.properties file in resources to retrieve db connection parameters
+     * username=<my-username>
+     * password=<my-secret-password>
+     * @throws IOException
+     */
 	@RequestMapping(value = "newuserregister", method = RequestMethod.POST)
 	public String newUseRegister(@RequestParam("username") String username,@RequestParam("password") String password,@RequestParam("email") String email) throws IOException
 	{

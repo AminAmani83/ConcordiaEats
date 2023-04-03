@@ -15,6 +15,12 @@ import java.io.IOException;
 @Repository
 public class UserDaoImpl implements UserDao {
 
+    /**
+     * Uses the db.properties file in resources to retrieve db connection parameters
+     * username=<my-username>
+     * password=<my-secret-password>
+     * @throws IOException
+     */
     private Connection con;
     public UserDaoImpl() throws IOException {
 		String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
