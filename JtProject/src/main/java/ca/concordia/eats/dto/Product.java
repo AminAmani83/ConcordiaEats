@@ -107,4 +107,24 @@ public class Product {
     public void setCategory(Category category) {
         this.category = category;
     }
+    
+ 
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof Product))
+            return false;
+        
+        Product other = (Product)o;
+        
+        return this.id == other.id;
+    }
+    
+    @Override
+    public final int hashCode() {
+    	
+    	return this.id;
+    }
+
 }

@@ -22,8 +22,7 @@
                                         </div>
                                         <p>$${bestSellerProduct.price}</p>
                                         <p>${bestSellerProduct.description}</p>
-                                        <form action="basket/add" method="get">
-                                            <input type="hidden" name="id" value="${bestSellerProduct.id}">
+                                        <form action="order/add/${bestSellerProduct.id}" method="get">
                                             <input type="submit" value="Add to Basket" class="btn btn-danger">
                                         </form>
                                     </div><!--enddetails-->
@@ -52,8 +51,7 @@
                                         </div>
                                         <p>$${highestRatedProduct.price}</p>
                                         <p>${highestRatedProduct.description}</p>
-                                        <form action="basket/add" method="get">
-                                            <input type="hidden" name="id" value="${highestRatedProduct.id}">
+                                        <form action="order/add/${highestRatedProduct.id}" method="get">
                                             <input type="submit" value="Add to Basket" class="btn btn-danger">
                                         </form>
                                     </div><!--enddetails-->
@@ -80,8 +78,7 @@
                                         </div>
                                         <p>$${recommendedProduct.price}</p>
                                         <p>${recommendedProduct.description}</p>
-                                        <form action="basket/add" method="get">
-                                            <input type="hidden" name="id" value="${recommendedProduct.id}">
+                                        <form action="order/add/${recommendedProduct.id}" method="get">
                                             <input type="submit" value="Add to Basket" class="btn btn-danger">
                                         </form>
                                     </div><!--enddetails-->

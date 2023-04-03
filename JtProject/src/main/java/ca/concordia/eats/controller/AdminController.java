@@ -1,5 +1,6 @@
 package ca.concordia.eats.controller;
 
+import ca.concordia.eats.dto.Basket;
 import ca.concordia.eats.dto.Category;
 import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.User;
@@ -83,10 +84,12 @@ public class AdminController {
 			userCredentials.setPassword(password);
 			boolean isValid = userService.validateUserLogin(userCredentials);
 			if (isValid) {
+				Basket basket = new Basket();
 				usernameForClass = username;
 				user = userService.fetchUserData(userCredentials);
 				session.setAttribute("user", user);
 				//User u = (User) session.getAttribute("user");
+				session.setAttribute("basket", basket);
 				return "redirect:/index";
 			} else {
 				model.addAttribute("message", "Invalid Username or Password");

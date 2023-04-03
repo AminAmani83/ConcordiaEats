@@ -258,6 +258,7 @@ public class UserDaoImpl implements UserDao {
                 // TODO: get all user data for user session management
                 user = new User();
                 user.setUsername(rs.getString("username"));
+                user.setUserId(rs.getInt("id"));
             }
         } catch (SQLException e) {
             e.printStackTrace();

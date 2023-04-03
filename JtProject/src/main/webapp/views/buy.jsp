@@ -13,7 +13,7 @@
 					
 <div class="body-text">Write your name in the right fields. Also write your imaginary card number. By clicking CCV field card will turn.</div>
 
-  <form>
+  <form  action="../../../makeorder">
     <div class="form-container">
       <div class="personal-information">
         <h1>Payment Information</h1>
