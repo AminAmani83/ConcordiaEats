@@ -11,6 +11,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 @Service
 public class ProductServiceImpl implements ProductService {
 
@@ -98,7 +100,7 @@ public class ProductServiceImpl implements ProductService {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'fetchPastPurchasedProducts'");
     }
-    public List<Product> search(String query) {
+    public List<Product> search(String query ) {
         return productDao.search(query);
     }
 

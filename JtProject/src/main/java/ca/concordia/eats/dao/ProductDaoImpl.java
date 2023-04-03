@@ -2,6 +2,8 @@ package ca.concordia.eats.dao;
 
 import ca.concordia.eats.dto.Category;
 import ca.concordia.eats.dto.Product;
+import ca.concordia.eats.dto.User;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -13,6 +15,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import java.util.HashMap;
 
 @Repository
@@ -358,8 +363,8 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public List<Product> search(String query) {
         List<Product> products = new ArrayList<>();
-        String sql = "SELECT * FROM product WHERE name LIKE ?";
         try {
+            String sql = "SELECT * FROM product WHERE name LIKE ?";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, "%" + query + "%");
             ResultSet rs = stmt.executeQuery();
@@ -372,7 +377,8 @@ public class ProductDaoImpl implements ProductDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return products;
+		return products;
+   
     }
 }
 
