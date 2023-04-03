@@ -352,8 +352,32 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public List<Product> fetchPastPurchasedProducts(int customerId) {
-        return null;
-    }
+        """select p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, 
+        p.discountPercent, r.rating, c.id as categoryId, c.name as categoryName from product p join category c on p.categoryid = c.id left join rating r on r.productId = p.id order by p.id desc""",
+
+
+        sqlQuery = ;
+        return jdbcTemplate.query(sqlQuery,
+            (rs, rowNum) ->
+                    new Product(
+                            rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getString("description"),
+                            rs.getString("imagePath"),
+                            rs.getFloat("price"),
+                            rs.getInt("salesCount"),
+                            rs.getBoolean("isOnSale"),
+                            rs.getFloat("discountPercent"),
+                            rs.getDouble("rating"),
+                            new Category(rs.getInt("categoryId"), rs.getString("categoryName"))
+                    )
+    );
+}
+
+
+
+
+    
 
     @Override
     public List<Product> search(String query) {
