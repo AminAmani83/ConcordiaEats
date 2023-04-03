@@ -14,6 +14,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Properties;
+import java.io.FileReader;
+import java.io.IOException;
 
 @Repository
 public class ProductDaoImpl implements ProductDao {
@@ -23,10 +26,17 @@ public class ProductDaoImpl implements ProductDao {
 
     Connection con;
 
-    public ProductDaoImpl() {
-        try {
-            this.con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject", "root", "");
-        } catch (Exception e) {
+    public ProductDaoImpl() throws IOException {
+        String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
+		String dbConfigPath = rootPath + "db.properties";
+
+		FileReader reader = new FileReader(dbConfigPath);
+		Properties dbProperties = new Properties();
+		dbProperties.load(reader);
+
+		try {
+			this.con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject", dbProperties.getProperty("username"), dbProperties.getProperty("password"));
+       } catch (Exception e) {
             System.out.println("Error connecting to the DB: " + e.getMessage());
         }
     }
