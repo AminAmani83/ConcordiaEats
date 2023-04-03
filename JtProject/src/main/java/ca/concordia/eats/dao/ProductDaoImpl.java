@@ -350,32 +350,39 @@ public class ProductDaoImpl implements ProductDao {
         return customerRatings;
     }
 
+    /**
+     * Retrieves all products that were already purchased by a given customer so that
+     * this customer is allowed to rate them.
+     */
     @Override
     public List<Product> fetchPastPurchasedProducts(int customerId) {
-        """select p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, 
-        p.discountPercent, r.rating, c.id as categoryId, c.name as categoryName from product p join category c on p.categoryid = c.id left join rating r on r.productId = p.id order by p.id desc""",
 
+        String sqlQuery = "SELECT p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, c.id, c.name FROM product p  JOIN category c on p.categoryid = c.id WHERE p.id IN (SELECT DISTINCT(productId) FROM purchase_details WHERE purchaseId IN (SELECT pur.id FROM purchase pur WHERE userId = ?));";
+        List<Product> pastPurchaseProducts = new LinkedList<>();
 
-        sqlQuery = ;
-        return jdbcTemplate.query(sqlQuery,
-            (rs, rowNum) ->
-                    new Product(
-                            rs.getInt("id"),
-                            rs.getString("name"),
-                            rs.getString("description"),
-                            rs.getString("imagePath"),
-                            rs.getFloat("price"),
-                            rs.getInt("salesCount"),
-                            rs.getBoolean("isOnSale"),
-                            rs.getFloat("discountPercent"),
-                            rs.getDouble("rating"),
-                            new Category(rs.getInt("categoryId"), rs.getString("categoryName"))
-                    )
-    );
-}
+        try {
+            PreparedStatement pst = con.prepareStatement(sqlQuery);
+            pst.setInt(1, customerId);
+            ResultSet rs = pst.executeQuery();
 
-
-
+            while (rs.next()) {
+                pastPurchaseProducts.add(new Product(rs.getInt(1),          // id
+                                                    rs.getString(2),        // name
+                                                    rs.getString(3),        // description    
+                                                    rs.getString(4),        // image path
+                                                    rs.getFloat(5),         // price
+                                                    rs.getInt(6),           // sales count  
+                                                    rs.getBoolean(7),       // is on sale
+                                                    rs.getFloat(8),         // discountPercent
+                                                    new Category(rs.getInt(9), rs.getString(10))       /// category
+                                                    )
+                                        );
+            }
+         } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+        return pastPurchaseProducts;
+    }
 
     
 
