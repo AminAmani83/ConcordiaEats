@@ -42,7 +42,13 @@ public class MainController {
                                 @RequestParam("productid") int productId, 
                                 @RequestParam("rating") int rating) {
 
-        productService.rateProduct(customerId, productId, rating);
+        if (productService.hasPurchased(customerId, productId)) {
+            productService.rateProduct(customerId, productId, rating);
+        } else {
+            /** TODO */
+            // Find something to do if the customer cannot rate.
+        }
+
         return "redirect:/product/";
     }
 

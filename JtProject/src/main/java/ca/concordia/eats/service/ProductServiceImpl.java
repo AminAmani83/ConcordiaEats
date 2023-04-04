@@ -99,6 +99,12 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> fetchPastPurchasedProducts(int customerId) {
         return productDao.fetchPastPurchasedProducts(customerId);
     }
+
+    @Override
+    public boolean hasPurchased(int customerId, int productId) {
+        return productDao.hasPurchased(customerId, productId);
+    }
+
     public List<Product> search(String query) {
         return productDao.search(query);
     }

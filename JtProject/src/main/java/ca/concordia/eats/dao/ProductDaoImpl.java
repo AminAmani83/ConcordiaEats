@@ -406,7 +406,32 @@ public class ProductDaoImpl implements ProductDao {
         return pastPurchaseProducts;
     }
 
-    
+
+    /**
+     * Helper method that facilitates handling of potential new rating.
+     */
+    @Override
+    public boolean hasPurchased(int customerId, int productId) {
+        String sqlQuery = "SELECT DISTINCT(productId) FROM purchase_details WHERE purchaseId in (SELECT id FROM purchase WHERE userId = ?) AND productId = ? )";
+        boolean hasPurchased = false;
+
+        try {
+            PreparedStatement pst = con.prepareStatement(sqlQuery);
+            pst.setInt(1, customerId);
+            pst.setInt(2, productId);
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+                hasPurchased = true;
+            }
+         } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+
+        return hasPurchased;
+    }
+
+
 
     @Override
     public List<Product> search(String query) {
