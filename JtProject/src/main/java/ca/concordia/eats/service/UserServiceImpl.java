@@ -57,6 +57,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Customer getCustomerByCredential(UserCredentials userCredentials) {
+        return userDao.getCustomerByCredential(userCredentials);
+    }   
+
+    @Override
     public Customer updateCustomer(Customer customer) {
         return userDao.updateCustomer(customer);
     }

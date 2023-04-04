@@ -18,6 +18,7 @@ public interface UserService {
     // CRUD CUSTOMER
     public List<Customer> getAllCustomers();
     public Customer getCustomerById(int userId);
+    public Customer getCustomerByCredential(UserCredentials userCredentials);
     public Customer updateCustomer(Customer customer);
     public Customer createCustomer(Customer customer);
     public boolean removeCustomer(UserCredentials userCredentials);

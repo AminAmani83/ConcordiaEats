@@ -92,6 +92,7 @@ public class AdminController {
 		
 		return "userLogin";
 	}
+	
 	@RequestMapping(value = "userloginvalidate", method = RequestMethod.POST)
 	public String userLogin(@RequestParam("username") String username, @RequestParam("password") String password, Model model, HttpSession session) {
 
@@ -236,12 +237,30 @@ public class AdminController {
 		return "redirect:/admin/categories";
 	}
 
+	/**
+	 * To display all customers in the admin panel.
+	 * @param model
+	 * @return
+	 */
 	@GetMapping("/admin/customers")
 	public String getAllCustomers(Model model) {
 		List<Customer> allCustomers = userService.getAllCustomers();
 		model.addAttribute("allCustomers", allCustomers);
 		return "displayCustomers";
 	}
+
+	/**
+	 * To allow the admin to remove customers.
+	 * @param userCredentials
+	 * @return
+	 */
+	@GetMapping("/admin/customers/delete")
+	public String removeCustomer(@RequestParam("id") UserCredentials userCredentials) {
+		userService.removeCustomer(userCredentials);
+		return "redirect:/admin/customers";
+	}
+
+
 
 	@GetMapping("profileDisplay")
 	public String profileDisplay(Model model) {
