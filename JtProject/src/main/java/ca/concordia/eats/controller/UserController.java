@@ -47,6 +47,7 @@ public class UserController{
      * Uses the db.properties file in resources to retrieve db connection parameters
      * username=<my-username>
      * password=<my-secret-password>
+	 * url=<jdbc-url>
      * @throws IOException
      */
 	@RequestMapping(value = "newuserregister", method = RequestMethod.POST)
@@ -61,7 +62,7 @@ public class UserController{
 
 		try
 		{
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject", dbProperties.getProperty("username"), dbProperties.getProperty("password"));
+			Connection con = DriverManager.getConnection(dbProperties.getProperty("url"), dbProperties.getProperty("username"), dbProperties.getProperty("password"));
 			PreparedStatement pst = con.prepareStatement("insert into users(username,password,email) values(?,?,?);");
 			pst.setString(1,username);
 			pst.setString(2, password);

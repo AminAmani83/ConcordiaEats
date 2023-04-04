@@ -19,6 +19,7 @@ public class UserDaoImpl implements UserDao {
      * Uses the db.properties file in resources to retrieve db connection parameters
      * username=<my-username>
      * password=<my-secret-password>
+     * url=<jdbc-url>
      * @throws IOException
      */
     private Connection con;
@@ -31,7 +32,7 @@ public class UserDaoImpl implements UserDao {
 		dbProperties.load(reader);
 
 		try {
-			this.con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject", dbProperties.getProperty("username"), dbProperties.getProperty("password"));
+			this.con = DriverManager.getConnection(dbProperties.getProperty("url"), dbProperties.getProperty("username"), dbProperties.getProperty("password"));
         } catch(Exception e) {
             System.out.println("Error connecting to the DB: " + e.getMessage());
         }
