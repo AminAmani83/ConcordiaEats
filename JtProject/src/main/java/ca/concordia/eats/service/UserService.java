@@ -13,7 +13,7 @@ public interface UserService {
     public User updateUser(User user);
     public User createUser(User user);
     public boolean validateUserLogin(UserCredentials userCredentials);
-    public User fetchUserData(UserCredentials userCredentials);
+    public Customer fetchCustomerData(UserCredentials userCredentials);
 
     // CRUD CUSTOMER
     public List<Customer> getAllCustomers();
