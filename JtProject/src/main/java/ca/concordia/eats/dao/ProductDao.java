@@ -6,6 +6,8 @@ import ca.concordia.eats.dto.Product;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 public interface ProductDao {
     // CRUD PRODUCT
     public List<Product> fetchAllProducts();

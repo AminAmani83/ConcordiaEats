@@ -11,6 +11,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 @Service
 public class ProductServiceImpl implements ProductService {
 
@@ -97,7 +99,6 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> fetchPastPurchasedProducts(int customerId) {
         return productDao.fetchPastPurchasedProducts(customerId);
     }
-
     public List<Product> search(String query) {
         return productDao.search(query);
     }

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 @Controller
 public class MainController {
 
@@ -40,7 +42,7 @@ public class MainController {
     }
 
     @GetMapping("/search")
-    public String search(@RequestParam("query") String query, Model model) {
+    public String search(@RequestParam("query") String query, Model model ) {
         List<Product> products = productService.search(query);
         model.addAttribute("products", products);
         return "search-results";
