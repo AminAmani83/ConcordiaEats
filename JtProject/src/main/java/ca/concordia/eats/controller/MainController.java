@@ -36,4 +36,14 @@ public class MainController {
         model.addAttribute("products", products);
         return "search-results";
     }
+
+    @GetMapping("/product/rate-product")
+    public String rateProduct(@RequestParam("customerid") int customerId, 
+                                @RequestParam("productid") int productId, 
+                                @RequestParam("rating") int rating) {
+
+        productService.rateProduct(customerId, productId, rating);
+        return "redirect:/product/";
+    }
+
 }
