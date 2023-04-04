@@ -1,5 +1,7 @@
 package ca.concordia.eats.controller;
 
+import ca.concordia.eats.dto.Customer;
+import ca.concordia.eats.dto.Favorite;
 import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.User;
 import ca.concordia.eats.service.ProductService;
@@ -22,23 +24,25 @@ public class MainController {
 
     @GetMapping("/product/make-favorite")
     public String makeFavorite(@RequestParam("productid") int productId, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        productService.makeFavorite(user.getUserId(), productId);
-        return "redirect:/product/";
+        Customer customer = (Customer) session.getAttribute("user");
+        productService.makeFavorite(customer.getUserId(), productId);
+        customer.setFavorite(new Favorite(productService.fetchCustomerFavoriteProducts(customer.getUserId())));
+        return "redirect:/index/";
     }
 
     @GetMapping("/product/remove-favorite")
     public String removeFavorite(@RequestParam("productid") int productId, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        productService.removeFavorite(user.getUserId(), productId);
-        return "redirect:/product/";
+        Customer customer = (Customer) session.getAttribute("user");
+        productService.removeFavorite(customer.getUserId(), productId);
+        customer.setFavorite(new Favorite(productService.fetchCustomerFavoriteProducts(customer.getUserId())));
+        return "redirect:/index/";
     }
 
     @GetMapping("/product/get-favorites")
-    public String fetchCustomerFavoriteProducts(@RequestParam("productid") int productId, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        productService.fetchCustomerFavoriteProducts(user.getUserId());
-        return "redirect:/product/favorites";
+    public String fetchCustomerFavoriteProducts(HttpSession session) {
+        Customer customer = (Customer) session.getAttribute("user");
+        productService.fetchCustomerFavoriteProducts(customer.getUserId());
+        return "redirect:/index/favorites";
     }
 
     @GetMapping("/search")

@@ -37,7 +37,8 @@ public class ProductDaoImpl implements ProductDao {
      * @throws IOException
      */
     public ProductDaoImpl() throws IOException {
-        String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
+        String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath()
+                .replaceAll("%20", " ");
         String dbConfigPath = rootPath + "db.properties";
 
         FileReader reader = new FileReader(dbConfigPath);
