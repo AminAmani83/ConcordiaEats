@@ -34,6 +34,7 @@
             height: auto;
         }
     </style>
+
     <meta charset="UTF-8">
     <title>Search Results</title>
 </head>
@@ -55,9 +56,13 @@
     <tr>
         <td><%= product.getId() %></td>
         <td><%= product.getName() %></td>
+        <td><%= product.getPrice()%></td>
+        <td><%= product.getDescription()%></td>
+        <td><img src="<%= product.getImagePath() %>" alt="<%= product.getName() %>"></td>
     </tr>
     <% } %>
 </table>
+
 <% } else { %>
 <p>No products found.</p>
 <% } %>
