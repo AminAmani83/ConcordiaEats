@@ -5,6 +5,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Properties;
+import java.io.FileReader;
+import java.io.IOException;
 
 import ca.concordia.eats.service.UserService;
 import org.springframework.stereotype.Controller;
@@ -39,12 +42,27 @@ public class UserController{
 	public String getProduct(Model model) {
 		return "uproduct";
 	}
+
+	/**
+     * Uses the db.properties file in resources to retrieve db connection parameters
+     * username=<my-username>
+     * password=<my-secret-password>
+	 * url=<jdbc-url>
+     * @throws IOException
+     */
 	@RequestMapping(value = "newuserregister", method = RequestMethod.POST)
-	public String newUseRegister(@RequestParam("username") String username,@RequestParam("password") String password,@RequestParam("email") String email)
+	public String newUseRegister(@RequestParam("username") String username,@RequestParam("password") String password,@RequestParam("email") String email) throws IOException
 	{
+		String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
+		String dbConfigPath = rootPath + "db.properties";
+
+		FileReader reader = new FileReader(dbConfigPath);
+		Properties dbProperties = new Properties();
+		dbProperties.load(reader);
+
 		try
 		{
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject","root","");
+			Connection con = DriverManager.getConnection(dbProperties.getProperty("url"), dbProperties.getProperty("username"), dbProperties.getProperty("password"));
 			PreparedStatement pst = con.prepareStatement("insert into users(username,password,email) values(?,?,?);");
 			pst.setString(1,username);
 			pst.setString(2, password);
