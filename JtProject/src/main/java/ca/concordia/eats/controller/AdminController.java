@@ -18,6 +18,9 @@ import java.io.IOException;
 import javax.servlet.http.HttpSession;
 import java.sql.*;
 import java.util.List;
+import java.util.Properties;
+import java.io.FileReader;
+import java.io.IOException;
 
 @Controller
 
@@ -30,9 +33,24 @@ public class AdminController {
 	private UserService userService;
 
 	Connection con;
-	public AdminController() {
+
+	/**
+     * Uses the db.properties file in resources to retrieve db connection parameters
+     * username=<my-username>
+     * password=<my-secret-password>
+	 * url=<jdbc-url>
+     * @throws IOException
+     */
+	public AdminController() throws IOException {
+		String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
+		String dbConfigPath = rootPath + "db.properties";
+
+		FileReader reader = new FileReader(dbConfigPath);
+		Properties dbProperties = new Properties();
+		dbProperties.load(reader);
+
 		try {
-			this.con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject", "root", "");
+			this.con = DriverManager.getConnection(dbProperties.getProperty("url"), dbProperties.getProperty("username"), dbProperties.getProperty("password"));
 		} catch(Exception e) {
 			System.out.println("Error connecting to the DB: " + e.getMessage());
 		}

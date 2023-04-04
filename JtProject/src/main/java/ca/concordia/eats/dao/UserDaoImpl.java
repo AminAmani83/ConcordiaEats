@@ -8,14 +8,31 @@ import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
+import java.io.FileReader;
+import java.io.IOException;
 
 @Repository
 public class UserDaoImpl implements UserDao {
 
+    /**
+     * Uses the db.properties file in resources to retrieve db connection parameters
+     * username=<my-username>
+     * password=<my-secret-password>
+     * url=<jdbc-url>
+     * @throws IOException
+     */
     private Connection con;
-    public UserDaoImpl() {
-        try {
-            this.con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject", "root", "");
+    public UserDaoImpl() throws IOException {
+		String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
+		String dbConfigPath = rootPath + "db.properties";
+
+		FileReader reader = new FileReader(dbConfigPath);
+		Properties dbProperties = new Properties();
+		dbProperties.load(reader);
+
+		try {
+			this.con = DriverManager.getConnection(dbProperties.getProperty("url"), dbProperties.getProperty("username"), dbProperties.getProperty("password"));
         } catch(Exception e) {
             System.out.println("Error connecting to the DB: " + e.getMessage());
         }
