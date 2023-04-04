@@ -102,11 +102,11 @@ public class Product {
         this.salesCount = salesCount;
     }
 
-    public boolean isOnSale() {
+    public boolean getIsOnSale() {
         return isOnSale;
     }
 
-    public void setOnSale(boolean onSale) {
+    public void setIsOnSale(boolean onSale) {
         isOnSale = onSale;
     }
 
