@@ -92,7 +92,7 @@ public class AdminController {
 		
 		return "userLogin";
 	}
-	
+
 	@RequestMapping(value = "userloginvalidate", method = RequestMethod.POST)
 	public String userLogin(@RequestParam("username") String username, @RequestParam("password") String password, Model model, HttpSession session) {
 
@@ -260,6 +260,31 @@ public class AdminController {
 		return "redirect:/admin/customers";
 	}
 
+
+	/**
+	 * The admin can update only certain information from the customer.
+	 * @param userCredentials
+	 * @param email
+	 * @param address
+	 * @param phone
+	 * @return
+	 */
+	@GetMapping("/admin/customers/update")
+	public String updateCustomer(@RequestParam("id") UserCredentials userCredentials, 
+								@RequestParam("email") String email, 
+								@RequestParam("address") String address,
+								@RequestParam("phone") String phone) {
+		Customer customer = userService.getCustomerByCredential(userCredentials);
+
+		// update the customer
+		customer.setEmail(email);
+		customer.setPhone(phone);
+		customer.setAddress(address);
+
+		userService.updateCustomer(customer);
+
+		return "redirect:/admin/customers";
+	}
 
 
 	@GetMapping("profileDisplay")
