@@ -2,9 +2,12 @@ package ca.concordia.eats.dao;
 
 import ca.concordia.eats.dto.User;
 import ca.concordia.eats.dto.Customer;
+import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.UserCredentials;
 
 import java.util.List;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * User Data Access Object.
@@ -26,6 +29,8 @@ public interface UserDao {
     public Customer updateCustomer(Customer customer);      // equivalent to updateProfile() in our class diagram
     public Customer createCustomer(Customer customer);      // equivalent to register() in our class diagram
     public boolean removeCustomer(UserCredentials userCredentials);
+	public List<Product> fetchCustomerSearchedProduct(HttpSession user) ;
+
 
 
 }

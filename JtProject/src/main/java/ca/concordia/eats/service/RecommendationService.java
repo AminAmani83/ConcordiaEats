@@ -14,13 +14,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 
 
 public interface RecommendationService {
     // CRUD USER
 
-    public List<Product> FetchPresonanllizedRecomendation(Customer customer);
-	public  List<Product> MostSerachedProducts(Customer customer);
+    public List<Product> FetchPresonanllizedRecomendation(HttpSession session);
+	public  List<Product> MostSerachedProducts(HttpSession session);
 
 
 

@@ -16,11 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.support.DaoSupport;
 import org.springframework.stereotype.Service;
 
-import ca.concordia.eats.dao.CustomerDao;
-import ca.concordia.eats.dao.CustomerDaoImpl;
+
 import ca.concordia.eats.dao.ProductDao;
 import ca.concordia.eats.dao.UserDao;
-import ca.concordia.eats.dto.Customer;
 import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.Recommendation;
 import ca.concordia.eats.dto.User;
@@ -34,17 +32,17 @@ import ca.concordia.eats.dto.User;
 public class RecommendationServiceImp implements RecommendationService {
 
     @Autowired
-    private CustomerDao customerDao;
+    private UserDao userDao;
     private ProductDao productDao;
 
 	@Override
-	public List<Product> FetchPresonanllizedRecomendation(Customer customer) {
-		return MostSerachedProducts(customer);
+	public List<Product> FetchPresonanllizedRecomendation(HttpSession session) {
+		return MostSerachedProducts(session);
 	}
 
 	@Override
-	public  List<Product> MostSerachedProducts(Customer customer){
-	   List<Product> searchedProducts = customerDao.fetchCustomerSearchedProduct( customer);
+	public  List<Product> MostSerachedProducts(HttpSession session){
+	   List<Product> searchedProducts = userDao.fetchCustomerSearchedProduct(session);
        Map<Integer, Integer> searchCountMap = new HashMap<>();
 	   List<Product> topSearchedProducts = null;
 
