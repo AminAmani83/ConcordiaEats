@@ -10,6 +10,7 @@
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
           crossorigin="anonymous">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
     <title>Product Management</title>
 </head>
@@ -21,15 +22,17 @@
        href="/admin/products/add">Add Product</a>
     <br>
 
-    <table class="table">
+    <table class="table" id="sortedTable">
         <tr>
             <th scope="col">Serial No.</th>
             <th scope="col">Product Name</th>
             <th scope="col">Category</th>
             <th scope="col">Preview</th>
-            <th scope="col">Quantity</th>
+            <th scope="col" onclick="sortTable(0)">Unit Sold </b> <i class="fa fa-fw fa-sort"></i></th>
             <th scope="col">Price</th>
+            <th scope="col">Discount Price</th>
             <th scope="col">Description</th>
+            <th scope="col">On Sales</th>
             <th scope="col">Delete</th>
             <th scope="col">Update</th>
         </tr>
@@ -55,7 +58,13 @@
                     <c:out value="${product.price}"/>
                 </td>
                 <td>
+                    <c:out value="${(empty product.discountPercent ? 1:product.discountPercent)*100}%"/>
+                </td>
+                <td>
                     <c:out value="${product.description}"/>
+                </td>
+                <td>
+                    <c:out value="${product.isOnSale}"/>
                 </td>
                 <td>
                     <form action="products/delete" method="get">
@@ -86,5 +95,62 @@
         src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
+<script>
+function sortTable(n) {
+  var table, rows, swapPosition, i, x, y, shouldSwitch, direction, switchcount = 0;
+  table = document.getElementById("sortedTable");
+  swapPosition = true;
+  // Set the sorting direction to ascending:
+  direction = "asc";
+  /* Make a loop that will continue until
+  no swapPosition has been done: */
+  while (swapPosition) {
+    // Start by saying: no swapPosition is done:
+    swapPosition = false;
+    rows = table.rows;
+    /* Loop through all table rows (except the
+    first, which contains table headers): */
+    for (i = 1; i < (rows.length - 1); i++) {
+      // Start by saying there should be no swapPosition:
+      shouldSwitch = false;
+      /* Get the two elements you want to compare,
+      one from current row and one from the next: */
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+      /* Check if the two rows should switch place,
+      based on the direction, asc or desc: */
+      if (direction == "asc") {
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          // If so, mark as a switch and break the loop:
+          shouldSwitch = true;
+          break;
+        }
+      } else if (direction == "desc") {
+        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+          // If so, mark as a switch and break the loop:
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+    if (shouldSwitch) {
+      /* If a switch has been marked, make the switch
+      and mark that a switch has been done: */
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      swapPosition = true;
+      // Each time a switch is done, increase this count by 1:
+      switchcount ++;
+    } else {
+      /* If no swapPosition has been done AND the direction is "asc",
+      set the direction to "desc" and run the while loop again. */
+      if (switchcount == 0 && direction == "asc") {
+        direction = "desc";
+        swapPosition = true;
+      }
+    }
+  }
+}
+</script>
+
 </body>
 </html>
