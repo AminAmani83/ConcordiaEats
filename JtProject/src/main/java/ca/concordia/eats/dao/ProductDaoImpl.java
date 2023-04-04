@@ -277,7 +277,6 @@ public class ProductDaoImpl implements ProductDao {
         SearchHistory searchHistory = new SearchHistory();
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         user = (User) session.getAttribute("user");
-        user.getUsername();
 
         String sql = "INSERT INTO search_history(userId, phrase, timeStamp) VALUES (?, ?,?);";
         PreparedStatement stmt = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
