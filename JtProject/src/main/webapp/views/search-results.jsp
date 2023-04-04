@@ -4,6 +4,36 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #555;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        .product-image {
+            width: 100px;
+            height: auto;
+        }
+    </style>
     <meta charset="UTF-8">
     <title>Search Results</title>
 </head>
