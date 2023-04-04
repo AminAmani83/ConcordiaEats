@@ -14,6 +14,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Properties;
+import java.io.FileReader;
+import java.io.IOException;
 
 @Repository
 public class ProductDaoImpl implements ProductDao {
@@ -23,10 +26,24 @@ public class ProductDaoImpl implements ProductDao {
 
     Connection con;
 
-    public ProductDaoImpl() {
-        try {
-            this.con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject", "root", "");
-        } catch (Exception e) {
+    /**
+     * Uses the db.properties file in resources to retrieve db connection parameters
+     * username=<my-username>
+     * password=<my-secret-password>
+     * url=<jdbc-url>
+     * @throws IOException
+     */
+    public ProductDaoImpl() throws IOException {
+        String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
+		String dbConfigPath = rootPath + "db.properties";
+
+		FileReader reader = new FileReader(dbConfigPath);
+		Properties dbProperties = new Properties();
+		dbProperties.load(reader);
+
+		try {
+			this.con = DriverManager.getConnection(dbProperties.getProperty("url"), dbProperties.getProperty("username"), dbProperties.getProperty("password"));
+       } catch (Exception e) {
             System.out.println("Error connecting to the DB: " + e.getMessage());
         }
     }
@@ -174,7 +191,7 @@ public class ProductDaoImpl implements ProductDao {
         try {
             PreparedStatement pst = con.prepareStatement("insert into category(name) values(?);");
             pst.setString(1, category.getName());
-            int i = pst.executeUpdate();
+            pst.executeUpdate();
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
@@ -187,7 +204,7 @@ public class ProductDaoImpl implements ProductDao {
             PreparedStatement pst = con.prepareStatement("update category set name = ? where categoryid = ?");
             pst.setString(1, category.getName());
             pst.setInt(2, category.getId());
-            int i = pst.executeUpdate();
+            pst.executeUpdate();
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
@@ -199,7 +216,7 @@ public class ProductDaoImpl implements ProductDao {
         try {
             PreparedStatement pst = con.prepareStatement("delete from category where categoryid = ? ;");
             pst.setInt(1, categoryId);
-            int i = pst.executeUpdate();
+            pst.executeUpdate();
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
@@ -212,7 +229,7 @@ public class ProductDaoImpl implements ProductDao {
             PreparedStatement pst = con.prepareStatement("insert into favorite values (?, ?);");
             pst.setInt(1, customerId);
             pst.setInt(2, productId);
-            int i = pst.executeUpdate();
+            pst.executeUpdate();
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
@@ -224,7 +241,7 @@ public class ProductDaoImpl implements ProductDao {
             PreparedStatement pst = con.prepareStatement("delete from favorite where userId=? and productId=?;");
             pst.setInt(1, customerId);
             pst.setInt(2, productId);
-            int i = pst.executeUpdate();
+            pst.executeUpdate();
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
@@ -350,10 +367,41 @@ public class ProductDaoImpl implements ProductDao {
         return customerRatings;
     }
 
+    /**
+     * Retrieves all products that were already purchased by a given customer so that
+     * this customer is allowed to rate them.
+     */
     @Override
     public List<Product> fetchPastPurchasedProducts(int customerId) {
-        return null;
+
+        String sqlQuery = "SELECT p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, c.id, c.name FROM product p  JOIN category c on p.categoryid = c.id WHERE p.id IN (SELECT DISTINCT(productId) FROM purchase_details WHERE purchaseId IN (SELECT pur.id FROM purchase pur WHERE userId = ?));";
+        List<Product> pastPurchaseProducts = new LinkedList<>();
+
+        try {
+            PreparedStatement pst = con.prepareStatement(sqlQuery);
+            pst.setInt(1, customerId);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                pastPurchaseProducts.add(new Product(rs.getInt(1),          // id
+                                                    rs.getString(2),        // name
+                                                    rs.getString(3),        // description    
+                                                    rs.getString(4),        // image path
+                                                    rs.getFloat(5),         // price
+                                                    rs.getInt(6),           // sales count  
+                                                    rs.getBoolean(7),       // is on sale
+                                                    rs.getFloat(8),         // discountPercent
+                                                    new Category(rs.getInt(9), rs.getString(10))       /// category
+                                                    )
+                                        );
+            }
+         } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+        return pastPurchaseProducts;
     }
+
+    
 
     @Override
     public List<Product> search(String query) {

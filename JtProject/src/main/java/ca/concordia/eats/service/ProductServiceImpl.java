@@ -95,9 +95,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> fetchPastPurchasedProducts(int customerId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'fetchPastPurchasedProducts'");
+        return productDao.fetchPastPurchasedProducts(customerId);
     }
+
     public List<Product> search(String query) {
         return productDao.search(query);
     }

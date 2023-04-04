@@ -15,6 +15,32 @@ public class Product {
     public Product() {
     }
 
+    /**
+     * This one does not include 'rating' which does not come natively with the DB.
+     * 
+     * @param id
+     * @param name
+     * @param description
+     * @param imagePath
+     * @param price
+     * @param salesCount
+     * @param isOnSale
+     * @param discountPercent
+     * @param category
+     */
+    public Product(Integer id, String name, String description, String imagePath, float price, int salesCount, boolean isOnSale, float discountPercent, Category category) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.imagePath = imagePath;
+        this.price = price;
+        this.salesCount = salesCount;
+        this.isOnSale = isOnSale;
+        this.discountPercent = discountPercent;
+        this.category = category;
+    }
+
+
     public Product(Integer id, String name, String description, String imagePath, float price, int salesCount, boolean isOnSale, float discountPercent, Double rating, Category category) {
         this.id = id;
         this.name = name;
