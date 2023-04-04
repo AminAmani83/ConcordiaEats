@@ -136,25 +136,25 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Product updateProduct(Product product) {
-        String sql = "update product set name =?, description = ?, imagePath=?, categoryid =?, price=?, salesCount=?, isOnSale=?, discountPercent=? where id = ?";
-        Category category = product.getCategory();
-        int update = jdbcTemplate.update(sql,
-                new Object[]{
-                        product.getName(),
-                        product.getDescription(),
-                        product.getImagePath(),
-                        category != null ? category.getId() : 6,
-                        product.getPrice(),
-                        product.getSalesCount(),
-                        product.isOnSale(),
-                        product.getDiscountPercent(),
-                        product.getId()});
-        if (update == 1) {
-            return product;
-        } else {
-            return null;
-        }
-
+    	String sql = "update product set name =?, description = ?, imagePath=?, categoryid =?, price=?, salesCount=?, isOnSale=?, discountPercent=? where id = ?";
+		Category category = product.getCategory();
+		int update = jdbcTemplate.update(sql,
+				new Object[] {
+						product.getName(),
+						product.getDescription(),
+						product.getImagePath(),
+						category!=null?category.getId():6,
+						product.getPrice(),
+						product.getSalesCount(),
+						product.getIsOnSale(),
+						product.getDiscountPercent(),
+						product.getId()});
+		if(update == 1) {
+			return product;
+		}else {
+			return null;
+		}
+		
     }
 
     @Override
