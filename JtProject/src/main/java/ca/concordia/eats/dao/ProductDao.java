@@ -2,7 +2,10 @@ package ca.concordia.eats.dao;
 
 import ca.concordia.eats.dto.Category;
 import ca.concordia.eats.dto.Product;
+import ca.concordia.eats.dto.SearchHistory;
 
+import javax.servlet.http.HttpSession;
+import java.sql.SQLException;
 import java.util.List;
 
 public interface ProductDao {
@@ -24,5 +27,7 @@ public interface ProductDao {
     public void makeFavorite(int customerId, int productId);
     public void removeFavorite(int customerId, int productId);
     public List<Product> fetchCustomerFavoriteProducts(int customerId);
-    public List<Product> search(String query);
+    List<Product> search(String query, HttpSession session);
+
+    public SearchHistory saveSearchHistoryToDatabase(String SearchQuery, HttpSession session) throws SQLException;
 }

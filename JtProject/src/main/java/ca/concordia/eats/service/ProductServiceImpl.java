@@ -6,6 +6,7 @@ import ca.concordia.eats.dto.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -14,6 +15,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     ProductDao productDao;
+    @Autowired
+    private HttpSession httpSession;
 
     @Override
     public List<Product> fetchAllProducts() {
@@ -80,7 +83,7 @@ public class ProductServiceImpl implements ProductService {
         return productDao.fetchCustomerFavoriteProducts(customerId);
     }
     public List<Product> search(String query) {
-        return productDao.search(query);
+        return productDao.search(query, httpSession);
     }
 
 }
