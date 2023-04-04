@@ -21,21 +21,23 @@ public class OrderController {
 
     @GetMapping("/order")
     public String shoppingCart(HttpSession session, Model model) {
-        model.addAttribute("allProducts", orderService.getProductsInCart(session));
-        model.addAttribute("total", String.valueOf(orderService.getTotal(session)));
+    	Basket sessionBasket = (Basket) session.getAttribute("basket");
+        model.addAttribute("allProducts", orderService.getProductsInCart(sessionBasket));
+        model.addAttribute("total", String.valueOf(orderService.getTotal(sessionBasket)));
         return "order";
     }
 
     @GetMapping("/order/add/{productId}")
     public String addProductToCart(@PathVariable("productId") Integer productId, HttpSession session, Model model) {
         Product product = productService.fetchProductById(productId);
+        Basket sessionBasket = (Basket) session.getAttribute("basket");
         if (product != null)
         {
-        	orderService.addProduct(product, session);
+        	orderService.addProduct(product, sessionBasket);
         }
         
-        model.addAttribute("allProducts", orderService.getProductsInCart(session));
-        model.addAttribute("total", String.valueOf(orderService.getTotal(session)));
+        model.addAttribute("allProducts", orderService.getProductsInCart(sessionBasket));
+        model.addAttribute("total", String.valueOf(orderService.getTotal(sessionBasket)));
         
         return "order";
     }
@@ -44,13 +46,14 @@ public class OrderController {
     public String updateProductToCart(@PathVariable("productId") Integer productId, @RequestParam("quantity") int quantity,
     		HttpSession session, Model model) {
         Product product = productService.fetchProductById(productId);
+        Basket sessionBasket = (Basket) session.getAttribute("basket");
         if (product != null)
         {
-        	orderService.updateProduct(product, quantity, session);
+        	orderService.updateProduct(product, quantity, sessionBasket);
         }
         
-        model.addAttribute("allProducts", orderService.getProductsInCart(session));
-        model.addAttribute("total", String.valueOf(orderService.getTotal(session)));
+        model.addAttribute("allProducts", orderService.getProductsInCart(sessionBasket));
+        model.addAttribute("total", String.valueOf(orderService.getTotal(sessionBasket)));
         
         return "order";
     }
@@ -58,13 +61,14 @@ public class OrderController {
     @GetMapping("/order/delete/{productId}")
     public String removeProductFromCart(@PathVariable("productId") Integer productId, HttpSession session, Model model) {
         Product product = productService.fetchProductById(productId);
+        Basket sessionBasket = (Basket) session.getAttribute("basket");
         if (product != null)
         {
-        	orderService.removeProduct(product, session);
+        	orderService.removeProduct(product, sessionBasket);
         }
         
-        model.addAttribute("allProducts", orderService.getProductsInCart(session));
-        model.addAttribute("total", String.valueOf(orderService.getTotal(session)));
+        model.addAttribute("allProducts", orderService.getProductsInCart(sessionBasket));
+        model.addAttribute("total", String.valueOf(orderService.getTotal(sessionBasket)));
         
         return "order";
     }
@@ -78,7 +82,11 @@ public class OrderController {
     @GetMapping("/makeorder")
     public String MakeOrder(HttpSession session) {
 
-    	orderService.makeOrder(session);
+    	Basket sessionBasket = (Basket) session.getAttribute("basket");
+    	User sessionUser = (User) session.getAttribute("user");
+    	orderService.makeOrder(sessionBasket, sessionUser);
+    	sessionBasket = new Basket();
+    	session.setAttribute("basket", sessionBasket);
     	
         return "redirect:/index";
     }

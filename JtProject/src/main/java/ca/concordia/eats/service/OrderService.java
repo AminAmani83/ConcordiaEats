@@ -2,24 +2,26 @@ package ca.concordia.eats.service;
 
 import java.util.List;
 import java.util.Map;
+import ca.concordia.eats.dto.Basket;
 
 import javax.servlet.http.HttpSession;
 
 import ca.concordia.eats.dto.Product;
+import ca.concordia.eats.dto.User;
 
 public interface OrderService {
 	
-    void addProduct(Product product, HttpSession session);
+    void addProduct(Product product, Basket sessionBasket);
 
-    void removeProduct(Product product, HttpSession session);
+    void removeProduct(Product product, Basket sessionBasket);
     
-    List<Product> getProductsInCart(HttpSession session);
+    List<Product> getProductsInCart(Basket sessionBasket);
 
     void checkout();
 
-    float getTotal(HttpSession session);
+    float getTotal(Basket sessionBasket);
 
-	void makeOrder(HttpSession session);
+	void makeOrder(Basket sessionBasket, User sessionUser);
 
-	void updateProduct(Product product, int quantity, HttpSession session);
+	void updateProduct(Product product, int quantity, Basket sessionBasket);
 }

@@ -10,7 +10,6 @@ import ca.concordia.eats.dto.Basket;
 import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.User;
 
-import javax.servlet.http.HttpSession;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -19,25 +18,24 @@ public class OrderServiceImpl implements OrderService {
     OrderDao orderDao;
 	
 	@Override
-	public void addProduct(Product product, HttpSession session) {
-        Basket basket = (Basket) session.getAttribute("basket");
+	public void addProduct(Product product, Basket sessionBasket) {
+        Basket basket = sessionBasket;
         
-        basket.addProduct(product, session);
+        basket.addProduct(product);
 
 	}
 
-	@Override
-	public void removeProduct(Product product, HttpSession session) {
-        Basket basket = (Basket) session.getAttribute("basket");
+	
+	public void removeProduct(Product product, Basket sessionBasket) {
+        Basket basket = sessionBasket;
         
         basket.removeProduct(product);
 	}
 
 	@Override
-	public List<Product> getProductsInCart(HttpSession session) {
+	public List<Product> getProductsInCart(Basket sessionBasket) {
 		
-        Basket basket = (Basket) session.getAttribute("basket");
-		return basket.getProductsInCart();
+		return sessionBasket.getProductsInCart();
 	}
 	
 	@Override
@@ -46,27 +44,20 @@ public class OrderServiceImpl implements OrderService {
 		
 	}
 
-	@Override
-	public float getTotal(HttpSession session) {
-        Basket basket = (Basket) session.getAttribute("basket");
-		return basket.getTotal();
+	public float getTotal(Basket sessionBasket) {
+       
+		return sessionBasket.getTotal();
 	}
 	
-	public void makeOrder(HttpSession session) {
-        Basket basket = (Basket) session.getAttribute("basket");
-        User user = (User) session.getAttribute("user");
-        
-        if (basket != null && user != null)
-        	orderDao.makeOrder(user, basket);
-        
-        basket = new Basket();
-        session.setAttribute("basket", basket);
-        
+	public void makeOrder(Basket sessionBasket, User sessionUser) {
+       
+        if (sessionBasket != null && sessionUser != null)
+        	orderDao.makeOrder(sessionUser, sessionBasket);
 	}
 
-	@Override
-	public void updateProduct(Product product, int quantity, HttpSession session) {
-        Basket basket = (Basket) session.getAttribute("basket");
+	
+	public void updateProduct(Product product, int quantity, Basket sessionBasket) {
+        Basket basket = sessionBasket;
         
         basket.updateProduct(product, quantity);
 		

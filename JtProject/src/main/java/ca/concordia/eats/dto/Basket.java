@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import ca.concordia.eats.dto.Product;
 
-import javax.servlet.http.HttpSession;
 
 public class Basket {
   
@@ -48,51 +48,70 @@ public class Basket {
         this.lineItems = lineItems;
     }
     
-	public void addProduct(Product product, HttpSession session) {
-		
-        if (products.containsKey(product)) {
-            products.replace(product, products.get(product) + 1);
+        
+    public void addProduct(Product product) {
+    	
+    	if (products.containsKey(product)) {
+    		
+    		products.replace(product, products.get(product) + 1);
+    		
         } else {
+        	
             products.put(product, 1);
         }   
-	}
-
-	public void removeProduct(Product product) {
-        products.remove(product);
-	}
-	
-    public List<Product> getProductsInCart(){
-		List<Product> productList = new ArrayList<Product>();
-		
-		for (Map.Entry<Product, Integer> entry : products.entrySet()) {
-			
-			Product product = entry.getKey();
-			product.setSalesCount(entry.getValue());
-			
-			productList.add(product);
-		}
-
-		return productList;
     }
-    
-	public float getTotal() {
 
-		float total = 0;
+    public void removeProduct(Product product) {
+    	
+        products.remove(product);
+    }
+        
+    public List<Product> getProductsInCart(){
+    	
+    	List<Product> productList = new ArrayList<Product>();
 		
-		for (Map.Entry<Product, Integer> product : products.entrySet()) {
-			total = total + product.getKey().getPrice() * product.getValue();
-		}
+    	for (Map.Entry<Product, Integer> entry : products.entrySet()) {
+			
+    		Product product = entry.getKey();
+    		product.setSalesCount(entry.getValue());
+			
+    		productList.add(product);
+    	}
 
-		return total;
-	}
+    	return productList;
+    }
+        
+    public float getTotal() {
+    	
+    	float total = 0;
+    	
+        for (Map.Entry<Product, Integer> entry : products.entrySet()) {
+        	
+        	Product product = entry.getKey();
+        	
+            int quantity = entry.getValue();
+            
+            if (product.isOnSale()) {
+            	
+            	total += product.getPrice() * (1 - product.getDiscountPercent() / 100.0f) * quantity;
+            	
+            } else {
+            	
+            	total += product.getPrice() * quantity;
+            }
+        }
+        return total;
+    }
 
 	public void updateProduct(Product product, int quantity) {
+		
         if (products.containsKey(product)) {
         	
         	products.replace(product, quantity);
             	
             	if (quantity < 1) {
-                products.remove(product);
+            		
+            		products.remove(product);
             }
         }
 	}	
