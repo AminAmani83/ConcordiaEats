@@ -1,11 +1,12 @@
 package ca.concordia.eats.controller;
 
 import ca.concordia.eats.dto.Category;
+import ca.concordia.eats.dto.Customer;
 import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.User;
 import ca.concordia.eats.dto.UserCredentials;
-import ca.concordia.eats.service.ProductService;
 import ca.concordia.eats.service.UserService;
+import ca.concordia.eats.service.ProductService;
 import ca.concordia.eats.utils.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -203,9 +204,9 @@ public class AdminController {
 		model.addAttribute("product", product);
 		return "productsUpdate";
 	}
+
 	@RequestMapping(value = "/admin/products/updateData",method=RequestMethod.POST)
 	public String updateproduct(@ModelAttribute("product") Product product, @RequestParam("productImage") MultipartFile multipartFile, @RequestParam("categoryid") int categoryId ) 
-	
 	{
 		Category category = productService.fetchCategoryById(categoryId);
 		product.setCategory(category);
@@ -236,7 +237,9 @@ public class AdminController {
 	}
 
 	@GetMapping("/admin/customers")
-	public String getCustomerDetail() {
+	public String getAllCustomers(Model model) {
+		List<Customer> allCustomers = userService.getAllCustomers();
+		model.addAttribute("allCustomers", allCustomers);
 		return "displayCustomers";
 	}
 
