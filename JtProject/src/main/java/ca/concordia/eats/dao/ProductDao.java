@@ -28,9 +28,9 @@ public interface ProductDao {
     public void makeFavorite(int customerId, int productId);
     public void removeFavorite(int customerId, int productId);
     public List<Product> fetchCustomerFavoriteProducts(int customerId);
-    public List<Product> search(String query, HttpSession session);
+    public List<Product> search(String query, int userId);
 
-    public SearchHistory saveSearchHistoryToDatabase(String SearchQuery, HttpSession session) throws SQLException;
+    public SearchHistory saveSearchHistoryToDatabase(String SearchQuery, int userId) throws SQLException;
 
     // OTHER : RATING
     public void rateProduct(int customerId, int productId, int rating);

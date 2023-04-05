@@ -102,8 +102,8 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> fetchPastPurchasedProducts(int customerId) {
         return productDao.fetchPastPurchasedProducts(customerId);
     }
-    public List<Product> search(String query) {
-        return productDao.search(query, httpSession);
+    public List<Product> search(String query, int userId) {
+        return productDao.search(query, userId);
     }
 
 }

@@ -409,7 +409,7 @@ public class ProductDaoImpl implements ProductDao {
 
 
     @Override
-    public List<Product> search(String query, HttpSession session) {
+    public List<Product> search(String query, int userId) {
         List<Product> products = new ArrayList<>();
         try {
             String sql = "SELECT * FROM product WHERE name LIKE ?";
@@ -421,7 +421,7 @@ public class ProductDaoImpl implements ProductDao {
                 product.setId(rs.getInt("id"));
                 product.setName(rs.getString("name"));
                 products.add(product);
-                SearchHistory searchHistory = saveSearchHistoryToDatabase(query, session);
+                SearchHistory searchHistory = saveSearchHistoryToDatabase(query, userId);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -432,15 +432,14 @@ public class ProductDaoImpl implements ProductDao {
 
 
     @Override
-    public SearchHistory saveSearchHistoryToDatabase(String SearchQuery, HttpSession session) throws SQLException {
+    public SearchHistory saveSearchHistoryToDatabase(String SearchQuery, int userId) throws SQLException {
         User user = new User();
         SearchHistory searchHistory = new SearchHistory();
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        user = (User) session.getAttribute("user");
 
         String sql = "INSERT INTO search_history(userId, phrase, timeStamp) VALUES (?, ?,?);";
         PreparedStatement stmt = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-        stmt.setInt(1, user.getUserId());
+        stmt.setInt(1, userId);
         stmt.setString(2, SearchQuery);
         stmt.setTimestamp(3, timestamp);
         int rowsAffected = stmt.executeUpdate();
