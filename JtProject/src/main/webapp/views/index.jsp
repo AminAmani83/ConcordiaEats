@@ -39,19 +39,18 @@
                                 <div class="col-2">
                                     <c:choose>
                                         <c:when test="${favoriteProducts.contains(product)}">
-                                            <a href="/product/remove-favorite?productid=${product.id}"
+                                            <a href="/product/remove-favorite?productid=${product.id}&src=index"
                                                title="Remove from Your Favorites">
                                                 <i class="fas fa-heart text-danger"></i>
                                             </a>
                                         </c:when>
                                         <c:otherwise>
-                                            <a href="/product/make-favorite?productid=${product.id}"
+                                            <a href="/product/make-favorite?productid=${product.id}&src=index"
                                                title="Add to Your Favorites">
                                                 <i class="far fa-heart text-danger"></i>
                                             </a>
                                         </c:otherwise>
                                     </c:choose>
-
                                 </div>
                             </div>
                         </div>
