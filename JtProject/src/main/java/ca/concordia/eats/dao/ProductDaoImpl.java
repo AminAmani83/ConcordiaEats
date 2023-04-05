@@ -2,13 +2,15 @@ package ca.concordia.eats.dao;
 
 import ca.concordia.eats.dto.Category;
 import ca.concordia.eats.dto.Product;
-
+import ca.concordia.eats.dto.SearchHistory;
+import ca.concordia.eats.dto.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
+import javax.servlet.http.HttpSession;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -407,7 +409,7 @@ public class ProductDaoImpl implements ProductDao {
 
 
     @Override
-    public List<Product> search(String query) {
+    public List<Product> search(String query, int userId) {
         List<Product> products = new ArrayList<>();
         try {
             String sql = "SELECT * FROM product WHERE name LIKE ?";
@@ -422,6 +424,7 @@ public class ProductDaoImpl implements ProductDao {
                 product.setDescription(rs.getString("description"));
                 product.setImagePath(rs.getString("imagePath"));
                 products.add(product);
+                SearchHistory searchHistory = saveSearchHistoryToDatabase(query, userId);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -429,5 +432,33 @@ public class ProductDaoImpl implements ProductDao {
         return products;
 
     }
+
+
+    @Override
+    public SearchHistory saveSearchHistoryToDatabase(String SearchQuery, int userId) throws SQLException {
+        User user = new User();
+        SearchHistory searchHistory = new SearchHistory();
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+        String sql = "INSERT INTO search_history(userId, phrase, timeStamp) VALUES (?, ?,?);";
+        PreparedStatement stmt = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+        stmt.setInt(1, userId);
+        stmt.setString(2, SearchQuery);
+        stmt.setTimestamp(3, timestamp);
+        int rowsAffected = stmt.executeUpdate();
+        if (rowsAffected == 0) {
+            throw new SQLException("Creating promotion failed, no rows affected.");
+        }
+        try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+            if (generatedKeys.next()) {
+                // searchHistory.setSearchHistoryId(generatedKeys.getInt(1));
+            } else {
+                throw new SQLException("Creating promotion failed, no ID obtained.");
+            }
+        }
+        return searchHistory;
+    }
+
+
 }
 

@@ -46,8 +46,9 @@ public class MainController {
     }
 
     @GetMapping("/search")
-    public String search(@RequestParam("query") String query, Model model) {
-        List<Product> products = productService.search(query);
+    public String search(@RequestParam("query") String query, Model model, HttpSession session ) {
+        User user = (User) session.getAttribute("user");
+        List<Product> products = productService.search(query, user.getUserId());
         model.addAttribute("products", products);
         return "search-results";
     }
