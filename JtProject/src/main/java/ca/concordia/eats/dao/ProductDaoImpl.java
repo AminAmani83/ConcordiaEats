@@ -15,6 +15,12 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+
+import java.util.HashMap;
+import java.util.Properties;
+import java.io.FileReader;
+import java.io.IOException;
 
 @Repository
 public class ProductDaoImpl implements ProductDao {
@@ -24,9 +30,25 @@ public class ProductDaoImpl implements ProductDao {
 
     Connection con;
 
-    public ProductDaoImpl() {
+    /**
+     * Uses the db.properties file in resources to retrieve db connection parameters
+     * username=<my-username>
+     * password=<my-secret-password>
+     * url=<jdbc-url>
+     *
+     * @throws IOException
+     */
+    public ProductDaoImpl() throws IOException {
+        String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath()
+                .replaceAll("%20", " ");
+        String dbConfigPath = rootPath + "db.properties";
+
+        FileReader reader = new FileReader(dbConfigPath);
+        Properties dbProperties = new Properties();
+        dbProperties.load(reader);
+
         try {
-            this.con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject", "root", "");
+            this.con = DriverManager.getConnection(dbProperties.getProperty("url"), dbProperties.getProperty("username"), dbProperties.getProperty("password"));
         } catch (Exception e) {
             System.out.println("Error connecting to the DB: " + e.getMessage());
         }
@@ -175,7 +197,7 @@ public class ProductDaoImpl implements ProductDao {
         try {
             PreparedStatement pst = con.prepareStatement("insert into category(name) values(?);");
             pst.setString(1, category.getName());
-            int i = pst.executeUpdate();
+            pst.executeUpdate();
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
@@ -188,7 +210,7 @@ public class ProductDaoImpl implements ProductDao {
             PreparedStatement pst = con.prepareStatement("update category set name = ? where categoryid = ?");
             pst.setString(1, category.getName());
             pst.setInt(2, category.getId());
-            int i = pst.executeUpdate();
+            pst.executeUpdate();
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
@@ -200,7 +222,7 @@ public class ProductDaoImpl implements ProductDao {
         try {
             PreparedStatement pst = con.prepareStatement("delete from category where categoryid = ? ;");
             pst.setInt(1, categoryId);
-            int i = pst.executeUpdate();
+            pst.executeUpdate();
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
@@ -213,7 +235,7 @@ public class ProductDaoImpl implements ProductDao {
             PreparedStatement pst = con.prepareStatement("insert into favorite values (?, ?);");
             pst.setInt(1, customerId);
             pst.setInt(2, productId);
-            int i = pst.executeUpdate();
+            pst.executeUpdate();
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
@@ -225,7 +247,7 @@ public class ProductDaoImpl implements ProductDao {
             PreparedStatement pst = con.prepareStatement("delete from favorite where userId=? and productId=?;");
             pst.setInt(1, customerId);
             pst.setInt(2, productId);
-            int i = pst.executeUpdate();
+            pst.executeUpdate();
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
@@ -249,11 +271,148 @@ public class ProductDaoImpl implements ProductDao {
         return customerFavoriteProducts;
     }
 
+    /**
+     * Helper method used in rateProduct.
+     */
+    @Override
+    public int fetchRatingByProductIdAndCustomerId(int customerId, int productId) {
+
+        int currentRating = -1;     // default value
+
+        try {
+            PreparedStatement pst = con.prepareStatement("select rating from rating where userId = ? and productId = ?;");
+            pst.setInt(1, customerId);
+            pst.setInt(2, productId);
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+                currentRating = rs.getInt(1);
+            }
+
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+
+        return currentRating;
+    }
+
+
+    /**
+     * Helper method used in rateProduct - used to insert a new rating if
+     * this is the first time this customer rates this product.
+     */
+    @Override
+    public void insertNewRating(int customerId, int productId, int rating) {
+        try {
+            PreparedStatement pst = con.prepareStatement("insert into rating (userId, productId, rating) values (?, ?, ?);");
+            pst.setInt(1, customerId);
+            pst.setInt(2, productId);
+            pst.setInt(3, rating);
+            pst.executeUpdate();
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+    }
+
+
+    /**
+     * Helper method used in rateProduct - used to update a rating if one
+     * exists already for this product and this customer.
+     */
+    @Override
+    public void updateCurrentRating(int customerId, int productId, int rating) {
+        try {
+            PreparedStatement pst = con.prepareStatement("update rating set rating = ? where userId = ? and productId = ?;");
+            pst.setInt(1, rating);
+            pst.setInt(2, customerId);
+            pst.setInt(3, productId);
+            pst.executeUpdate();
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+    }
+
+    /**
+     * rateProduct either updates a current rating or inserts a new rating.
+     */
+    @Override
+    public void rateProduct(int customerId, int productId, int rating) {
+        try {
+            int currentRating = fetchRatingByProductIdAndCustomerId(customerId, productId);
+
+            if (currentRating == -1) {
+                insertNewRating(customerId, productId, currentRating);
+            } else if (currentRating >= 0 & currentRating <= 5) {
+                updateCurrentRating(customerId, productId, currentRating);
+            } else {
+                System.out.println("currentRating value is outside valid bounds.");
+            }
+
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+    }
+
+
+    /**
+     * customerRatings is defined as <productId, rating> for a specified customer.
+     */
+    @Override
+    public Map<Integer, Integer> fetchAllCustomerRatings(int customerId) {
+
+        Map<Integer, Integer> customerRatings = new HashMap<Integer, Integer>();
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("select productId, rating from rating where userId=" + customerId + ";");
+            while (rs.next()) {
+                customerRatings.put(rs.getInt(1), rs.getInt(2));
+            }
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+        return customerRatings;
+    }
+
+    /**
+     * Retrieves all products that were already purchased by a given customer so that
+     * this customer is allowed to rate them.
+     */
+    @Override
+    public List<Product> fetchPastPurchasedProducts(int customerId) {
+
+        String sqlQuery = "SELECT p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, c.id, c.name FROM product p  JOIN category c on p.categoryid = c.id WHERE p.id IN (SELECT DISTINCT(productId) FROM purchase_details WHERE purchaseId IN (SELECT pur.id FROM purchase pur WHERE userId = ?));";
+        List<Product> pastPurchaseProducts = new LinkedList<>();
+
+        try {
+            PreparedStatement pst = con.prepareStatement(sqlQuery);
+            pst.setInt(1, customerId);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                pastPurchaseProducts.add(new Product(rs.getInt(1),          // id
+                                rs.getString(2),        // name
+                                rs.getString(3),        // description
+                                rs.getString(4),        // image path
+                                rs.getFloat(5),         // price
+                                rs.getInt(6),           // sales count
+                                rs.getBoolean(7),       // is on sale
+                                rs.getFloat(8),         // discountPercent
+                                new Category(rs.getInt(9), rs.getString(10))       /// category
+                        )
+                );
+            }
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+        return pastPurchaseProducts;
+    }
+
+
     @Override
     public List<Product> search(String query, HttpSession session) {
         List<Product> products = new ArrayList<>();
-        String sql = "SELECT * FROM product WHERE name LIKE ?";
         try {
+            String sql = "SELECT * FROM product WHERE name LIKE ?";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, "%" + query + "%");
             ResultSet rs = stmt.executeQuery();
@@ -268,6 +427,7 @@ public class ProductDaoImpl implements ProductDao {
             e.printStackTrace();
         }
         return products;
+
     }
 
 
@@ -299,3 +459,4 @@ public class ProductDaoImpl implements ProductDao {
 
 
 }
+

@@ -1,9 +1,6 @@
 package ca.concordia.eats.controller;
 
-import ca.concordia.eats.dto.Category;
-import ca.concordia.eats.dto.Product;
-import ca.concordia.eats.dto.User;
-import ca.concordia.eats.dto.UserCredentials;
+import ca.concordia.eats.dto.*;
 import ca.concordia.eats.service.ProductService;
 import ca.concordia.eats.service.UserService;
 import ca.concordia.eats.utils.FileUploadUtil;
@@ -14,10 +11,12 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import javax.servlet.http.HttpSession;
 import java.sql.*;
 import java.util.List;
+import java.util.Properties;
+import java.io.FileReader;
 
 @Controller
 
@@ -30,9 +29,25 @@ public class AdminController {
 	private UserService userService;
 
 	Connection con;
-	public AdminController() {
+
+	/**
+     * Uses the db.properties file in resources to retrieve db connection parameters
+     * username=<my-username>
+     * password=<my-secret-password>
+	 * url=<jdbc-url>
+     * @throws IOException
+     */
+	public AdminController() throws IOException {
+		String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath()
+				.replaceAll("%20", " ");
+		String dbConfigPath = rootPath + "db.properties";
+
+		FileReader reader = new FileReader(dbConfigPath);
+		Properties dbProperties = new Properties();
+		dbProperties.load(reader);
+
 		try {
-			this.con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject", "root", "");
+			this.con = DriverManager.getConnection(dbProperties.getProperty("url"), dbProperties.getProperty("username"), dbProperties.getProperty("password"));
 		} catch(Exception e) {
 			System.out.println("Error connecting to the DB: " + e.getMessage());
 		}
@@ -49,12 +64,12 @@ public class AdminController {
 	}
 
 	@GetMapping("/index")
-	public String index(Model model) {
-		List<Product> allProducts = productService.fetchAllProducts();
-		if(usernameForClass.equalsIgnoreCase("")) {
+	public String index(Model model, HttpSession session) {
+		if (usernameForClass.equalsIgnoreCase("")) {
 			return "userLogin";
-		}
-		else {
+		} else {
+			List<Product> allProducts = productService.fetchAllProducts();
+			Customer customer = (Customer) session.getAttribute("user");
 			// Temp Products TODO: use actual results from DB
 			Product bestSellerProduct = new Product(1, "Hamburger", "Delicious", "https://tmbidigitalassetsazure.blob.core.windows.net/secure/RMS/attachments/37/1200x1200/Sausage-Sliders-with-Cran-Apple-Slaw_exps48783_SD2235819D06_24_2bC_RMS.jpg", 0f, 0, false, 0f, null, null);
 			Product highestRatedProduct = new Product(2, "Chicken Soup", "Delicious", "https://www.allrecipes.com/thmb/NgpgUebR7ixeEuToPd1c1TgaQmU=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/8814_HomemadeChickenSoup_SoupLovingNicole_LSH-2000-4ae7ff733c554fdab0796d15c8d1151f.jpg", 0f, 0, false, 0f, null, null);
@@ -64,6 +79,7 @@ public class AdminController {
 			model.addAttribute("bestSellerProduct", bestSellerProduct);
 			model.addAttribute("highestRatedProduct", highestRatedProduct);
 			model.addAttribute("recommendedProduct", recommendedProduct);
+			model.addAttribute("favoriteProducts", customer.getFavorite().getCustomerFavoritedProducts());
 			return "index";
 		}
 	}
@@ -78,15 +94,15 @@ public class AdminController {
 
 		try {
 			UserCredentials userCredentials = new UserCredentials();
-			User user = new User();
 			userCredentials.setUsername(username);
 			userCredentials.setPassword(password);
 			boolean isValid = userService.validateUserLogin(userCredentials);
 			if (isValid) {
 				usernameForClass = username;
-				user = userService.fetchUserData(userCredentials);
-				session.setAttribute("user", user);
-				//User u = (User) session.getAttribute("user");
+				Customer customer = userService.fetchCustomerData(userCredentials);
+				Favorite customerFavorite = new Favorite(productService.fetchCustomerFavoriteProducts(customer.getUserId()));
+				customer.setFavorite(customerFavorite);
+				session.setAttribute("user", customer);
 				return "redirect:/index";
 			} else {
 				model.addAttribute("message", "Invalid Username or Password");

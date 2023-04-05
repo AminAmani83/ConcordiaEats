@@ -1,10 +1,12 @@
 package ca.concordia.eats.service;
 
+import ca.concordia.eats.dto.Favorite;
 import ca.concordia.eats.dto.UserCredentials;
 import org.springframework.stereotype.Service;
 
 import ca.concordia.eats.dao.UserDao;
 import ca.concordia.eats.dto.User;
+import ca.concordia.eats.dto.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -19,8 +21,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;
 
+    @Autowired
+    ProductService productService;
+
     @Override
-    public List<User> getAlUsers() {
+    public List<User> getAllUsers() {
         return userDao.getAllUsers();
     }
 
@@ -39,18 +44,40 @@ public class UserServiceImpl implements UserService {
         return userDao.createUser(user);
     }
 
-    @Override
-    public boolean removeUser(int userId) {
-        return userDao.removeUser(userId);
-    }
-
     public boolean validateUserLogin(UserCredentials userCredentials) {
         return userDao.checkUserByCredentials(userCredentials);
     }
 
-    public User fetchUserData(UserCredentials userCredentials) {
-        return userDao.fetchUserByCredentials(userCredentials);
+
+    // Below are Customer related service classes.
+    @Override
+    public List<Customer> getAllCustomers() {
+        return userDao.getAllCustomers();
     }
 
+    @Override
+    public Customer getCustomerById(int userId) {
+        return userDao.getCustomerById(userId);
+    }
 
+    @Override
+    public Customer updateCustomer(Customer customer) {
+        return userDao.updateCustomer(customer);
+    }
+
+    public Customer fetchCustomerData(UserCredentials userCredentials) {
+        Customer customer = userDao.fetchCustomerData(userCredentials);
+        customer.setFavorite(new Favorite(productService.fetchCustomerFavoriteProducts(customer.getUserId())));
+        return customer;
+    }
+
+    @Override
+    public Customer createCustomer(Customer customer) {
+        return userDao.createCustomer(customer);
+    }
+
+    @Override
+    public boolean removeCustomer(UserCredentials userCredentials) {
+        return userDao.removeCustomer(userCredentials);
+    }
 }

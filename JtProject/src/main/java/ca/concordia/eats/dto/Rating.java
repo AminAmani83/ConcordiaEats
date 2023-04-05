@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Rating {
   
-    Map<Integer, Integer> customerRatings = new HashMap<Integer, Integer>();
+    Map<Integer, Integer> customerRatings = new HashMap<Integer, Integer>();        // <productId, rating>
     private List<Product> rateableProducts;
   
     public Rating() {
@@ -12,7 +12,7 @@ public class Rating {
     }
       
     public List<Product> getRateableProducts() {
-        return new ArrayList(rateableProducts);
+        return rateableProducts;
     }
 
     public void setRateableProducts(List<Product> rateableProducts) {

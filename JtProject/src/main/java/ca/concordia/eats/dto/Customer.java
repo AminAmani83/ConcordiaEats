@@ -3,23 +3,33 @@ package ca.concordia.eats.dto;
 public class Customer extends User {
   
     private String address;
-    private String email;
     private String phone;
+
+    private Favorite favorite;
+    private Rating rating;
+    private Recommendation recommendation;
     
+    public Customer() {
+    }
+
+    public Customer(Integer userId, String username, String role, String address, String email, String phone) {
+        super(userId, username, role, email);
+        this.address = address;
+        this.phone = phone;
+    }
+
+    public Customer(Integer userId, String username, String role, String address, String email, String phone, boolean loginStatus) {
+        super(userId, username, role, email, loginStatus);
+        this.address = address;
+        this.phone = phone;
+    }
+
     public String getAddress() {
         return address;
     }
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
     
     public String getPhone() {
@@ -28,5 +38,29 @@ public class Customer extends User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public Favorite getFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(Favorite favorite) {
+        this.favorite = favorite;
+    }
+
+    public Rating getRating() {
+        return rating;
+    }
+
+    public void setRating(Rating rating) {
+        this.rating = rating;
+    }
+
+    public Recommendation getRecommendation() {
+        return recommendation;
+    }
+
+    public void setRecommendation(Recommendation recommendation) {
+        this.recommendation = recommendation;
     }
 }
