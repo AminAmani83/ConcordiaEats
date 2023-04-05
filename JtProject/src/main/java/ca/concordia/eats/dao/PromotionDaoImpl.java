@@ -19,7 +19,9 @@ public class PromotionDaoImpl implements PromotionDao {
     public List<Promotion> fetchAllPromotions() throws DAOException {
         List<Promotion> allPromotions = new ArrayList<>();
         try {
-            PreparedStatement stmt = con.prepareStatement("SELECT * FROM promotion");
+            PreparedStatement stmt = con.prepareStatement("SELECT promotion.id, promotion.startDate, promotion.endDate, promotionType.type" +
+                    " FROM promotion, promotion_type"+
+                    "WHERE promotionTypeId = promotion_type.id");
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Promotion promotion = mapResultSetToPromotion(rs);
@@ -34,8 +36,11 @@ public class PromotionDaoImpl implements PromotionDao {
     @Override
     public Promotion fetchPromotionById(int PromotionId) throws DAOException {
         Promotion promotion = null;
+        String sql = "SELECT promotion.id, promotion.startDate, promotion.endDate, promotionType.type" +
+                " FROM promotion, promotion_type"+
+                "WHERE promotion.id = ? AND promotionTypeId = promotion_type.id";
         try {
-            PreparedStatement stmt = con.prepareStatement("SELECT * FROM promotion WHERE promotion.id = ?");
+            PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setInt(1, PromotionId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -50,11 +55,12 @@ public class PromotionDaoImpl implements PromotionDao {
 
     @Override
     public Promotion createPromotion(Promotion promotion) throws DAOException {
-        String sql = "INSERT INTO promotions (promotion_type_id, promotion_start_date, promotion_end_date) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO promotions (id, startDate, endDate, promotionTypeId) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-            stmt.setInt(1, promotion.getPromotionTypeId());
+            stmt.setInt(1, promotion.getPromotionId());
             stmt.setObject(2, promotion.getPromotionStartDate());
             stmt.setObject(3, promotion.getPromotionEndDate());
+            stmt.setInt(4, promotion.getPromotionType().getId());
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected == 0) {
                 throw new DAOException("Creating promotion failed, no rows affected.");
@@ -75,11 +81,13 @@ public class PromotionDaoImpl implements PromotionDao {
 
     @Override
     public Promotion updatePromotion(Promotion promotion) throws DAOException {
-        String sql = "UPDATE promotions SET promotion_type_id = ?, promotion_start_date = ?, promotion_end_date = ? WHERE promotion_id = ?";
+        String sql = "UPDATE promotions" +
+                " SET startDate = ?, endDate = ?, promotionTypeId = ? " +
+                "WHERE promotion.id = ?";
         try (PreparedStatement stmt = con.prepareStatement(sql)) {
-            stmt.setInt(1, promotion.getPromotionTypeId());
-            stmt.setObject(2, promotion.getPromotionStartDate());
-            stmt.setObject(3, promotion.getPromotionEndDate());
+            stmt.setObject(1, promotion.getPromotionStartDate());
+            stmt.setObject(2, promotion.getPromotionEndDate());
+            stmt.setObject(3, promotion.getPromotionType().getId());
             stmt.setInt(4, promotion.getPromotionId());
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected == 0) {
@@ -120,7 +128,7 @@ public class PromotionDaoImpl implements PromotionDao {
         Date endDate = rs.getDate(3);
         LocalDateTime localEndDateTime = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
         promotion.setPromotionEndDate(localEndDateTime);
-        promotion.setPromotionTypeId(rs.getInt(4));
+        promotion.getPromotionType().setType(rs.getString(4));
         return promotion;
     }
 

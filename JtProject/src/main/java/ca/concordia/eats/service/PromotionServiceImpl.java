@@ -21,27 +21,17 @@ public class PromotionServiceImpl implements PromotionService {
 
     @Override
     public List<Promotion> getAllPromotions() throws ServiceException {
-        List<Promotion> promotions;
         try {
-            promotions = promotionDao.fetchAllPromotions();
-            for (Promotion promotionItem : promotions) {
-                PromotionType promotionType = promotionDao.getPromotionTypeById(promotionItem.getPromotionTypeId());
-                promotionItem.setPromotionType(promotionType);
-            }
-
+            return promotionDao.fetchAllPromotions();
         } catch (DAOException e) {
             throw new ServiceException("Error fetching all promotions", e);
         }
-        return promotions;
     }
 
     @Override
     public Promotion getPromotionById(int promotionId) throws ServiceException {
         try {
-            Promotion promotion = promotionDao.fetchPromotionById(promotionId);
-            PromotionType promotionType = promotionDao.getPromotionTypeById(promotion.getPromotionTypeId());
-            promotion.setPromotionType(promotionType);
-            return promotion;
+            return promotionDao.fetchPromotionById(promotionId);
         } catch (DAOException e) {
             throw new ServiceException("Error getting promotion by ID", e);
         }
@@ -51,10 +41,7 @@ public class PromotionServiceImpl implements PromotionService {
     @Override
     public Promotion createPromotion(Promotion promotion) throws ServiceException {
         try {
-            Promotion NewPromotion = promotionDao.createPromotion(promotion);
-            PromotionType promotionType = promotionDao.getPromotionTypeById(NewPromotion.getPromotionTypeId());
-            promotion.setPromotionType(promotionType);
-            return NewPromotion;
+            return promotionDao.createPromotion(promotion);
         } catch (DAOException e) {
             throw new ServiceException("Error creating promotion", e);
         }
@@ -63,10 +50,7 @@ public class PromotionServiceImpl implements PromotionService {
     @Override
     public Promotion updatePromotion(Promotion promotion) throws ServiceException {
         try {
-            Promotion NewPromotion = promotionDao.createPromotion(promotion);
-            PromotionType promotionType = promotionDao.getPromotionTypeById(NewPromotion.getPromotionTypeId());
-            promotion.setPromotionType(promotionType);
-            return NewPromotion;
+            return promotionDao.updatePromotion(promotion);
         } catch (DAOException e) {
             throw new ServiceException("Error updating promotion", e);
         }

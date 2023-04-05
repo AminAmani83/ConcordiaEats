@@ -449,7 +449,7 @@ public class ProductDaoImpl implements ProductDao {
         }
         try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
             if (generatedKeys.next()) {
-                //searchHistory.setSearchHistoryId(generatedKeys.getInt(1));
+                // searchHistory.setSearchHistoryId(generatedKeys.getInt(1));
             } else {
                 throw new SQLException("Creating promotion failed, no ID obtained.");
             }

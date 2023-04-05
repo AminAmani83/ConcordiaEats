@@ -4,18 +4,17 @@ import java.time.LocalDateTime;
 
 public class Promotion {
   
-    private int PromotionId;
-    private int promotionTypeId;
+    private int promotionId;
     private PromotionType promotionType;
     private LocalDateTime promotionStartDate;
     private LocalDateTime promotionEndDate;
 
     public int getPromotionId() {
-        return PromotionId;
+        return promotionId;
     }
 
     public void setPromotionId(int promotionId) {
-        this.PromotionId = promotionId;
+        this.promotionId = promotionId;
     }
 
 
@@ -30,13 +29,6 @@ public class Promotion {
     }
     public void setPromotionEndDate(LocalDateTime promotionEndDate) {
         this.promotionEndDate = promotionEndDate;
-    }
-
-    public int getPromotionTypeId() {
-        return promotionTypeId;
-    }
-    public void setPromotionTypeId(int promotionTypeId) {
-        this.promotionTypeId = promotionTypeId;
     }
 
     public PromotionType getPromotionType() {
