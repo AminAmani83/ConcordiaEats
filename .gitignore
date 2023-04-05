@@ -53,3 +53,4 @@ atlassian-ide-plugin.xml
 # VS Code
 .vscode/
 *.class
+db.properties
