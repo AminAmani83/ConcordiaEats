@@ -23,30 +23,30 @@ public class MainController {
     ProductService productService;
 
     @GetMapping("/product/make-favorite")
-    public String makeFavorite(@RequestParam("productid") int productId, HttpSession session) {
+    public String makeFavorite(@RequestParam("productid") int productId, @RequestParam("src") String sourcePage, HttpSession session) {
         Customer customer = (Customer) session.getAttribute("user");
         productService.makeFavorite(customer.getUserId(), productId);
         customer.setFavorite(new Favorite(productService.fetchCustomerFavoriteProducts(customer.getUserId())));
-        return "redirect:/index/";
+        return "redirect:/" + sourcePage;
     }
 
     @GetMapping("/product/remove-favorite")
-    public String removeFavorite(@RequestParam("productid") int productId, HttpSession session) {
+    public String removeFavorite(@RequestParam("productid") int productId, @RequestParam("src") String sourcePage, HttpSession session) {
         Customer customer = (Customer) session.getAttribute("user");
         productService.removeFavorite(customer.getUserId(), productId);
         customer.setFavorite(new Favorite(productService.fetchCustomerFavoriteProducts(customer.getUserId())));
-        return "redirect:/index/";
+        return "redirect:/" + sourcePage;
     }
 
-    @GetMapping("/product/get-favorites")
-    public String fetchCustomerFavoriteProducts(HttpSession session) {
+    @GetMapping("/favorites")
+    public String fetchCustomerFavoriteProducts(HttpSession session, Model model) {
         Customer customer = (Customer) session.getAttribute("user");
-        productService.fetchCustomerFavoriteProducts(customer.getUserId());
-        return "redirect:/index/favorites";
+        model.addAttribute("favoriteProducts", customer.getFavorite().getCustomerFavoritedProducts());
+        return "/favorites";
     }
 
     @GetMapping("/search")
-    public String search(@RequestParam("query") String query, Model model ) {
+    public String search(@RequestParam("query") String query, Model model) {
         List<Product> products = productService.search(query);
         model.addAttribute("products", products);
         return "search-results";
