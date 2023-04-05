@@ -420,6 +420,9 @@ public class ProductDaoImpl implements ProductDao {
                 Product product = new Product();
                 product.setId(rs.getInt("id"));
                 product.setName(rs.getString("name"));
+                product.setPrice(rs.getFloat("price"));
+                product.setDescription(rs.getString("description"));
+                product.setImagePath(rs.getString("imagePath"));
                 products.add(product);
                 SearchHistory searchHistory = saveSearchHistoryToDatabase(query, userId);
             }
