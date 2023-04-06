@@ -274,6 +274,7 @@ public class UserDaoImpl implements UserDao {
             stmt.setString(1, userCredentials.getUsername());
             stmt.setString(2, userCredentials.getPassword());
             ResultSet rs = stmt.executeQuery();
+
             if (!rs.next()) return null;
 
             Customer customer = new Customer();
@@ -282,9 +283,9 @@ public class UserDaoImpl implements UserDao {
             customer.setRole(rs.getString("role"));
             customer.setEmail(rs.getString("email"));
             customer.setAddress(rs.getString("address"));
-            customer.setRole(rs.getString("role"));
             customer.setPhone(rs.getString("phone"));
             return customer;
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

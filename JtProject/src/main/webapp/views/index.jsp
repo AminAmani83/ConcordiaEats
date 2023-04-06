@@ -70,8 +70,7 @@
                             <p class="card-text">
                                 <c:out value="${product.description}"/>
                             </p>
-                            <form action="basket/add" method="get">
-                                <input type="hidden" name="id" value="<c:out value="${product.id}" />">
+                            <form action="order/add/${product.id}" method="get">
                                 <input type="submit" value="Add to Basket" class="btn btn-danger">
                             </form>
                         </div>

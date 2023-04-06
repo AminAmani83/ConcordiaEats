@@ -148,4 +148,5 @@ public class Product {
     public int hashCode() {
         return id.hashCode();
     }
+
 }

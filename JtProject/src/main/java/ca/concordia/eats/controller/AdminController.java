@@ -98,11 +98,14 @@ public class AdminController {
 			userCredentials.setPassword(password);
 			boolean isValid = userService.validateUserLogin(userCredentials);
 			if (isValid) {
+				Basket basket = new Basket();
 				usernameForClass = username;
 				Customer customer = userService.fetchCustomerData(userCredentials);
 				Favorite customerFavorite = new Favorite(productService.fetchCustomerFavoriteProducts(customer.getUserId()));
 				customer.setFavorite(customerFavorite);
 				session.setAttribute("user", customer);
+        session.setAttribute("basket", basket);
+
 				return "redirect:/index";
 			} else {
 				model.addAttribute("message", "Invalid Username or Password");
