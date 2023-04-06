@@ -10,7 +10,6 @@ argfile*
 activemq-data/
 classes/
 target/
-DB/
 
 # Log files
 jxl.log

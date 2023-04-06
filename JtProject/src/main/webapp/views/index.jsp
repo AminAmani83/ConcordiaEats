@@ -33,7 +33,26 @@
                 <div class="col-3 py-4">
                     <div class="card text-center">
                         <div class="card-header">
-                            On Sale!
+                            <div class="row">
+                                <div class="col-2"></div>
+                                <div class="col-8"><span>On Sale!</span></div>
+                                <div class="col-2">
+                                    <c:choose>
+                                        <c:when test="${favoriteProducts.contains(product)}">
+                                            <a href="/product/remove-favorite?productid=${product.id}&src=index"
+                                               title="Remove from Your Favorites">
+                                                <i class="fas fa-heart text-danger"></i>
+                                            </a>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <a href="/product/make-favorite?productid=${product.id}&src=index"
+                                               title="Add to Your Favorites">
+                                                <i class="far fa-heart text-danger"></i>
+                                            </a>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </div>
+                            </div>
                         </div>
                         <img class="card-img-top"
                              src="<c:out value="${product.imagePath}" />"

@@ -2,7 +2,10 @@ package ca.concordia.eats.dao;
 
 import ca.concordia.eats.dto.Category;
 import ca.concordia.eats.dto.Product;
+import ca.concordia.eats.dto.SearchHistory;
 
+import javax.servlet.http.HttpSession;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +28,9 @@ public interface ProductDao {
     public void makeFavorite(int customerId, int productId);
     public void removeFavorite(int customerId, int productId);
     public List<Product> fetchCustomerFavoriteProducts(int customerId);
+    public List<Product> search(String query, int userId);
+
+    public SearchHistory saveSearchHistoryToDatabase(String SearchQuery, int userId) throws SQLException;
 
     // OTHER : RATING
     public void rateProduct(int customerId, int productId, int rating);
@@ -34,6 +40,5 @@ public interface ProductDao {
     public void updateCurrentRating(int customerId, int productId, int rating);         // helper for rateProduct
     public void insertNewRating(int customerId, int productId, int rating);             // helper for rateProduct
 
-    public List<Product> search(String query);
 }
 

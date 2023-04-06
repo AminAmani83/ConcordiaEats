@@ -7,15 +7,20 @@ import ca.concordia.eats.dto.Rating;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpSession;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
     ProductDao productDao;
+    @Autowired
+    private HttpSession httpSession;
 
     @Override
     public List<Product> fetchAllProducts() {
@@ -95,11 +100,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> fetchPastPurchasedProducts(int customerId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'fetchPastPurchasedProducts'");
+        return productDao.fetchPastPurchasedProducts(customerId);
     }
-    public List<Product> search(String query) {
-        return productDao.search(query);
+    public List<Product> search(String query, int userId) {
+        return productDao.search(query, userId);
     }
 
 }

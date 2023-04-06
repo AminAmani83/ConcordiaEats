@@ -4,6 +4,10 @@ public class Customer extends User {
   
     private String address;
     private String phone;
+
+    private Favorite favorite;
+    private Rating rating;
+    private Recommendation recommendation;
     
     public Customer() {
     }
@@ -34,5 +38,29 @@ public class Customer extends User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public Favorite getFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(Favorite favorite) {
+        this.favorite = favorite;
+    }
+
+    public Rating getRating() {
+        return rating;
+    }
+
+    public void setRating(Rating rating) {
+        this.rating = rating;
+    }
+
+    public Recommendation getRecommendation() {
+        return recommendation;
+    }
+
+    public void setRecommendation(Recommendation recommendation) {
+        this.recommendation = recommendation;
     }
 }

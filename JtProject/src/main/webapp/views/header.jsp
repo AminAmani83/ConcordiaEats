@@ -12,10 +12,10 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto"></ul>
             <ul class="navbar-nav">
-            	<li class="nav-item active"><a class="nav-link" href="/order">Shopping Cart</a></li>
+            	  <li class="nav-item active"><a class="nav-link" href="/order">Shopping Cart</a></li>
+                <li class="nav-item active"><a class="nav-link" href="/favorites">Favorites</a></li>
                 <li class="nav-item active"><a class="nav-link" href="/profileDisplay">Profile</a></li>
-                <li class="nav-item active"><a class="nav-link" href="/logout">Logout</a>
-                </li>
+                <li class="nav-item active"><a class="nav-link" href="/logout">Logout</a></li>
             </ul>
         </div>
 
