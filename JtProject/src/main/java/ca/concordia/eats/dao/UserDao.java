@@ -19,6 +19,8 @@ public interface UserDao {
     public boolean checkUserByCredentials(UserCredentials userCredentials);
     public Customer fetchCustomerData(UserCredentials userCredentials);
     public boolean checkUserIsCustomer(UserCredentials userCredentials);    // helper method for checking that the User is indeed a customer and not an admin.
+    public UserCredentials fetchUserCredentialsById(int userId);
+    public void updateUserProfile(Customer customer, UserCredentials userCredentials);
 
     // CRUD CUSTOMER
     public List<Customer> getAllCustomers();

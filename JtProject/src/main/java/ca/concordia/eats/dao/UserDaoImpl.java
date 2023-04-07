@@ -27,7 +27,7 @@ public class UserDaoImpl implements UserDao {
 
     public UserDaoImpl() throws IOException {
         String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath()
-                .replaceAll("%20", " ");;
+                .replaceAll("%20", " ");
         String dbConfigPath = rootPath + "db.properties";
 
         FileReader reader = new FileReader(dbConfigPath);
@@ -224,6 +224,37 @@ public class UserDaoImpl implements UserDao {
             isCustomer = false;
         }
         return isCustomer;
+    }
+
+    @Override
+    public UserCredentials fetchUserCredentialsById(int userId) {
+        try {
+            PreparedStatement pst = con.prepareStatement("select username, password from user where id = ?;");
+            pst.setInt(1, userId);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                return new UserCredentials(rs.getString(1), rs.getString(2));
+            }
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+        return null;
+    }
+
+    @Override
+    public void updateUserProfile(Customer customer, UserCredentials userCredentials) {
+        try {
+            PreparedStatement pst = con.prepareStatement("update user set username = ?, password = ?, email = ?, phone = ?, address = ? where id = ?;");
+            pst.setString(1, userCredentials.getUsername());
+            pst.setString(2, userCredentials.getPassword());
+            pst.setString(3, customer.getEmail());
+            pst.setString(4, customer.getPhone());
+            pst.setString(5, customer.getAddress());
+            pst.setInt(6, customer.getUserId());
+            pst.executeUpdate();
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
     }
 
 
