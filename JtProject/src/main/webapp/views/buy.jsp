@@ -13,7 +13,7 @@
 					
 <div class="body-text">Write your name in the right fields. Also write your imaginary card number. By clicking CCV field card will turn.</div>
 
-  <form>
+  <form  action="../../../makeorder">
     <div class="form-container">
       <div class="personal-information">
         <h1>Payment Information</h1>
@@ -40,7 +40,7 @@
 
 body {
   padding: 60px 0;
-  background-color: rgba(178,209,229,0.7);
+  background-color: rgba(200, 200, 200, 0.7);
   margin: 0 auto;
   width: 600px;
 }
@@ -58,13 +58,13 @@ body {
   align-items: center;
 }
 .card-wrapper {
-  background-color: #6FB7E9;
+  background-color: #919191;
   width: 100%;
   display: flex;
 
 }
 .personal-information {
-  background-color: #3C8DC5;
+  background-color: #707070;
   color: #fff;
   padding: 1px 0;
   text-align: center;
@@ -95,7 +95,7 @@ input[type="submit"]{
   height: 60px;
   width: 100%;
   border: none;
-  background-color: #3C8DC5;
+  background-color: #707070;
   color: #fff;
   margin-top: 2px;
   curson: pointer;
@@ -105,7 +105,7 @@ input[type="submit"]{
   cursor: pointer;
 }
 input[type="submit"]:hover{
-  background-color: #6FB7E9;
+  background-color: #999999;
   transition: 0.3s ease;
 }
 #column-left {
