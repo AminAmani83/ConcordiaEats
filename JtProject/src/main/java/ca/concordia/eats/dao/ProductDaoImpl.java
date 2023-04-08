@@ -19,6 +19,7 @@ import java.util.Map;
 
 import java.util.HashMap;
 import java.util.Properties;
+import java.util.Set;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -381,7 +382,7 @@ public class ProductDaoImpl implements ProductDao {
     public List<Product> fetchPastPurchasedProducts(int customerId) {
 
         String sqlQuery = "SELECT p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, c.id, c.name FROM product p  JOIN category c on p.categoryid = c.id WHERE p.id IN (SELECT DISTINCT(productId) FROM purchase_details WHERE purchaseId IN (SELECT pur.id FROM purchase pur WHERE userId = ?));";
-        List<Product> pastPurchaseProducts = new LinkedList<>();
+        List<Product> pastPurchasedProducts = new LinkedList<>();
 
         try {
             PreparedStatement pst = con.prepareStatement(sqlQuery);
@@ -389,7 +390,7 @@ public class ProductDaoImpl implements ProductDao {
             ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
-                pastPurchaseProducts.add(new Product(rs.getInt(1),          // id
+                pastPurchasedProducts.add(new Product(rs.getInt(1),          // id
                                 rs.getString(2),        // name
                                 rs.getString(3),        // description
                                 rs.getString(4),        // image path
@@ -404,34 +405,8 @@ public class ProductDaoImpl implements ProductDao {
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
-        return pastPurchaseProducts;
+        return pastPurchasedProducts;
     }
-
-
-    /**
-     * Helper method that facilitates handling of potential new rating.
-     */
-    @Override
-    public boolean hasPurchased(int customerId, int productId) {
-        String sqlQuery = "SELECT DISTINCT(productId) FROM purchase_details WHERE purchaseId in (SELECT id FROM purchase WHERE userId = ?) AND productId = ? )";
-        boolean hasPurchased = false;
-
-        try {
-            PreparedStatement pst = con.prepareStatement(sqlQuery);
-            pst.setInt(1, customerId);
-            pst.setInt(2, productId);
-            ResultSet rs = pst.executeQuery();
-
-            if (rs.next()) {
-                hasPurchased = true;
-            }
-         } catch (Exception ex) {
-            System.out.println("Exception Occurred: " + ex.getMessage());
-        }
-
-        return hasPurchased;
-    }
-
 
 
     @Override
