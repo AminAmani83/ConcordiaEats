@@ -5,17 +5,20 @@ import java.util.*;
 public class Rating {
   
     Map<Integer, Integer> customerRatings = new HashMap<Integer, Integer>();        // <productId, rating>
-    private List<Product> rateableProducts;
   
-    public Rating() {
-        this.rateableProducts = new ArrayList<Product>();
-    }
-      
-    public List<Product> getRateableProducts() {
-        return rateableProducts;
+    public Rating () {
     }
 
-    public void setRateableProducts(List<Product> rateableProducts) {
-        this.rateableProducts = (rateableProducts == null) ? new ArrayList<Product>() : new ArrayList<Product>(rateableProducts);
+    public Rating(Map<Integer,Integer> customerRatings) {
+        this.customerRatings = customerRatings;
     }
+
+    public Map<Integer,Integer> getCustomerRatings() {
+        return customerRatings;
+    }
+
+    public void setCustomerRatings(Map<Integer,Integer> customerRatings) {
+        this.customerRatings = (customerRatings == null) ? new HashMap<Integer,Integer>() : new HashMap<Integer,Integer>(customerRatings);
+    }
+
 }

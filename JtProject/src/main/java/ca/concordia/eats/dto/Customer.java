@@ -1,6 +1,7 @@
 package ca.concordia.eats.dto;
 
-import java.util.Set;
+import java.util.List;
+import java.util.Map;
 
 public class Customer extends User {
   
@@ -10,7 +11,7 @@ public class Customer extends User {
     private Favorite favorite;
     private Rating rating;
     private Recommendation recommendation;
-    private Set<Product> purchasedProducts;
+    private List<Product> purchasedProducts;
     
     public Customer() {
     }
@@ -67,11 +68,11 @@ public class Customer extends User {
         this.recommendation = recommendation;
     }
 
-    public Set<Product> getPurchasedProducts() {
+    public List<Product> getPurchasedProducts() {
         return purchasedProducts;
     }
 
-    public void setPurchasedProducts(Set<Product> purchasedProducts) {
+    public void setPurchasedProducts(List<Product> purchasedProducts) {
         this.purchasedProducts = purchasedProducts;
     }
 
