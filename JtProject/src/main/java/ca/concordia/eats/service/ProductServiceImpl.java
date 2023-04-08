@@ -104,11 +104,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public boolean hasPurchased(int customerId, int productId) {
-        return productDao.hasPurchased(customerId, productId);
-    }
-
-    @Override
     public List<Product> search(String query, int userId) {
         return productDao.search(query, userId);
     }
