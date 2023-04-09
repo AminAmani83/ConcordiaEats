@@ -3,8 +3,11 @@ package ca.concordia.eats.controller;
 import ca.concordia.eats.dto.Customer;
 import ca.concordia.eats.dto.Favorite;
 import ca.concordia.eats.dto.Product;
+import ca.concordia.eats.dto.Rating;
 import ca.concordia.eats.dto.User;
+import ca.concordia.eats.service.UserService;
 import ca.concordia.eats.service.ProductService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -55,19 +58,34 @@ public class MainController {
         return "search-results";
     }
 
+    /**
+     * Allows the Customer to rate a product he/she has already purchased.
+     * 
+     * @param productId - the product to be rated
+     * @param rating - the chosen rating
+     * @param sourcePage - the page on which the customer was when rating the product - there are multiple page possibilities here.
+     * @param session - the User session
+     * @return
+     */
     @GetMapping("/product/rate-product")
-    public String rateProduct(@RequestParam("customerid") int customerId, 
-                                @RequestParam("productid") int productId, 
-                                @RequestParam("rating") int rating) {
+    public String rateProduct(@RequestParam("productid") int productId, 
+                                @RequestParam("rating") int rating,
+                                @RequestParam("src") String sourcePage,
+                                HttpSession session) {
+                            
+        if (session.getAttribute("user") == null) return "userLogin";
 
-        if (productService.hasPurchased(customerId, productId)) {
-            productService.rateProduct(customerId, productId, rating);
+        Customer customer = (Customer) session.getAttribute("user");
+        Product product = productService.fetchProductById(productId);
+        List<Product> purchasedProducts = customer.getPurchasedProducts();
+
+        if (purchasedProducts.contains(product)) {      // allow rating
+            productService.rateProduct(customer.getUserId(), productId, rating);
+            customer.setRating(new Rating(productService.fetchAllCustomerRatings(customer.getUserId())));
         } else {
-            /** TODO */
-            // Find something to do if the customer cannot rate.
+            //TODO
+            // Find something to do if customer cannot rate - text to be displayed??
         }
-
-        return "redirect:/product/";
+        return "redirect:/" + sourcePage;
     }
-
 }
