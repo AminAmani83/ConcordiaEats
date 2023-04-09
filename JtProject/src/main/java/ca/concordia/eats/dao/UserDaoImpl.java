@@ -125,7 +125,7 @@ public class UserDaoImpl implements UserDao {
 
         try {
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select id, username, role, email, address, phone from user where role='CUSTOMER';");
+            ResultSet rs = stmt.executeQuery("select id, username, role, address, email, phone from user where role='CUSTOMER';");
             while (rs.next()) {
                 allCustomers.add(new Customer(rs.getInt(1),
                         rs.getString(2),
@@ -282,7 +282,7 @@ public class UserDaoImpl implements UserDao {
 
                 PreparedStatement pst = con.prepareStatement("delete from user where username = ? and password = ?;");
                 pst.setString(1, userCredentials.getUsername());
-                pst.setString(1, userCredentials.getPassword());
+                pst.setString(2, userCredentials.getPassword());
                 pst.executeUpdate();
 
                 customerRemoved = true;
