@@ -1,7 +1,6 @@
 package ca.concordia.eats.dto;
 
 import java.util.List;
-import java.util.Map;
 
 public class Customer extends User {
   

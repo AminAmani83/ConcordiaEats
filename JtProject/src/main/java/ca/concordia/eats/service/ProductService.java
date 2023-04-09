@@ -5,7 +5,6 @@ import ca.concordia.eats.dto.Product;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
@@ -34,5 +33,5 @@ public interface ProductService {
     // OTHER : RATING
     public void rateProduct(int customerId, int productId, int rating);
     public Map<Integer, Integer> fetchAllCustomerRatings(int customerId);
-    public Set<Product> fetchPastPurchasedProducts(int customerId);
+    public List<Product> fetchPastPurchasedProducts(int customerId);
 }

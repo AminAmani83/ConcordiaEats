@@ -8,6 +8,7 @@ import ca.concordia.eats.dto.User;
 import ca.concordia.eats.service.UserService;
 import ca.concordia.eats.service.ProductService;
 
+import org.apache.jasper.tagplugins.jstl.core.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class MainController {
@@ -77,11 +79,12 @@ public class MainController {
 
         Customer customer = (Customer) session.getAttribute("user");
         Product product = productService.fetchProductById(productId);
-        List<Product> purchasedProducts = customer.getPurchasedProducts();
+        Map<Integer,Integer> customerRatings = productService.fetchAllCustomerRatings(customer.getUserId());
+        List<Product> purchasedProducts = productService.fetchPastPurchasedProducts(customer.getUserId());
 
         if (purchasedProducts.contains(product)) {      // allow rating
             productService.rateProduct(customer.getUserId(), productId, rating);
-            customer.setRating(new Rating(productService.fetchAllCustomerRatings(customer.getUserId())));
+            customer.setRating(new Rating(customerRatings, purchasedProducts));
         } else {
             //TODO
             // Find something to do if customer cannot rate - text to be displayed??

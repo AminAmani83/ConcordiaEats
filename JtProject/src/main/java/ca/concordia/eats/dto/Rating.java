@@ -10,12 +10,12 @@ import java.util.*;
 public class Rating {
   
     Map<Integer, Integer> customerRatings = new HashMap<Integer, Integer>();        // <productId, rating>
-    Set<Product> rateableProducts = new HashSet<Product>();                         // this variable contains only past purchased Products
+    List<Product> rateableProducts = new ArrayList<Product>();                    // this variable contains only past purchased Products
   
     public Rating () {
     }
 
-    public Rating(Map<Integer,Integer> customerRatings, Set<Product> rateableProducts) {
+    public Rating(Map<Integer,Integer> customerRatings, List<Product> rateableProducts) {
         this.customerRatings = customerRatings;
         this.rateableProducts = rateableProducts;
     }
@@ -28,12 +28,12 @@ public class Rating {
         this.customerRatings = (customerRatings == null) ? new HashMap<Integer,Integer>() : new HashMap<Integer,Integer>(customerRatings);
     }
 
-    public Set<Product> getRateableProducts() {
+    public List<Product> getRateableProducts() {
         return rateableProducts;
     }
 
-    public void setRateableProducts(Set<Product> rateableProducts) {
-        this.rateableProducts = (rateableProducts == null) ? new HashSet<Product>() : new HashSet<Product>(rateableProducts);
+    public void setRateableProducts(List<Product> rateableProducts) {
+        this.rateableProducts = (rateableProducts == null) ? new ArrayList<Product>() : new ArrayList<Product>(rateableProducts);
     }
 
 }

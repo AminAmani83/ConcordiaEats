@@ -8,7 +8,6 @@ import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public interface ProductDao {
     // CRUD PRODUCT
@@ -37,7 +36,7 @@ public interface ProductDao {
     public void rateProduct(int customerId, int productId, int rating);
     public Map<Integer, Integer> fetchAllCustomerRatings(int customerId);
     public int fetchRatingByProductIdAndCustomerId(int customerId, int productId);
-    public Set<Product> fetchPastPurchasedProducts(int customerId);
+    public List<Product> fetchPastPurchasedProducts(int customerId);
     public void updateCurrentRating(int customerId, int productId, int rating);         // helper for rateProduct
     public void insertNewRating(int customerId, int productId, int rating);             // helper for rateProduct
 
