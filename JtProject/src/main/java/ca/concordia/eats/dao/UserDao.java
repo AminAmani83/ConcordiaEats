@@ -1,7 +1,8 @@
 package ca.concordia.eats.dao;
 
-import ca.concordia.eats.dto.User;
 import ca.concordia.eats.dto.Customer;
+import ca.concordia.eats.dto.Product;
+import ca.concordia.eats.dto.User;
 import ca.concordia.eats.dto.UserCredentials;
 
 import java.util.List;
@@ -25,9 +26,12 @@ public interface UserDao {
     // CRUD CUSTOMER
     public List<Customer> getAllCustomers();
     public Customer getCustomerById(int userId);
+    public Customer getCustomerByCredential(UserCredentials userCredentials);
     public Customer updateCustomer(Customer customer);      // equivalent to updateProfile() in our class diagram
     public Customer createCustomer(Customer customer);      // equivalent to register() in our class diagram
-    public boolean removeCustomer(UserCredentials userCredentials);
+    public boolean removeCustomerById(int customerId);
+	public List<Product> fetchCustomerSearchedProduct(User user) ;
+
 
 
 }

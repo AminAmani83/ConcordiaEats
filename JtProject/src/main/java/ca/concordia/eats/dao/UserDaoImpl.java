@@ -2,15 +2,19 @@ package ca.concordia.eats.dao;
 
 import ca.concordia.eats.dto.User;
 import ca.concordia.eats.dto.Customer;
+import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.UserCredentials;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.io.FileReader;
 import java.io.IOException;
+
+import javax.servlet.http.HttpSession;
 
 @Repository
 public class UserDaoImpl implements UserDao {
@@ -171,6 +175,23 @@ public class UserDaoImpl implements UserDao {
         return customer;
     }
 
+    @Override
+    public Customer getCustomerByCredential(UserCredentials userCredentials) {
+        Customer customer = null;
+        try {
+            PreparedStatement stmt = con.prepareStatement("SELECT * FROM user WHERE username = ? AND password = ?");
+            stmt.setString(1, userCredentials.getUsername());
+            stmt.setString(2, userCredentials.getPassword());
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                customer = new Customer();
+                customer.setUsername(rs.getString("username"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+            return customer;
+    }
 
     /**
      * Only allow a Customer to update its email, address or phone.
@@ -259,9 +280,10 @@ public class UserDaoImpl implements UserDao {
 
 
     @Override
-    public boolean removeCustomer(UserCredentials userCredentials) {
+    public boolean removeCustomerById(int customerId) {
 
         boolean customerRemoved = false;
+        UserCredentials userCredentials = fetchUserCredentialsById(customerId);
         boolean isCustomer = checkUserIsCustomer(userCredentials);
 
         if (isCustomer) {
@@ -322,5 +344,43 @@ public class UserDaoImpl implements UserDao {
         }
         return null;
     }
+
+	
+private ProductDao productDao;
+	
+	@Override
+	public List<Product> fetchCustomerSearchedProduct(User user)     {
+		List<Product> products = productDao.fetchAllProducts();
+		List<Product>  searchedProducts = new ArrayList<>();
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject", "root", "")) {
+            // Create a statement
+            String query = "SELECT * FROM search_history WHERE userId = ?";
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setInt(1, user.getUserId());
+            
+            // Execute the query and get the result set
+            ResultSet resultSet = statement.executeQuery(query);
+            
+            // Create a HashMap to hold the search phrases and their counts
+            
+            // Loop through the result set and add each search phrase to the HashMap
+            while (resultSet.next()) {
+        		String  searchedphrase = resultSet.getString("phrase");
+                int userId = resultSet.getInt("userId");
+                	  for (Product product : products) {
+                          if (product.getName().toLowerCase().contains(searchedphrase.toLowerCase())) {
+                        	  searchedProducts.add(product);
+
+                          }
+                      
+            }
+
+            }}
+        catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+  		return searchedProducts;
+    }
+
 
 }
