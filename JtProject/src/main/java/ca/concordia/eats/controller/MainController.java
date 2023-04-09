@@ -85,6 +85,7 @@ public class MainController {
         if (purchasedProducts.contains(product)) {      // allow rating
             productService.rateProduct(customer.getUserId(), productId, rating);
             customer.setRating(new Rating(customerRatings, purchasedProducts));         //TODO - maybe this needs to be deleted.
+            product.setRating(productService.calculateAvgProductRating(productId));     // Needs to be recalculated after this rating.
             
         } else {
             //TODO
