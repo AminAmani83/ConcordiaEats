@@ -243,7 +243,7 @@ public class AdminController {
 
 	/**
 	 * To allow the admin to remove customers from the customer panel.
-	 * @param userCredentials
+	 * @param customerId
 	 * @return
 	 */
 	@GetMapping("/admin/customers/delete")
@@ -256,7 +256,7 @@ public class AdminController {
 	/**
 	 * The admin can update only certain information from the customer.
 	 * The admin can only do so by 'id'.
-	 * @param userCredentials
+	 * @param customerId
 	 * @param email
 	 * @param address
 	 * @param phone
