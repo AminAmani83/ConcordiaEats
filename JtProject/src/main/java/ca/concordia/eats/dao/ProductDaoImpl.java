@@ -462,5 +462,27 @@ public class ProductDaoImpl implements ProductDao {
     }
 
 
+    /**
+     * This method is used in the background to calculate the average product rating for one product.
+     * This average rating is displayed on the Front-End as filled stars.
+     */
+    @Override
+    public Double calculateAvgProductRating(int productId) {
+
+        Double avgRating = 0.0;
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("select AVG(rating) from rating where productId=" + productId + ";");
+            if (rs.next()) {
+                avgRating = rs.getDouble(1);
+            }
+            
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+        return avgRating;
+    }
+
+
 }
 
