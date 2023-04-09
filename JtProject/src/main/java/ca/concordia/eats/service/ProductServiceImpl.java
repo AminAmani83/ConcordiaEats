@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
@@ -99,7 +100,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> fetchPastPurchasedProducts(int customerId) {
+    public Set<Product> fetchPastPurchasedProducts(int customerId) {
         return productDao.fetchPastPurchasedProducts(customerId);
     }
 

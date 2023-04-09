@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 import java.io.FileReader;
@@ -379,10 +380,10 @@ public class ProductDaoImpl implements ProductDao {
      * this customer is allowed to rate them.
      */
     @Override
-    public List<Product> fetchPastPurchasedProducts(int customerId) {
+    public Set<Product> fetchPastPurchasedProducts(int customerId) {
 
         String sqlQuery = "SELECT p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, c.id, c.name FROM product p  JOIN category c on p.categoryid = c.id WHERE p.id IN (SELECT DISTINCT(productId) FROM purchase_details WHERE purchaseId IN (SELECT pur.id FROM purchase pur WHERE userId = ?));";
-        List<Product> pastPurchasedProducts = new LinkedList<>();
+        Set<Product> pastPurchasedProducts = new HashSet<>();
 
         try {
             PreparedStatement pst = con.prepareStatement(sqlQuery);

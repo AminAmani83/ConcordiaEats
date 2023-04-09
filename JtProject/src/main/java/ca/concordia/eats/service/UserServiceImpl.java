@@ -74,7 +74,9 @@ public class UserServiceImpl implements UserService {
     public Customer fetchCustomerData(UserCredentials userCredentials) {
         Customer customer = userDao.fetchCustomerData(userCredentials);
         customer.setFavorite(new Favorite(productService.fetchCustomerFavoriteProducts(customer.getUserId())));
-        customer.setPurchasedProducts(productService.fetchPastPurchasedProducts(customer.getUserId()));
+        customer.setRating(new Rating(productService.fetchAllCustomerRatings(customer.getUserId()),
+                                    productService.fetchPastPurchasedProducts(customer.getUserId())));
+                                    
         return customer;
     }
 
