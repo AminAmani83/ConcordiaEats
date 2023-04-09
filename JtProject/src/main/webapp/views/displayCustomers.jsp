@@ -22,56 +22,90 @@
 
 		
 		<table class="table">
-
-			<tr>
-				<th scope="col">UserId</th>
-				<th scope="col">Customer Name</th>
-				<th scope="col">Email</th>
-				<th scope="col">Address</th>
-			</tr>
-			<tbody>
+			<thead class="thead-light">
 				<tr>
-
-					<%
-					try {
-						String url = "jdbc:mysql://localhost:3306/springproject";
-						Class.forName("com.mysql.cj.jdbc.Driver");
-						Connection con = DriverManager.getConnection(url, "root", "");
-						Statement stmt = con.createStatement();
-						Statement stmt2 = con.createStatement();
-						ResultSet rs = stmt.executeQuery("select * from users");
-					%>
-					<%
-					while (rs.next()) {
-					%>
-					<td>
-						<%= rs.getInt(1) %>
-					</td>
-					<td>
-						<%= rs.getString(2) %>
-					</td>
-					<td>
-						<%= rs.getString(6) %>
-						</td>
-					<td>
-						<%= rs.getString(5) %>
-					</td>
-
+					<th scope="col">CustomerId</th>
+					<th scope="col">Customer Name</th>
+					<th scope="col">Email</th>
+					<th scope="col">Address</th>
+					<th scope="col">Phone</th>
+					<th scope="col">Delete</th>
+					<th scope="col">Update</th>
 				</tr>
-				<%
-				}
-				%>
-
-			</tbody>
-		</table>
-		<%
-		} catch (Exception ex) {
-		out.println("Exception Occurred:: " + ex.getMessage());
-		}
-		%>
-	</div>
-
-
+			</thead>
+			<tbody>
+				<c:forEach items="${allCategories}" var="category">
+					<tr>
+						<td><c:out value="${category.id}"/></td>
+						<td><c:out value="${category.name}"/></td>
+		
+						<td>
+							<form action="categories/delete" method="get">
+								<input type="hidden" name="id" value="<c:out value="${category.id}" />">
+								<input type="submit" value="Delete" class="btn btn-danger">
+							</form>
+						</td>
+		
+						<td>
+							<form action="categories/update" method="get">
+		
+								<!-- Button trigger modal -->
+								<button type="button" class="btn btn-warning" data-toggle="modal"
+										data-target="#exampleModalCenter2"
+										onclick="document.getElementById('categoryname').value =  '<c:out
+												value="${category.name}"/>'; document.getElementById('categoryid').value =
+												'<c:out value="${category.id}"/>';">Update
+								</button>
+		
+								<!-- Modal -->
+								<div class="modal fade" id="exampleModalCenter2" tabindex="-1"
+									 role="dialog" aria-labelledby="exampleModalCenterTitle"
+									 aria-hidden="true">
+									<div class="modal-dialog modal-dialog-centered" role="document">
+		
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title" id="exampleModalLongTitle">Update
+													Product Details</h5>
+												<button type="button" class="close" data-dismiss="modal"
+														aria-label="Close">
+													<span aria-hidden="true">&times;</span>
+												</button>
+											</div>
+											<div class="modal-body text-center">
+												<div class="form-group">
+													<input class="form-control" type="number"
+														   readonly="readonly" name="categoryid" id="categoryid" value="0">
+												</div>
+												<div class="form-group">
+													<input class="form-control" type="text" name="categoryname"
+														   id="categoryname"
+														   value="categoryname">
+												</div>
+		
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary"
+														data-dismiss="modal">Close
+												</button>
+												<button type="submit" class="btn btn-primary">Update
+													changes
+												</button>
+											</div>
+		
+										</div>
+									</div>
+								</div>
+		
+							</form>
+						</td>
+		
+					</tr>
+				</c:forEach>
+				</tbody>
+			</table>
+		</div>
+	
 
 	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
 		integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
