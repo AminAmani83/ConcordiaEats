@@ -84,7 +84,8 @@ public class MainController {
 
         if (purchasedProducts.contains(product)) {      // allow rating
             productService.rateProduct(customer.getUserId(), productId, rating);
-            customer.setRating(new Rating(customerRatings, purchasedProducts));
+            customer.setRating(new Rating(customerRatings, purchasedProducts));         //TODO - maybe this needs to be deleted.
+            
         } else {
             //TODO
             // Find something to do if customer cannot rate - text to be displayed??
