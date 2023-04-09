@@ -1,26 +1,19 @@
 package ca.concordia.eats.service;
 
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpSession;
-
-import org.apache.logging.log4j.util.PropertySource.Comparator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.support.DaoSupport;
 import org.springframework.stereotype.Service;
 
 
 import ca.concordia.eats.dao.ProductDao;
 import ca.concordia.eats.dao.UserDao;
 import ca.concordia.eats.dto.Product;
-import ca.concordia.eats.dto.Recommendation;
 import ca.concordia.eats.dto.User;
 
 
@@ -36,13 +29,13 @@ public class RecommendationServiceImp implements RecommendationService {
     private ProductDao productDao;
 
 	@Override
-	public List<Product> FetchPresonanllizedRecomendation(HttpSession session) {
-		return MostSerachedProducts(session);
+	public List<Product> fetchPersonalisedRecommendation(User user) {
+		return mostSearchedProducts(user);
 	}
 
 	@Override
-	public  List<Product> MostSerachedProducts(HttpSession session){
-	   List<Product> searchedProducts = userDao.fetchCustomerSearchedProduct(session);
+	public  List<Product> mostSearchedProducts(User user){
+	   List<Product> searchedProducts = userDao.fetchCustomerSearchedProduct(user);
        Map<Integer, Integer> searchCountMap = new HashMap<>();
 	   List<Product> topSearchedProducts = null;
 

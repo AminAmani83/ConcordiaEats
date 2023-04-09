@@ -349,9 +349,7 @@ public class UserDaoImpl implements UserDao {
 private ProductDao productDao;
 	
 	@Override
-	public List<Product> fetchCustomerSearchedProduct(HttpSession session)     {
-		User user = (User) session.getAttribute("user");
-
+	public List<Product> fetchCustomerSearchedProduct(User user)     {
 		List<Product> products = productDao.fetchAllProducts();
 		List<Product>  searchedProducts = new ArrayList<>();
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject", "root", "")) {
