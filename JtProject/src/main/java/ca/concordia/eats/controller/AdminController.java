@@ -1,5 +1,6 @@
 package ca.concordia.eats.controller;
 
+import ca.concordia.eats.dto.*;
 import ca.concordia.eats.dto.Category;
 import ca.concordia.eats.dto.Customer;
 import ca.concordia.eats.dto.Product;
@@ -21,7 +22,6 @@ import java.sql.*;
 import java.util.List;
 import java.util.Properties;
 import java.io.FileReader;
-import java.io.IOException;
 
 @Controller
 
@@ -43,7 +43,8 @@ public class AdminController {
      * @throws IOException
      */
 	public AdminController() throws IOException {
-		String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
+		String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath()
+				.replaceAll("%20", " ");
 		String dbConfigPath = rootPath + "db.properties";
 
 		FileReader reader = new FileReader(dbConfigPath);
@@ -68,12 +69,12 @@ public class AdminController {
 	}
 
 	@GetMapping("/index")
-	public String index(Model model) {
-		List<Product> allProducts = productService.fetchAllProducts();
-		if(usernameForClass.equalsIgnoreCase("")) {
+	public String index(Model model, HttpSession session) {
+		if (usernameForClass.equalsIgnoreCase("")) {
 			return "userLogin";
-		}
-		else {
+		} else {
+			List<Product> allProducts = productService.fetchAllProducts();
+			Customer customer = (Customer) session.getAttribute("user");
 			// Temp Products TODO: use actual results from DB
 			Product bestSellerProduct = new Product(1, "Hamburger", "Delicious", "https://tmbidigitalassetsazure.blob.core.windows.net/secure/RMS/attachments/37/1200x1200/Sausage-Sliders-with-Cran-Apple-Slaw_exps48783_SD2235819D06_24_2bC_RMS.jpg", 0f, 0, false, 0f, null, null);
 			Product highestRatedProduct = new Product(2, "Chicken Soup", "Delicious", "https://www.allrecipes.com/thmb/NgpgUebR7ixeEuToPd1c1TgaQmU=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/8814_HomemadeChickenSoup_SoupLovingNicole_LSH-2000-4ae7ff733c554fdab0796d15c8d1151f.jpg", 0f, 0, false, 0f, null, null);
@@ -83,6 +84,7 @@ public class AdminController {
 			model.addAttribute("bestSellerProduct", bestSellerProduct);
 			model.addAttribute("highestRatedProduct", highestRatedProduct);
 			model.addAttribute("recommendedProduct", recommendedProduct);
+			model.addAttribute("favoriteProducts", customer.getFavorite().getCustomerFavoritedProducts());
 			return "index";
 		}
 	}
@@ -98,15 +100,18 @@ public class AdminController {
 
 		try {
 			UserCredentials userCredentials = new UserCredentials();
-			User user = new User();
 			userCredentials.setUsername(username);
 			userCredentials.setPassword(password);
 			boolean isValid = userService.validateUserLogin(userCredentials);
 			if (isValid) {
+				Basket basket = new Basket();
 				usernameForClass = username;
-				user = userService.fetchUserData(userCredentials);
-				session.setAttribute("user", user);
-				//User u = (User) session.getAttribute("user");
+				Customer customer = userService.fetchCustomerData(userCredentials);
+				Favorite customerFavorite = new Favorite(productService.fetchCustomerFavoriteProducts(customer.getUserId()));
+				customer.setFavorite(customerFavorite);
+				session.setAttribute("user", customer);
+        session.setAttribute("basket", basket);
+
 				return "redirect:/index";
 			} else {
 				model.addAttribute("message", "Invalid Username or Password");

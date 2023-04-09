@@ -240,6 +240,19 @@ INSERT INTO `user` (`username`, `password`, `role`, `email`, `address`, `phone`)
 ('jay', '123', 'CUSTOMER', 'gajerajay9@gmail.com', '4 Privet Drive', '999-999-9999'),
 ('admin', '123', 'ADMIN', '20ceuos042@ddu.ac.in', '10 Sussex Drive', '888-888-8888');
 
+INSERT INTO `springproject`.`product`
+(`name`, `description`, `imagePath`, `categoryid`, `price`, `salesCount`, `isOnSale`, `discountPercent`)
+VALUES
+  ('Sample Product', 'This is a sample product description.', '/images/sample-product.jpg', 1, 24.99, 0, 1, 0.10),
+  ('Pepperoni Pizza', 'A classic pizza topped with pepperoni slices and melted cheese.', 'https://example.com/pizza.jpg', 1, 10.99, 100, 0, 0),
+  ('Vegetarian Pad Thai', 'A Thai noodle dish made with vegetables, tofu, and peanuts.', 'https://example.com/pad-thai.jpg', 2, 8.99, 50, 1, 10),
+  ('Grilled Chicken Sandwich', 'A sandwich with grilled chicken, lettuce, tomato, and mayo.', 'https://example.com/chicken-sandwich.jpg', 3, 7.99, 75, 0, 0),
+  ('Mango Smoothie', 'A smoothie made with mango, yogurt, and honey.', 'https://example.com/mango-smoothie.jpg', 4, 4.99, 25, 1, 20),
+  ('Cheeseburger', 'A burger with a beef patty, cheese, lettuce, tomato, and ketchup.', 'https://example.com/cheeseburger.jpg', 3, 9.99, 90, 0, 0),
+  ('Chocolate Chip Cookies', 'Homemade chocolate chip cookies made with butter and brown sugar.', 'https://example.com/cookies.jpg', 5, 3.99, 150, 1, 15),
+  ('Beef Stir Fry', 'A Chinese stir-fry with beef, vegetables, and rice.', 'https://example.com/stir-fry.jpg', 2, 11.99, 60, 0, 0),
+  ('Greek Salad', 'A salad with feta cheese, olives, tomatoes, cucumbers, and a vinaigrette dressing.', 'https://example.com/salad.jpg', 4, 6.99, 40, 1, 25);
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

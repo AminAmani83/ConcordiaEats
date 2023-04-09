@@ -2,21 +2,20 @@ package ca.concordia.eats.dao;
 
 import ca.concordia.eats.dto.Category;
 import ca.concordia.eats.dto.Product;
+import ca.concordia.eats.dto.SearchHistory;
 import ca.concordia.eats.dto.User;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
+import javax.servlet.http.HttpSession;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpSession;
 
 import java.util.HashMap;
 import java.util.Properties;
@@ -36,19 +35,21 @@ public class ProductDaoImpl implements ProductDao {
      * username=<my-username>
      * password=<my-secret-password>
      * url=<jdbc-url>
+     *
      * @throws IOException
      */
     public ProductDaoImpl() throws IOException {
-        String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
-		String dbConfigPath = rootPath + "db.properties";
+        String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath()
+                .replaceAll("%20", " ");
+        String dbConfigPath = rootPath + "db.properties";
 
-		FileReader reader = new FileReader(dbConfigPath);
-		Properties dbProperties = new Properties();
-		dbProperties.load(reader);
+        FileReader reader = new FileReader(dbConfigPath);
+        Properties dbProperties = new Properties();
+        dbProperties.load(reader);
 
-		try {
-			this.con = DriverManager.getConnection(dbProperties.getProperty("url"), dbProperties.getProperty("username"), dbProperties.getProperty("password"));
-       } catch (Exception e) {
+        try {
+            this.con = DriverManager.getConnection(dbProperties.getProperty("url"), dbProperties.getProperty("username"), dbProperties.getProperty("password"));
+        } catch (Exception e) {
             System.out.println("Error connecting to the DB: " + e.getMessage());
         }
     }
@@ -273,7 +274,7 @@ public class ProductDaoImpl implements ProductDao {
     /**
      * Helper method used in rateProduct.
      */
-    @Override 
+    @Override
     public int fetchRatingByProductIdAndCustomerId(int customerId, int productId) {
 
         int currentRating = -1;     // default value
@@ -287,7 +288,7 @@ public class ProductDaoImpl implements ProductDao {
             if (rs.next()) {
                 currentRating = rs.getInt(1);
             }
-            
+
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
@@ -297,7 +298,7 @@ public class ProductDaoImpl implements ProductDao {
 
 
     /**
-     * Helper method used in rateProduct - used to insert a new rating if 
+     * Helper method used in rateProduct - used to insert a new rating if
      * this is the first time this customer rates this product.
      */
     @Override
@@ -311,9 +312,9 @@ public class ProductDaoImpl implements ProductDao {
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
-    } 
+    }
 
-    
+
     /**
      * Helper method used in rateProduct - used to update a rating if one
      * exists already for this product and this customer.
@@ -339,9 +340,9 @@ public class ProductDaoImpl implements ProductDao {
         try {
             int currentRating = fetchRatingByProductIdAndCustomerId(customerId, productId);
 
-            if (currentRating==-1) {
+            if (currentRating == -1) {
                 insertNewRating(customerId, productId, currentRating);
-            } else if (currentRating>=0 & currentRating<=5) {
+            } else if (currentRating >= 0 & currentRating <= 5) {
                 updateCurrentRating(customerId, productId, currentRating);
             } else {
                 System.out.println("currentRating value is outside valid bounds.");
@@ -359,7 +360,7 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public Map<Integer, Integer> fetchAllCustomerRatings(int customerId) {
 
-        Map<Integer, Integer> customerRatings = new HashMap<Integer, Integer>();    
+        Map<Integer, Integer> customerRatings = new HashMap<Integer, Integer>();
         try {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("select productId, rating from rating where userId=" + customerId + ";");
@@ -389,27 +390,26 @@ public class ProductDaoImpl implements ProductDao {
 
             while (rs.next()) {
                 pastPurchaseProducts.add(new Product(rs.getInt(1),          // id
-                                                    rs.getString(2),        // name
-                                                    rs.getString(3),        // description    
-                                                    rs.getString(4),        // image path
-                                                    rs.getFloat(5),         // price
-                                                    rs.getInt(6),           // sales count  
-                                                    rs.getBoolean(7),       // is on sale
-                                                    rs.getFloat(8),         // discountPercent
-                                                    new Category(rs.getInt(9), rs.getString(10))       /// category
-                                                    )
-                                        );
+                                rs.getString(2),        // name
+                                rs.getString(3),        // description
+                                rs.getString(4),        // image path
+                                rs.getFloat(5),         // price
+                                rs.getInt(6),           // sales count
+                                rs.getBoolean(7),       // is on sale
+                                rs.getFloat(8),         // discountPercent
+                                new Category(rs.getInt(9), rs.getString(10))       /// category
+                        )
+                );
             }
-         } catch (Exception ex) {
+        } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
         return pastPurchaseProducts;
     }
 
-    
 
     @Override
-    public List<Product> search(String query) {
+    public List<Product> search(String query, int userId) {
         List<Product> products = new ArrayList<>();
         try {
             String sql = "SELECT * FROM product WHERE name LIKE ?";
@@ -420,13 +420,45 @@ public class ProductDaoImpl implements ProductDao {
                 Product product = new Product();
                 product.setId(rs.getInt("id"));
                 product.setName(rs.getString("name"));
+                product.setPrice(rs.getFloat("price"));
+                product.setDescription(rs.getString("description"));
+                product.setImagePath(rs.getString("imagePath"));
                 products.add(product);
+                SearchHistory searchHistory = saveSearchHistoryToDatabase(query, userId);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-		return products;
-   
+        return products;
+
     }
+
+
+    @Override
+    public SearchHistory saveSearchHistoryToDatabase(String SearchQuery, int userId) throws SQLException {
+        User user = new User();
+        SearchHistory searchHistory = new SearchHistory();
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+        String sql = "INSERT INTO search_history(userId, phrase, timeStamp) VALUES (?, ?,?);";
+        PreparedStatement stmt = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+        stmt.setInt(1, userId);
+        stmt.setString(2, SearchQuery);
+        stmt.setTimestamp(3, timestamp);
+        int rowsAffected = stmt.executeUpdate();
+        if (rowsAffected == 0) {
+            throw new SQLException("Creating promotion failed, no rows affected.");
+        }
+        try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+            if (generatedKeys.next()) {
+                // searchHistory.setSearchHistoryId(generatedKeys.getInt(1));
+            } else {
+                throw new SQLException("Creating promotion failed, no ID obtained.");
+            }
+        }
+        return searchHistory;
+    }
+
+
 }
 
