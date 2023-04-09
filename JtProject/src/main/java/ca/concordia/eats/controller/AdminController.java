@@ -1,8 +1,8 @@
 package ca.concordia.eats.controller;
 
 import ca.concordia.eats.dto.*;
-import ca.concordia.eats.service.ProductService;
 import ca.concordia.eats.service.UserService;
+import ca.concordia.eats.service.ProductService;
 import ca.concordia.eats.utils.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -89,6 +89,7 @@ public class AdminController {
 		
 		return "userLogin";
 	}
+
 	@RequestMapping(value = "userloginvalidate", method = RequestMethod.POST)
 	public String userLogin(@RequestParam("username") String username, @RequestParam("password") String password, Model model, HttpSession session) {
 
@@ -123,6 +124,7 @@ public class AdminController {
 		
 		return "adminlogin";
 	}
+
 	@GetMapping("/adminhome")
 	public String adminHome(Model model) {
 		if(adminLogInCheck !=0)
@@ -130,11 +132,13 @@ public class AdminController {
 		else
 			return "redirect:/admin";
 	}
+
 	@GetMapping("/loginvalidate")
 	public String adminLog(Model model) {
 		
 		return "adminlogin";
 	}
+
 	@RequestMapping(value = "loginvalidate", method = RequestMethod.POST)
 	public String adminLogin(@RequestParam("username") String username, @RequestParam("password") String pass, Model model) {
 		
@@ -204,9 +208,9 @@ public class AdminController {
 		model.addAttribute("product", product);
 		return "productsUpdate";
 	}
+
 	@RequestMapping(value = "/admin/products/updateData",method=RequestMethod.POST)
 	public String updateproduct(@ModelAttribute("product") Product product, @RequestParam("productImage") MultipartFile multipartFile, @RequestParam("categoryid") int categoryId ) 
-	
 	{
 		Category category = productService.fetchCategoryById(categoryId);
 		product.setCategory(category);
@@ -236,9 +240,53 @@ public class AdminController {
 		return "redirect:/admin/categories";
 	}
 
+	/**
+	 * To display all customers in the admin customer panel.
+	 * @param model
+	 * @return
+	 */
 	@GetMapping("/admin/customers")
-	public String getCustomerDetail() {
+	public String getAllCustomers(Model model) {
+		List<Customer> allCustomers = userService.getAllCustomers();
+		model.addAttribute("allCustomers", allCustomers);
 		return "displayCustomers";
 	}
 
+	/**
+	 * To allow the admin to remove customers from the customer panel.
+	 * @param userCredentials
+	 * @return
+	 */
+	@GetMapping("/admin/customers/delete")
+	public String removeCustomer(@RequestParam("id") int customerId) {
+		userService.removeCustomerById(customerId);
+		return "redirect:/admin/customers";
+	}
+
+
+	/**
+	 * The admin can update only certain information from the customer.
+	 * The admin can only do so by 'id'.
+	 * @param userCredentials
+	 * @param email
+	 * @param address
+	 * @param phone
+	 * @return
+	 */
+	@GetMapping("/admin/customers/update")
+	public String updateCustomer(@RequestParam("id") int customerId, 
+								@RequestParam("email") String email, 
+								@RequestParam("address") String address,
+								@RequestParam("phone") String phone) {
+		Customer customer = userService.getCustomerById(customerId);
+
+		// update the customer
+		customer.setEmail(email);
+		customer.setPhone(phone);
+		customer.setAddress(address);
+
+		userService.updateCustomer(customer);
+
+		return "redirect:/admin/customers";
+	}
 }

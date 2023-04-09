@@ -171,6 +171,23 @@ public class UserDaoImpl implements UserDao {
         return customer;
     }
 
+    @Override
+    public Customer getCustomerByCredential(UserCredentials userCredentials) {
+        Customer customer = null;
+        try {
+            PreparedStatement stmt = con.prepareStatement("SELECT * FROM user WHERE username = ? AND password = ?");
+            stmt.setString(1, userCredentials.getUsername());
+            stmt.setString(2, userCredentials.getPassword());
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                customer = new Customer();
+                customer.setUsername(rs.getString("username"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+            return customer;
+    }
 
     /**
      * Only allow a Customer to update its email, address or phone.
@@ -259,9 +276,10 @@ public class UserDaoImpl implements UserDao {
 
 
     @Override
-    public boolean removeCustomer(UserCredentials userCredentials) {
+    public boolean removeCustomerById(int customerId) {
 
         boolean customerRemoved = false;
+        UserCredentials userCredentials = fetchUserCredentialsById(customerId);
         boolean isCustomer = checkUserIsCustomer(userCredentials);
 
         if (isCustomer) {
