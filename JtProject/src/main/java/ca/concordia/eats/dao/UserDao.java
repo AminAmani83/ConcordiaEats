@@ -28,7 +28,7 @@ public interface UserDao {
     public Customer getCustomerByCredential(UserCredentials userCredentials);
     public Customer updateCustomer(Customer customer);      // equivalent to updateProfile() in our class diagram
     public Customer createCustomer(Customer customer);      // equivalent to register() in our class diagram
-    public boolean removeCustomer(UserCredentials userCredentials);
+    public boolean removeCustomerById(int customerId);
 
 
 }

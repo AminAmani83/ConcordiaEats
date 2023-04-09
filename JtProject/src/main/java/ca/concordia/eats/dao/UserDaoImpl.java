@@ -276,9 +276,10 @@ public class UserDaoImpl implements UserDao {
 
 
     @Override
-    public boolean removeCustomer(UserCredentials userCredentials) {
+    public boolean removeCustomerById(int customerId) {
 
         boolean customerRemoved = false;
+        UserCredentials userCredentials = fetchUserCredentialsById(customerId);
         boolean isCustomer = checkUserIsCustomer(userCredentials);
 
         if (isCustomer) {

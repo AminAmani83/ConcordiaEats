@@ -23,6 +23,6 @@ public interface UserService {
     public Customer getCustomerByCredential(UserCredentials userCredentials);
     public Customer updateCustomer(Customer customer);
     public Customer createCustomer(Customer customer);
-    public boolean removeCustomer(UserCredentials userCredentials);
+    public boolean removeCustomerById(int customerId);
    
 }

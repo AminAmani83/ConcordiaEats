@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean removeCustomer(UserCredentials userCredentials) {
-        return userDao.removeCustomer(userCredentials);
+    public boolean removeCustomerById(int customerId) {
+        return userDao.removeCustomerById(customerId);
     }
 }
