@@ -108,4 +108,9 @@ public class ProductServiceImpl implements ProductService {
         return productDao.search(query, userId);
     }
 
+    @Override
+    public Double calculateAvgProductRating(int productId) {
+        return productDao.calculateAvgProductRating(productId);
+    }
+
 }
