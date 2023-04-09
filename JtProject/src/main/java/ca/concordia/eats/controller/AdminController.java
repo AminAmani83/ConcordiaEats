@@ -241,7 +241,7 @@ public class AdminController {
 	}
 
 	/**
-	 * To display all customers in the admin panel.
+	 * To display all customers in the admin customer panel.
 	 * @param model
 	 * @return
 	 */
@@ -253,19 +253,20 @@ public class AdminController {
 	}
 
 	/**
-	 * To allow the admin to remove customers.
+	 * To allow the admin to remove customers from the customer panel.
 	 * @param userCredentials
 	 * @return
 	 */
 	@GetMapping("/admin/customers/delete")
-	public String removeCustomer(@RequestParam("id") UserCredentials userCredentials) {
-		userService.removeCustomer(userCredentials);
+	public String removeCustomer(@RequestParam("id") int customerId) {
+		userService.removeCustomerById(customerId);
 		return "redirect:/admin/customers";
 	}
 
 
 	/**
 	 * The admin can update only certain information from the customer.
+	 * The admin can only do so by 'id'.
 	 * @param userCredentials
 	 * @param email
 	 * @param address
@@ -273,11 +274,11 @@ public class AdminController {
 	 * @return
 	 */
 	@GetMapping("/admin/customers/update")
-	public String updateCustomer(@RequestParam("id") UserCredentials userCredentials, 
+	public String updateCustomer(@RequestParam("id") int customerId, 
 								@RequestParam("email") String email, 
 								@RequestParam("address") String address,
 								@RequestParam("phone") String phone) {
-		Customer customer = userService.getCustomerByCredential(userCredentials);
+		Customer customer = userService.getCustomerById(customerId);
 
 		// update the customer
 		customer.setEmail(email);
