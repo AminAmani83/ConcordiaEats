@@ -34,33 +34,35 @@
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach items="${allCategories}" var="category">
+				<c:forEach items="${allCustomers}" var="customer">
 					<tr>
-						<td><c:out value="${category.id}"/></td>
-						<td><c:out value="${category.name}"/></td>
+						<td><c:out value="${customer.userId}"/></td>
+						<td><c:out value="${customer.username}"/></td>
+						<td><c:out value="${customer.email}"/></td>
+						<td><c:out value="${customer.address}"/></td>
+						<td><c:out value="${customer.phone}"/></td>
 		
 						<td>
-							<form action="categories/delete" method="get">
-								<input type="hidden" name="id" value="<c:out value="${category.id}" />">
+							<form action="customers/delete" method="get">
+								<input type="hidden" name="customerId" value="<c:out value="${customer.userId}" />">
 								<input type="submit" value="Delete" class="btn btn-danger">
 							</form>
 						</td>
 		
 						<td>
-							<form action="categories/update" method="get">
+							<form action="customers/update" method="get">
 		
-								<!-- Button trigger modal -->
-								<button type="button" class="btn btn-warning" data-toggle="modal"
-										data-target="#exampleModalCenter2"
-										onclick="document.getElementById('categoryname').value =  '<c:out
-												value="${category.name}"/>'; document.getElementById('categoryid').value =
-												'<c:out value="${category.id}"/>';">Update
-								</button>
-		
+							<!-- Button trigger modal -->
+							<button type="button" class="btn btn-warning" data-toggle="modal"
+									data-target="#exampleModalCenter2"
+									onclick="document.getElementById('categoryname').value="<c:out value="${category.name}"/ >"; document.getElementById('categoryid').value =
+											'<c:out value="${category.id}"/>';">Update
+							</button>
+			
 								<!-- Modal -->
 								<div class="modal fade" id="exampleModalCenter2" tabindex="-1"
-									 role="dialog" aria-labelledby="exampleModalCenterTitle"
-									 aria-hidden="true">
+										role="dialog" aria-labelledby="exampleModalCenterTitle"
+										aria-hidden="true">
 									<div class="modal-dialog modal-dialog-centered" role="document">
 		
 										<div class="modal-content">
@@ -75,12 +77,21 @@
 											<div class="modal-body text-center">
 												<div class="form-group">
 													<input class="form-control" type="number"
-														   readonly="readonly" name="categoryid" id="categoryid" value="0">
+															readonly="readonly" name="customerid" id="customerid" value="0">
 												</div>
 												<div class="form-group">
-													<input class="form-control" type="text" name="categoryname"
-														   id="categoryname"
-														   value="categoryname">
+													<input class="form-control" type="text" name="email"
+															id="email"
+															value="email">
+												<div class="form-group">
+													<input class="form-control" type="text" name="address"
+															id="address"
+															value="address">
+												<div class="form-group">
+													<input class="form-control" type="text" name="phone"
+														id="phone"
+														value="phone">
+		
 												</div>
 		
 											</div>
