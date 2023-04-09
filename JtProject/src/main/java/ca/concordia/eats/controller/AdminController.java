@@ -238,7 +238,7 @@ public class AdminController {
 	public String getAllCustomers(Model model) {
 		List<Customer> allCustomers = userService.getAllCustomers();
 		model.addAttribute("allCustomers", allCustomers);
-		return "displayCustomers";
+		return "customers";
 	}
 
 	/**
