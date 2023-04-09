@@ -1,11 +1,6 @@
 package ca.concordia.eats.controller;
 
 import ca.concordia.eats.dto.*;
-import ca.concordia.eats.dto.Category;
-import ca.concordia.eats.dto.Customer;
-import ca.concordia.eats.dto.Product;
-import ca.concordia.eats.dto.User;
-import ca.concordia.eats.dto.UserCredentials;
 import ca.concordia.eats.service.UserService;
 import ca.concordia.eats.service.ProductService;
 import ca.concordia.eats.utils.FileUploadUtil;
@@ -129,6 +124,7 @@ public class AdminController {
 		
 		return "adminlogin";
 	}
+
 	@GetMapping("/adminhome")
 	public String adminHome(Model model) {
 		if(adminLogInCheck !=0)
@@ -136,11 +132,13 @@ public class AdminController {
 		else
 			return "redirect:/admin";
 	}
+
 	@GetMapping("/loginvalidate")
 	public String adminLog(Model model) {
 		
 		return "adminlogin";
 	}
+
 	@RequestMapping(value = "loginvalidate", method = RequestMethod.POST)
 	public String adminLogin(@RequestParam("username") String username, @RequestParam("password") String pass, Model model) {
 		
@@ -290,58 +288,4 @@ public class AdminController {
 
 		return "redirect:/admin/customers";
 	}
-
-
-	@GetMapping("profileDisplay")
-	public String profileDisplay(Model model) {
-		String displayusername,displaypassword,displayemail,displayaddress;
-		try
-		{
-			Statement stmt = con.createStatement();
-			ResultSet rst = stmt.executeQuery("select * from users where username = '"+ usernameForClass +"';");
-			
-			if(rst.next())
-			{
-			int userid = rst.getInt(1);
-			displayusername = rst.getString(2);
-			displayemail = rst.getString(3);
-			displaypassword = rst.getString(4);
-			displayaddress = rst.getString(5);
-			model.addAttribute("userid",userid);
-			model.addAttribute("username",displayusername);
-			model.addAttribute("email",displayemail);
-			model.addAttribute("password",displaypassword);
-			model.addAttribute("address",displayaddress);
-			}
-		}
-		catch(Exception e)
-		{
-			System.out.println("Exception:"+e);
-		}
-		System.out.println("Hello");
-		return "updateProfile";
-	}
-	
-	@RequestMapping(value = "updateuser",method=RequestMethod.POST)
-	public String updateUserProfile(@RequestParam("userid") int userid,@RequestParam("username") String username, @RequestParam("email") String email, @RequestParam("password") String password, @RequestParam("address") String address) 
-	
-	{
-		try
-		{
-			PreparedStatement pst = con.prepareStatement("update users set username= ?,email = ?,password= ?, address= ? where uid = ?;");
-			pst.setString(1, username);
-			pst.setString(2, email);
-			pst.setString(3, password);
-			pst.setString(4, address);
-			pst.setInt(5, userid);
-			int i = pst.executeUpdate();	
-			usernameForClass = username;
-		}
-		catch(Exception e)
-		{
-			System.out.println("Exception:"+e);
-		}
-		return "redirect:/index";
-	}
-
 }
