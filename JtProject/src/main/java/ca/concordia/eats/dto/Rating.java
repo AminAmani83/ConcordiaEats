@@ -12,7 +12,7 @@ public class Rating {
     }
       
     public List<Product> getRateableProducts() {
-        return new ArrayList(rateableProducts);
+        return rateableProducts;
     }
 
     public void setRateableProducts(List<Product> rateableProducts) {

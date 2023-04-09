@@ -13,13 +13,16 @@ public interface UserService {
     public User updateUser(User user);
     public User createUser(User user);
     public boolean validateUserLogin(UserCredentials userCredentials);
-    public User fetchUserData(UserCredentials userCredentials);
+    public Customer fetchCustomerData(UserCredentials userCredentials);
+    public UserCredentials fetchUserCredentialsById(int userId);
+    public void updateUserProfile(Customer customer, UserCredentials userCredentials);
 
     // CRUD CUSTOMER
     public List<Customer> getAllCustomers();
     public Customer getCustomerById(int userId);
+    public Customer getCustomerByCredential(UserCredentials userCredentials);
     public Customer updateCustomer(Customer customer);
     public Customer createCustomer(Customer customer);
-    public boolean removeCustomer(UserCredentials userCredentials);
+    public boolean removeCustomerById(int customerId);
    
 }

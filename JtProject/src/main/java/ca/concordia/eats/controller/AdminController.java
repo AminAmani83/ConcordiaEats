@@ -1,11 +1,8 @@
 package ca.concordia.eats.controller;
 
-import ca.concordia.eats.dto.Category;
-import ca.concordia.eats.dto.Product;
-import ca.concordia.eats.dto.User;
-import ca.concordia.eats.dto.UserCredentials;
-import ca.concordia.eats.service.ProductService;
+import ca.concordia.eats.dto.*;
 import ca.concordia.eats.service.UserService;
+import ca.concordia.eats.service.ProductService;
 import ca.concordia.eats.utils.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +15,8 @@ import java.io.IOException;
 import javax.servlet.http.HttpSession;
 import java.sql.*;
 import java.util.List;
+import java.util.Properties;
+import java.io.FileReader;
 
 @Controller
 
@@ -30,9 +29,25 @@ public class AdminController {
 	private UserService userService;
 
 	Connection con;
-	public AdminController() {
+
+	/**
+     * Uses the db.properties file in resources to retrieve db connection parameters
+     * username=<my-username>
+     * password=<my-secret-password>
+	 * url=<jdbc-url>
+     * @throws IOException
+     */
+	public AdminController() throws IOException {
+		String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath()
+				.replaceAll("%20", " ");
+		String dbConfigPath = rootPath + "db.properties";
+
+		FileReader reader = new FileReader(dbConfigPath);
+		Properties dbProperties = new Properties();
+		dbProperties.load(reader);
+
 		try {
-			this.con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject", "root", "");
+			this.con = DriverManager.getConnection(dbProperties.getProperty("url"), dbProperties.getProperty("username"), dbProperties.getProperty("password"));
 		} catch(Exception e) {
 			System.out.println("Error connecting to the DB: " + e.getMessage());
 		}
@@ -49,12 +64,12 @@ public class AdminController {
 	}
 
 	@GetMapping("/index")
-	public String index(Model model) {
-		List<Product> allProducts = productService.fetchAllProducts();
-		if(usernameForClass.equalsIgnoreCase("")) {
+	public String index(Model model, HttpSession session) {
+		if (usernameForClass.equalsIgnoreCase("")) {
 			return "userLogin";
-		}
-		else {
+		} else {
+			List<Product> allProducts = productService.fetchAllProducts();
+			Customer customer = (Customer) session.getAttribute("user");
 			// Temp Products TODO: use actual results from DB
 			Product bestSellerProduct = new Product(1, "Hamburger", "Delicious", "https://tmbidigitalassetsazure.blob.core.windows.net/secure/RMS/attachments/37/1200x1200/Sausage-Sliders-with-Cran-Apple-Slaw_exps48783_SD2235819D06_24_2bC_RMS.jpg", 0f, 0, false, 0f, null, null);
 			Product highestRatedProduct = new Product(2, "Chicken Soup", "Delicious", "https://www.allrecipes.com/thmb/NgpgUebR7ixeEuToPd1c1TgaQmU=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/8814_HomemadeChickenSoup_SoupLovingNicole_LSH-2000-4ae7ff733c554fdab0796d15c8d1151f.jpg", 0f, 0, false, 0f, null, null);
@@ -64,6 +79,7 @@ public class AdminController {
 			model.addAttribute("bestSellerProduct", bestSellerProduct);
 			model.addAttribute("highestRatedProduct", highestRatedProduct);
 			model.addAttribute("recommendedProduct", recommendedProduct);
+			model.addAttribute("favoriteProducts", customer.getFavorite().getCustomerFavoritedProducts());
 			return "index";
 		}
 	}
@@ -73,20 +89,24 @@ public class AdminController {
 		
 		return "userLogin";
 	}
+
 	@RequestMapping(value = "userloginvalidate", method = RequestMethod.POST)
 	public String userLogin(@RequestParam("username") String username, @RequestParam("password") String password, Model model, HttpSession session) {
 
 		try {
 			UserCredentials userCredentials = new UserCredentials();
-			User user = new User();
 			userCredentials.setUsername(username);
 			userCredentials.setPassword(password);
 			boolean isValid = userService.validateUserLogin(userCredentials);
 			if (isValid) {
+				Basket basket = new Basket();
 				usernameForClass = username;
-				user = userService.fetchUserData(userCredentials);
-				session.setAttribute("user", user);
-				//User u = (User) session.getAttribute("user");
+				Customer customer = userService.fetchCustomerData(userCredentials);
+				Favorite customerFavorite = new Favorite(productService.fetchCustomerFavoriteProducts(customer.getUserId()));
+				customer.setFavorite(customerFavorite);
+				session.setAttribute("user", customer);
+        session.setAttribute("basket", basket);
+
 				return "redirect:/index";
 			} else {
 				model.addAttribute("message", "Invalid Username or Password");
@@ -104,6 +124,7 @@ public class AdminController {
 		
 		return "adminlogin";
 	}
+
 	@GetMapping("/adminhome")
 	public String adminHome(Model model) {
 		if(adminLogInCheck !=0)
@@ -111,11 +132,13 @@ public class AdminController {
 		else
 			return "redirect:/admin";
 	}
+
 	@GetMapping("/loginvalidate")
 	public String adminLog(Model model) {
 		
 		return "adminlogin";
 	}
+
 	@RequestMapping(value = "loginvalidate", method = RequestMethod.POST)
 	public String adminLogin(@RequestParam("username") String username, @RequestParam("password") String pass, Model model) {
 		
@@ -185,9 +208,9 @@ public class AdminController {
 		model.addAttribute("product", product);
 		return "productsUpdate";
 	}
+
 	@RequestMapping(value = "/admin/products/updateData",method=RequestMethod.POST)
 	public String updateproduct(@ModelAttribute("product") Product product, @RequestParam("productImage") MultipartFile multipartFile, @RequestParam("categoryid") int categoryId ) 
-	
 	{
 		Category category = productService.fetchCategoryById(categoryId);
 		product.setCategory(category);
@@ -217,61 +240,53 @@ public class AdminController {
 		return "redirect:/admin/categories";
 	}
 
+	/**
+	 * To display all customers in the admin customer panel.
+	 * @param model
+	 * @return
+	 */
 	@GetMapping("/admin/customers")
-	public String getCustomerDetail() {
+	public String getAllCustomers(Model model) {
+		List<Customer> allCustomers = userService.getAllCustomers();
+		model.addAttribute("allCustomers", allCustomers);
 		return "displayCustomers";
 	}
 
-	@GetMapping("profileDisplay")
-	public String profileDisplay(Model model) {
-		String displayusername,displaypassword,displayemail,displayaddress;
-		try
-		{
-			Statement stmt = con.createStatement();
-			ResultSet rst = stmt.executeQuery("select * from users where username = '"+ usernameForClass +"';");
-			
-			if(rst.next())
-			{
-			int userid = rst.getInt(1);
-			displayusername = rst.getString(2);
-			displayemail = rst.getString(3);
-			displaypassword = rst.getString(4);
-			displayaddress = rst.getString(5);
-			model.addAttribute("userid",userid);
-			model.addAttribute("username",displayusername);
-			model.addAttribute("email",displayemail);
-			model.addAttribute("password",displaypassword);
-			model.addAttribute("address",displayaddress);
-			}
-		}
-		catch(Exception e)
-		{
-			System.out.println("Exception:"+e);
-		}
-		System.out.println("Hello");
-		return "updateProfile";
-	}
-	
-	@RequestMapping(value = "updateuser",method=RequestMethod.POST)
-	public String updateUserProfile(@RequestParam("userid") int userid,@RequestParam("username") String username, @RequestParam("email") String email, @RequestParam("password") String password, @RequestParam("address") String address) 
-	
-	{
-		try
-		{
-			PreparedStatement pst = con.prepareStatement("update users set username= ?,email = ?,password= ?, address= ? where uid = ?;");
-			pst.setString(1, username);
-			pst.setString(2, email);
-			pst.setString(3, password);
-			pst.setString(4, address);
-			pst.setInt(5, userid);
-			int i = pst.executeUpdate();	
-			usernameForClass = username;
-		}
-		catch(Exception e)
-		{
-			System.out.println("Exception:"+e);
-		}
-		return "redirect:/index";
+	/**
+	 * To allow the admin to remove customers from the customer panel.
+	 * @param userCredentials
+	 * @return
+	 */
+	@GetMapping("/admin/customers/delete")
+	public String removeCustomer(@RequestParam("id") int customerId) {
+		userService.removeCustomerById(customerId);
+		return "redirect:/admin/customers";
 	}
 
+
+	/**
+	 * The admin can update only certain information from the customer.
+	 * The admin can only do so by 'id'.
+	 * @param userCredentials
+	 * @param email
+	 * @param address
+	 * @param phone
+	 * @return
+	 */
+	@GetMapping("/admin/customers/update")
+	public String updateCustomer(@RequestParam("id") int customerId, 
+								@RequestParam("email") String email, 
+								@RequestParam("address") String address,
+								@RequestParam("phone") String phone) {
+		Customer customer = userService.getCustomerById(customerId);
+
+		// update the customer
+		customer.setEmail(email);
+		customer.setPhone(phone);
+		customer.setAddress(address);
+
+		userService.updateCustomer(customer);
+
+		return "redirect:/admin/customers";
+	}
 }

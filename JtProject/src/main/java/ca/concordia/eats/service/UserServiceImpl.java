@@ -1,5 +1,6 @@
 package ca.concordia.eats.service;
 
+import ca.concordia.eats.dto.Favorite;
 import ca.concordia.eats.dto.UserCredentials;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    ProductService productService;
 
     @Override
     public List<User> getAllUsers() {
@@ -57,12 +61,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Customer getCustomerByCredential(UserCredentials userCredentials) {
+        return userDao.getCustomerByCredential(userCredentials);
+    }   
+
+    @Override
     public Customer updateCustomer(Customer customer) {
         return userDao.updateCustomer(customer);
     }
 
-    public User fetchUserData(UserCredentials userCredentials) {
-        return userDao.fetchUserByCredentials(userCredentials);
+    public Customer fetchCustomerData(UserCredentials userCredentials) {
+        Customer customer = userDao.fetchCustomerData(userCredentials);
+        customer.setFavorite(new Favorite(productService.fetchCustomerFavoriteProducts(customer.getUserId())));
+        return customer;
+    }
+
+    @Override
+    public UserCredentials fetchUserCredentialsById(int userId) {
+        return userDao.fetchUserCredentialsById(userId);
+    }
+
+    @Override
+    public void updateUserProfile(Customer customer, UserCredentials userCredentials) {
+        userDao.updateUserProfile(customer, userCredentials);
     }
 
     @Override
@@ -71,7 +92,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean removeCustomer(UserCredentials userCredentials) {
-        return userDao.removeCustomer(userCredentials);
+    public boolean removeCustomerById(int customerId) {
+        return userDao.removeCustomerById(customerId);
     }
 }
