@@ -5,6 +5,7 @@ import ca.concordia.eats.dto.Customer;
 import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.UserCredentials;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
