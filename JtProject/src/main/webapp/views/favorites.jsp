@@ -30,7 +30,7 @@
         <div class="row px-4 justify-content-center">
             <c:choose>
                 <c:when test="${empty favoriteProducts}">
-                    <div class="col-8 text-center pt-4">
+                    <div class="col-8 text-center pt-4" style="min-height: 500px">
                     Your Favorite Products Will be Displayed Here.<br><br>
                         This page is currently empty. You can click on the red heart icon (<i class="far fa-heart text-danger"></i>)<br>
                         near each product to add it to your favorite products.<br><br>
@@ -93,6 +93,7 @@
                 </c:otherwise>
             </c:choose>
         </div>
+        <%@include file="footer.jsp" %>
     </div>
 </section>
 
