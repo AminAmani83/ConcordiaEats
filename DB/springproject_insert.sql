@@ -34,7 +34,6 @@ VALUES ('jay', '123', 'CUSTOMER', 'john123@gmail.com', '123 Main St, Anytown, US
 
 INSERT INTO `springproject`.`user` (`username`, `password`, `role`, `email`, `address`, `phone`)
 VALUES ('admin', '123', 'ADMIN', 'jane456@gmail.com', '456 Elm St, Anytown, USA', '+1 (555) 234-5678');
--- the user table autoincrement starts at 3 which needs to be fixed
 
 
 -- -----------------------------------------------------

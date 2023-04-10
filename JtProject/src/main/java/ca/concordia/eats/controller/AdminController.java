@@ -1,6 +1,8 @@
 package ca.concordia.eats.controller;
 
 import ca.concordia.eats.dto.*;
+import ca.concordia.eats.service.PromotionService;
+import ca.concordia.eats.service.ServiceException;
 import ca.concordia.eats.service.UserService;
 import ca.concordia.eats.service.ProductService;
 import ca.concordia.eats.utils.FileUploadUtil;
@@ -24,6 +26,7 @@ public class AdminController {
 
 	@Autowired
 	ProductService productService;
+	PromotionService promotionService;
 
 	@Autowired
 	private UserService userService;
@@ -166,13 +169,13 @@ public class AdminController {
 		productService.createCategory(category);
 		return "redirect:/admin/categories";
 	}
-	
+
 	@GetMapping("/admin/categories/delete")
 	public String removeCategory(@RequestParam("id") int categoryId) {
 		productService.removeCategoryById(categoryId);
 		return "redirect:/admin/categories";
 	}
-	
+
 	@GetMapping("/admin/categories/update")
 	public String updateCategory(@RequestParam("categoryid") int categoryId, @RequestParam("categoryname") String categoryName) {
 		productService.updateCategory(new Category(categoryId, categoryName));
@@ -289,4 +292,33 @@ public class AdminController {
 
 		return "redirect:/admin/customers";
 	}
+
+
+	@GetMapping("/admin/promotions")
+	public String getAllPromotions(Model model) {
+		try {
+			List<Promotion> allPromotions = promotionService.getAllPromotions();
+			model.addAttribute("allPromotions", allPromotions);
+			return "promotions";
+		} catch (ServiceException e) {
+			e.printStackTrace();
+			model.addAttribute("errorMessage", "An error occurred while retrieving the promotions");
+			return "error";
+		}
+
+	}
+
+	@RequestMapping(value = "admin/sendPromotion",method = RequestMethod.GET)
+	public String createPromotion(@RequestParam("promotionName") String promotionName, Model model) {
+		try {
+			Promotion promotion = new Promotion();
+			promotionService.createPromotion(promotion);
+			return "redirect:/admin/promotions";
+		} catch (ServiceException e) {
+			e.printStackTrace();
+			model.addAttribute("errorMessage", "An error occurred while creating the promotions");
+			return "error";
+		}
+	}
+
 }
