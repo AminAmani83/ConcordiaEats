@@ -125,7 +125,7 @@ public class UserDaoImpl implements UserDao {
 
         try {
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select id, username, role, email, address, phone from user where role='CUSTOMER';");
+            ResultSet rs = stmt.executeQuery("select id, username, role, address, email, phone from user where role='CUSTOMER';");
             while (rs.next()) {
                 allCustomers.add(new Customer(rs.getInt(1),
                         rs.getString(2),
@@ -152,12 +152,14 @@ public class UserDaoImpl implements UserDao {
             pst.setInt(1, userId);
             ResultSet rs = pst.executeQuery();
 
-            customer = new Customer(rs.getInt(1),
-                    rs.getString(2),
-                    rs.getString(3),
-                    rs.getString(4),
-                    rs.getString(5),
-                    rs.getString(6));
+            if (rs.next()) {
+                customer = new Customer(rs.getInt(1),
+                                        rs.getString(2),
+                                        rs.getString(3),
+                                        rs.getString(4),
+                                        rs.getString(5),
+                                        rs.getString(6));
+            }
 
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
@@ -192,11 +194,11 @@ public class UserDaoImpl implements UserDao {
     @Override
     public Customer updateCustomer(Customer customer) {
         try {
-            PreparedStatement pst = con.prepareStatement("update user set email = ?, set address = ?, set phone = ?  where id = ?;");
-            pst.setString(2, customer.getEmail());
-            pst.setString(3, customer.getAddress());
-            pst.setString(4, customer.getPhone());
-            pst.setInt(5, customer.getUserId());
+            PreparedStatement pst = con.prepareStatement("update user set email = ?, address = ?, phone = ?  where id = ?;");
+            pst.setString(1, customer.getEmail());
+            pst.setString(2, customer.getAddress());
+            pst.setString(3, customer.getPhone());
+            pst.setInt(4, customer.getUserId());
             pst.executeUpdate();
 
         } catch (Exception ex) {
@@ -282,7 +284,7 @@ public class UserDaoImpl implements UserDao {
 
                 PreparedStatement pst = con.prepareStatement("delete from user where username = ? and password = ?;");
                 pst.setString(1, userCredentials.getUsername());
-                pst.setString(1, userCredentials.getPassword());
+                pst.setString(2, userCredentials.getPassword());
                 pst.executeUpdate();
 
                 customerRemoved = true;
