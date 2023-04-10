@@ -18,7 +18,9 @@ import java.util.List;
 import java.util.Map;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -378,7 +380,7 @@ public class ProductDaoImpl implements ProductDao {
     public List<Product> fetchPastPurchasedProducts(int customerId) {
 
         String sqlQuery = "SELECT p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, c.id, c.name FROM product p  JOIN category c on p.categoryid = c.id WHERE p.id IN (SELECT DISTINCT(productId) FROM purchase_details WHERE purchaseId IN (SELECT pur.id FROM purchase pur WHERE userId = ?));";
-        List<Product> pastPurchaseProducts = new LinkedList<>();
+        List<Product> pastPurchasedProducts = new ArrayList<>();
 
         try {
             PreparedStatement pst = con.prepareStatement(sqlQuery);
@@ -386,7 +388,7 @@ public class ProductDaoImpl implements ProductDao {
             ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
-                pastPurchaseProducts.add(new Product(rs.getInt(1),          // id
+                pastPurchasedProducts.add(new Product(rs.getInt(1),          // id
                                 rs.getString(2),        // name
                                 rs.getString(3),        // description
                                 rs.getString(4),        // image path
@@ -401,7 +403,7 @@ public class ProductDaoImpl implements ProductDao {
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
-        return pastPurchaseProducts;
+        return pastPurchasedProducts;
     }
 
 
@@ -454,6 +456,28 @@ public class ProductDaoImpl implements ProductDao {
             }
         }
         return searchHistory;
+    }
+
+
+    /**
+     * This method is used in the background to calculate the average product rating for one product.
+     * This average rating is displayed on the Front-End as filled stars.
+     */
+    @Override
+    public Double calculateAvgProductRating(int productId) {
+
+        Double avgRating = 0.0;
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("select AVG(rating) from rating where productId=" + productId + ";");
+            if (rs.next()) {
+                avgRating = rs.getDouble(1);
+            }
+            
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+        return avgRating;
     }
 
 

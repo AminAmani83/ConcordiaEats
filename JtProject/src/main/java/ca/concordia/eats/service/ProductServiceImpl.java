@@ -106,8 +106,15 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> fetchPastPurchasedProducts(int customerId) {
         return productDao.fetchPastPurchasedProducts(customerId);
     }
+
+    @Override
     public List<Product> search(String query, int userId) {
         return productDao.search(query, userId);
+    }
+
+    @Override
+    public Double calculateAvgProductRating(int productId) {
+        return productDao.calculateAvgProductRating(productId);
     }
 
 }
