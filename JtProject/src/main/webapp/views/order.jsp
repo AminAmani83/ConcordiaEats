@@ -13,9 +13,11 @@
 
     <title>Shopping Card</title>
 </head>
-<body class="bg-light">
+<body>
+<section class="wrapper">
+    <div class="container-fostrap">
 <%@include file="header.jsp" %>
-<div class="container-fluid">
+<div class="container-fluid" style="min-height: 500px;">
 
     <table class="table">
         <tr>
@@ -69,6 +71,9 @@
 </form>
 
 </div>
+    <%@include file="footer.jsp" %>
+    </div>
+</section>
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
