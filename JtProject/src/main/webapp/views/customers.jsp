@@ -56,9 +56,9 @@
                         <!-- Button trigger modal -->
                         <button type="button" class="btn btn-warning" data-toggle="modal"
                                 data-target="#exampleModalCenter2"
-                                onclick="document.getElementById('categoryname').value =  '<c:out
-                                        value="${category.name}"/>'; document.getElementById('categoryid').value =
-                                        '<c:out value="${category.id}"/>';">Update
+                                onclick="document.getElementById('username').value =  '<c:out
+                                        value="${customer.username}"/>'; document.getElementById('customerId').value =
+                                        '<c:out value="${customer.userId}"/>';">Update
                         </button>
 
                         <!-- Modal -->
@@ -70,7 +70,7 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="exampleModalLongTitle">Update
-                                            Product Details</h5>
+                                            Customer Details</h5>
                                         <button type="button" class="close" data-dismiss="modal"
                                                 aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
@@ -79,12 +79,22 @@
                                     <div class="modal-body text-center">
                                         <div class="form-group">
                                             <input class="form-control" type="number"
-                                                    readonly="readonly" name="categoryid" id="categoryid" value="0">
+                                                    readonly="readonly" name="customerId" id="customerId" value="customerId">
                                         </div>
                                         <div class="form-group">
-                                            <input class="form-control" type="text" name="categoryname"
-                                                    id="categoryname"
-                                                    value="categoryname">
+                                            <input class="form-control" type="text" name="email"
+                                                    id="email"
+                                                    value="email">
+                                        </div>
+                                        <div class="form-group">
+                                            <input class="form-control" type="text" name="address"
+                                                    id="address"
+                                                    value="address">
+                                        </div>
+                                        <div class="form-group">
+                                            <input class="form-control" type="text" name="phone"
+                                                    id="phone"
+                                                    value="phone">
                                         </div>
 
                                     </div>
