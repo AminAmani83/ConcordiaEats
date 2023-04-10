@@ -55,14 +55,14 @@
 
                         <!-- Button trigger modal -->
                         <button type="button" class="btn btn-warning" data-toggle="modal"
-                                data-target="#exampleModalCenter2"
-                                onclick="document.getElementById('customername').value =  '<c:out
+                                data-target="#exampleModalCenter2-${customer.userId}"
+                                onclick="document.getElementById('customerName').value =  '<c:out
                                         value="${customer.username}"/>'; document.getElementById('customerid').value =
                                         '<c:out value="${customer.userId}"/>';">Update
                         </button>
 
                         <!-- Modal -->
-                        <div class="modal fade" id="exampleModalCenter2" tabindex="-1"
+                        <div class="modal fade" id="exampleModalCenter2-${customer.userId}" tabindex="-1"
                                 role="dialog" aria-labelledby="exampleModalCenterTitle"
                                 aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -77,24 +77,28 @@
                                         </button>
                                     </div>
                                     <div class="modal-body text-center">
+
+                                        <input class="form-control" type="hidden"
+                                        name="customerId" id="customerId" value="${customer.userId}">
+
                                         <div class="form-group">
-                                            <input class="form-control" type="number"
-                                                    readonly="readonly" name="customerId" id="customerId" value="customerId">
+                                            <input class="form-control" type="text"
+                                                    readonly="readonly" name="customerName" id="customerName" value="${customer.username}">
                                         </div>
                                         <div class="form-group">
                                             <input class="form-control" type="text" name="email"
                                                     id="email"
-                                                    value="email">
+                                                    value="${customer.email}">
                                         </div>
                                         <div class="form-group">
                                             <input class="form-control" type="text" name="address"
                                                     id="address"
-                                                    value="address">
+                                                    value="${customer.address}">
                                         </div>
                                         <div class="form-group">
                                             <input class="form-control" type="text" name="phone"
                                                     id="phone"
-                                                    value="phone">
+                                                    value="${customer.phone}">
                                         </div>
 
                                     </div>

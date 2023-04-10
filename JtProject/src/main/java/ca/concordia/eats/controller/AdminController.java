@@ -263,8 +263,8 @@ public class AdminController {
 	 * @return
 	 */
 	@GetMapping("/admin/customers/update")
-	public String updateCustomer(@RequestParam("customerid") int customerId, 
-								@RequestParam("customername") String username,
+	public String updateCustomer(@RequestParam("customerId") int customerId, 
+								@RequestParam("customerName") String username,
 								@RequestParam("email") String email, 
 								@RequestParam("address") String address,
 								@RequestParam("phone") String phone) {
