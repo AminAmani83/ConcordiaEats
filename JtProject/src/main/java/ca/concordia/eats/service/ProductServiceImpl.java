@@ -8,11 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpSession;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -72,6 +70,9 @@ public class ProductServiceImpl implements ProductService {
         return productDao.removeCategoryById(categoryId);
     }
 
+
+    // FAVORITES
+
     @Override
     public void makeFavorite(int customerId, int productId) {
         productDao.makeFavorite(customerId, productId);
@@ -84,9 +85,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> fetchCustomerFavoriteProducts(int customerId) {
-        return productDao.fetchCustomerFavoriteProducts(customerId);
+        List<Integer> customerFavoriteProductIds = productDao.fetchCustomerFavoriteProductIds(customerId);
+        return productDao.fetchAllProducts().stream().filter(p -> customerFavoriteProductIds.contains(p.getId())).collect(Collectors.toList());
     }
 
+
+    // RATING
 
     @Override
     public void rateProduct(int customerId, int productId, int rating) {
