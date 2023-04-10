@@ -21,7 +21,7 @@
 </head>
 
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light" >
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" >
     <div class="container-fluid">
         <a class="navbar-brand" href="#">
             <img th:src="@{/images/logo.png}"  src="../static/images/logo.png" width="auto" height="40" class="d-inline-block align-top" alt=""/>
@@ -31,26 +31,20 @@
         </button>
 		
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <h4>Welcome ${ username } </h4>
+        <h4><a class="navbar-brand" href="/index">Concordia Eats</a></h4>
             <ul class="navbar-nav mr-auto"></ul>
             <ul class="navbar-nav">
                 <li class="nav-item active">
-                    <a class="nav-link" th:href="@{/}" href="#">Home</a>
+                    <a class="nav-link" href="/index" >Home</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" th:href="@{/shop}" href="#">Shop</a>
+                    <a class="nav-link" href="/order">Shopping Cart</a>
                 </li>
+		<li class="nav-item active">
+			<a class="nav-link" href="profileDisplay" >Profile</a>
+		</li>
                 <li class="nav-item active">
                     <a class="nav-link" sec:authorize="isAuthenticated()" href="logout">Logout</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" th:href="@{/cart}" href="#">Cart</a>
-                </li>
-                <li class="nav-item active">
-                    <span class="nav-link" th:text="${cartCount}">0</span>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="profileDisplay" >Profile</a>
                 </li>
             </ul>
 
@@ -83,11 +77,11 @@ header .overlay{
 	padding: 50px;
 	color: #FFF;
 	text-shadow: 1px 1px 1px #333;
-  background-image: linear-gradient( 135deg, #9f05ff69 10%, #fd5e086b 100%);
+  background-image: linear-gradient( 135deg, #ECECEC 10%, #A9A9A9 100%);
 	
 }</style>
-<form action="https://formcarry.com/s/Pq3xf4Lbabh" method="POST">
-        <table class="tab2" width="40%" align="center" bgcolor="#FF0000">
+<form action="https://formcarry.com/s/Q45i2lxCRS" method="POST" accept-charset="UTF-8">
+        <table class="tab2" width="40%" align="center" bgcolor="#333333">
             <tr>
                 <td><br></td>
             </tr>
