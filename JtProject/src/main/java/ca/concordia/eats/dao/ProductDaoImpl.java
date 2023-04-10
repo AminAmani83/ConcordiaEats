@@ -4,6 +4,8 @@ import ca.concordia.eats.dto.Category;
 import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.SearchHistory;
 import ca.concordia.eats.dto.User;
+import ca.concordia.eats.utils.ConnectionUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -39,19 +41,7 @@ public class ProductDaoImpl implements ProductDao {
      * @throws IOException
      */
     public ProductDaoImpl() throws IOException {
-        String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath()
-                .replaceAll("%20", " ");
-        String dbConfigPath = rootPath + "db.properties";
-
-        FileReader reader = new FileReader(dbConfigPath);
-        Properties dbProperties = new Properties();
-        dbProperties.load(reader);
-
-        try {
-            this.con = DriverManager.getConnection(dbProperties.getProperty("url"), dbProperties.getProperty("username"), dbProperties.getProperty("password"));
-        } catch (Exception e) {
-            System.out.println("Error connecting to the DB: " + e.getMessage());
-        }
+        this.con = ConnectionUtil.getConnection();
     }
 
     @Override

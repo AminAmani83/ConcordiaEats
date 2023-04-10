@@ -4,6 +4,8 @@ import ca.concordia.eats.dto.User;
 import ca.concordia.eats.dto.Customer;
 import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.UserCredentials;
+import ca.concordia.eats.utils.ConnectionUtil;
+
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -27,22 +29,11 @@ public class UserDaoImpl implements UserDao {
      *
      * @throws IOException
      */
+
     private Connection con;
 
     public UserDaoImpl() throws IOException {
-        String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath()
-                .replaceAll("%20", " ");
-        String dbConfigPath = rootPath + "db.properties";
-
-        FileReader reader = new FileReader(dbConfigPath);
-        Properties dbProperties = new Properties();
-        dbProperties.load(reader);
-
-        try {
-            this.con = DriverManager.getConnection(dbProperties.getProperty("url"), dbProperties.getProperty("username"), dbProperties.getProperty("password"));
-        } catch (Exception e) {
-            System.out.println("Error connecting to the DB: " + e.getMessage());
-        }
+        this.con = ConnectionUtil.getConnection();
     }
 
     @Override
@@ -349,14 +340,14 @@ public class UserDaoImpl implements UserDao {
 private ProductDao productDao;
 	
 	@Override
-	public List<Product> fetchCustomerSearchedProduct(Customer customer)     {
+	public List<Product> fetchCustomerSearchedProduct(User user)     {
 		List<Product> products = productDao.fetchAllProducts();
 		List<Product>  searchedProducts = new ArrayList<>();
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject", "root", "")) {
+        try {
             // Create a statement
             String query = "SELECT * FROM search_history WHERE userId = ?";
-            PreparedStatement statement = conn.prepareStatement(query);
-            statement.setInt(1, customer.getUserId());
+            PreparedStatement statement = con.prepareStatement(query);
+            statement.setInt(1, user.getUserId());
             
             // Execute the query and get the result set
             ResultSet resultSet = statement.executeQuery(query);
