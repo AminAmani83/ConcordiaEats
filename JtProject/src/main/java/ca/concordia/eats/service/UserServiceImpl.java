@@ -1,6 +1,7 @@
 package ca.concordia.eats.service;
 
 import ca.concordia.eats.dto.Favorite;
+import ca.concordia.eats.dto.Rating;
 import ca.concordia.eats.dto.UserCredentials;
 import org.springframework.stereotype.Service;
 
@@ -73,6 +74,9 @@ public class UserServiceImpl implements UserService {
     public Customer fetchCustomerData(UserCredentials userCredentials) {
         Customer customer = userDao.fetchCustomerData(userCredentials);
         customer.setFavorite(new Favorite(productService.fetchCustomerFavoriteProducts(customer.getUserId())));
+        customer.setRating(new Rating(productService.fetchAllCustomerRatings(customer.getUserId()),
+                                    productService.fetchPastPurchasedProducts(customer.getUserId())));
+                                    
         return customer;
     }
 
