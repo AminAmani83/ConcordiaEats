@@ -2,8 +2,11 @@ package ca.concordia.eats.dao;
 
 import ca.concordia.eats.dto.Promotion;
 import ca.concordia.eats.dto.PromotionType;
+import ca.concordia.eats.utils.ConnectionUtil;
+
 import org.springframework.stereotype.Repository;
 
+import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -14,6 +17,10 @@ import java.util.List;
 @Repository
 public class PromotionDaoImpl implements PromotionDao {
     private Connection con;
+
+    public PromotionDaoImpl() throws IOException {
+        this.con = ConnectionUtil.getConnection();
+    }
 
     @Override
     public List<Promotion> fetchAllPromotions() throws DAOException {

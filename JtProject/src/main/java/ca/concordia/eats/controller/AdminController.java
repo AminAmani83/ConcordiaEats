@@ -3,6 +3,7 @@ package ca.concordia.eats.controller;
 import ca.concordia.eats.dto.*;
 import ca.concordia.eats.service.UserService;
 import ca.concordia.eats.service.ProductService;
+import ca.concordia.eats.utils.ConnectionUtil;
 import ca.concordia.eats.utils.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,8 +16,6 @@ import java.io.IOException;
 import javax.servlet.http.HttpSession;
 import java.sql.*;
 import java.util.List;
-import java.util.Properties;
-import java.io.FileReader;
 
 @Controller
 
@@ -38,19 +37,7 @@ public class AdminController {
      * @throws IOException
      */
 	public AdminController() throws IOException {
-		String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath()
-				.replaceAll("%20", " ");
-		String dbConfigPath = rootPath + "db.properties";
-
-		FileReader reader = new FileReader(dbConfigPath);
-		Properties dbProperties = new Properties();
-		dbProperties.load(reader);
-
-		try {
-			this.con = DriverManager.getConnection(dbProperties.getProperty("url"), dbProperties.getProperty("username"), dbProperties.getProperty("password"));
-		} catch(Exception e) {
-			System.out.println("Error connecting to the DB: " + e.getMessage());
-		}
+        this.con = ConnectionUtil.getConnection();
 	}
 
 	int adminLogInCheck = 0;
