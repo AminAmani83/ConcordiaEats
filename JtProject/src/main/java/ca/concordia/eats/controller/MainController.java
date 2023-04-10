@@ -1,5 +1,6 @@
 package ca.concordia.eats.controller;
 
+import ca.concordia.eats.dto.BestDeals;
 import ca.concordia.eats.dto.Customer;
 import ca.concordia.eats.dto.Favorite;
 import ca.concordia.eats.dto.Product;
@@ -20,6 +21,7 @@ public class MainController {
 
     @Autowired
     ProductService productService;
+
 
     @GetMapping("/product/make-favorite")
     public String makeFavorite(@RequestParam("productid") int productId, @RequestParam("src") String sourcePage, HttpSession session) {
@@ -59,25 +61,31 @@ public class MainController {
     @Autowired
     BestDealsService bestDealsService;
     
-    @GetMapping("/")
-    public String fetchPersonalizedRecommendatedProductsBasedSearchPatternByUser(HttpSession session, Model model) {
+    @GetMapping("/recommendedProducts")
+    public String fetchPersonalizedRecommendatedProductByUser(HttpSession session, Model model) {
         if (session.getAttribute("user") == null) return "userLogin";
         Customer customer = (Customer) session.getAttribute("user");
-        model.addAttribute("recommendedProducts", customer.getRecommendation());
-        return "/recommendedProducts";
+        Product recommendedProduct=bestDealsService.fetchPersonalizedRecommendatedProductByUser(customer);
+        customer.setRecommendation(recommendedProduct);
+        model.addAttribute("recommendedProduct", customer.getRecommendation());
+        return "/recommendedProduct";
     }
-    @GetMapping("/")
+    @GetMapping("/bestSellerProduct")
     public String fetchBestSellerProduct(HttpSession session, Model model) {
         if (session.getAttribute("user") == null) return "userLogin";
         Customer customer = (Customer) session.getAttribute("user");
-        model.addAttribute("bestSellerProducts", customer.getBestSellerProduct());
-        return "/bestSellerProducts";
+        Product bestSellerProduct=bestDealsService.fetchBestSellerProduct();
+        customer.setBestSellerProduct(bestSellerProduct);
+        model.addAttribute("bestSellerProduct", customer.getBestSellerProduct());
+        return "/bestSellerProduct";
     }
-    @GetMapping("/")
+    @GetMapping("/highestRatingProduct")
     public String fetchHighestRatingProductByUser(HttpSession session, Model model) {
         if (session.getAttribute("user") == null) return "userLogin";
-        Customer customer = (Customer) session.getAttribute("user");
+        Customer customer = (Customer) session.getAttribute("user");    
+        Product highestRatingProduct=bestDealsService.fetchHighestRatingProduct();
+        customer.setBestSellerProduct(highestRatingProduct);
         model.addAttribute("highestRatingProduct", customer.getHighestRatingProduct());
-        return "/favorites";
+        return "/highestRatingProduct";
     }
 }

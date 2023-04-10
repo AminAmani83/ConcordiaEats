@@ -10,9 +10,10 @@ import java.util.Map;
 public interface BestDealsService {
     // CRUD USER
 
-    public List<Product> fetchPersonalizedRecommendatedProductsBasedSearchPatternByUser(Customer customer);
-    public List<Product> fetchHighestRatingProductsByUser (Customer customer);
-    public  Product fetchHighestRatingProductByUser (Customer customer);
+    public List<Product> fetchPersonalizedRecommendatedProductsByUser(Customer customer);
+    public Product fetchPersonalizedRecommendatedProductByUser(Customer customer);
+    public List<Product> fetchHighestRatingProducts ();
+    public  Product fetchHighestRatingProduct ();
     public List<Product> fetchBestSellerProducts ();
     public  Product fetchBestSellerProduct ();
     public  Map<Integer, Integer> fetchMostSearchedProductsByUser (Customer customer);

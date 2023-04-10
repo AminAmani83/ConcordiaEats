@@ -9,7 +9,7 @@ public class Customer extends User {
 
     private Favorite favorite;
     private Rating rating;
-    private List<Product> recommendation;
+    private Product recommendation;
     private Product highestRatingProduct;
     private Product bestSellerProduct;
     
@@ -60,11 +60,11 @@ public class Customer extends User {
         this.rating = rating;
     }
 
-    public List<Product> getRecommendation() {
+    public Product getRecommendation() {
         return recommendation;
     }
 
-    public void setRecommendation(List<Product> recommendation) {
+    public void setRecommendation(Product recommendation) {
         this.recommendation = recommendation;
     }
     public Product getHighestRatingProduct() {

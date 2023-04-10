@@ -32,7 +32,7 @@ public class BestDealsServiceImpl implements BestDealsService {
     
 
 	@Override
-	public List<Product> fetchPersonalizedRecommendatedProductsBasedSearchPatternByUser(Customer customer) {
+	public List<Product> fetchPersonalizedRecommendatedProductsByUser(Customer customer) {
 		   List<Product> topSearchedProducts = null;
 	       Map<Integer, Integer> searchCountMap =  fetchMostSearchedProductsByUser(customer);
 		   List<Map.Entry<Integer, Integer>> sortedResults = new ArrayList<>(searchCountMap.entrySet());
@@ -62,7 +62,7 @@ public class BestDealsServiceImpl implements BestDealsService {
 	}
 
 	@Override
-	public List<Product> fetchHighestRatingProductsByUser(Customer customer) {
+	public List<Product> fetchHighestRatingProducts() {
 		List<Product> HighestRatingProducts=new ArrayList<>();
 		Map<Integer, Float> AllProductAvgRatings= productDao.fetchAllProductAvgRatings();
 		List<Map.Entry<Integer, Float>> sortedResults = new ArrayList<>(AllProductAvgRatings.entrySet());
@@ -87,9 +87,9 @@ public class BestDealsServiceImpl implements BestDealsService {
 	}
 
 	@Override
-	public Product fetchHighestRatingProductByUser(Customer customer) {
+	public Product fetchHighestRatingProduct() {
 		Product HighestRatingProduct;
-		List<Product> HighestRatingProducts=fetchHighestRatingProductsByUser(customer);
+		List<Product> HighestRatingProducts=fetchHighestRatingProducts();
 		HighestRatingProduct = HighestRatingProducts.get(0);
 		return HighestRatingProduct;
 	}
@@ -101,6 +101,15 @@ public class BestDealsServiceImpl implements BestDealsService {
 		BestSellerProduct = BestSellerProducts.get(0);
 		return BestSellerProduct;
 	}
+
+	@Override
+	public Product fetchPersonalizedRecommendatedProductByUser(Customer customer) {
+		Product PersonalizedRecommendatedProduct;
+		List<Product> PersonalizedRecommendatedProducts=fetchPersonalizedRecommendatedProductsByUser(customer);
+		PersonalizedRecommendatedProduct = PersonalizedRecommendatedProducts.get(0);
+		return PersonalizedRecommendatedProduct;		
+	}
+
 
 
 
