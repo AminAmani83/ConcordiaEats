@@ -14,18 +14,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
-import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.util.Properties;
 
 @Controller
 public class UserController{
 
 	@Autowired
 	private UserService userService;
+
+	Connection con;
+
+	public UserController() throws IOException {
+		this.con = ConnectionUtil.getConnection();
+	}
 
 	@GetMapping("/register")
 	public String registerUser()
@@ -61,7 +64,6 @@ public class UserController{
 
 		try
 		{
-			Connection con = ConnectionUtil.getConnection();
 			PreparedStatement pst = con.prepareStatement("insert into users(username,password,email) values(?,?,?);");
 			pst.setString(1,username);
 			pst.setString(2, password);

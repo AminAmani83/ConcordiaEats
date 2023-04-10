@@ -16,8 +16,6 @@ import java.io.IOException;
 import javax.servlet.http.HttpSession;
 import java.sql.*;
 import java.util.List;
-import java.util.Properties;
-import java.io.FileReader;
 
 @Controller
 
