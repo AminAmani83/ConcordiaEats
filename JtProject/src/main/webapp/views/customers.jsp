@@ -56,8 +56,8 @@
                         <!-- Button trigger modal -->
                         <button type="button" class="btn btn-warning" data-toggle="modal"
                                 data-target="#exampleModalCenter2"
-                                onclick="document.getElementById('username').value =  '<c:out
-                                        value="${customer.username}"/>'; document.getElementById('customerId').value =
+                                onclick="document.getElementById('customername').value =  '<c:out
+                                        value="${customer.username}"/>'; document.getElementById('customerid').value =
                                         '<c:out value="${customer.userId}"/>';">Update
                         </button>
 
