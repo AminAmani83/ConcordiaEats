@@ -92,7 +92,7 @@ public class AdminController {
 				Favorite customerFavorite = new Favorite(productService.fetchCustomerFavoriteProducts(customer.getUserId()));
 				customer.setFavorite(customerFavorite);
 				session.setAttribute("user", customer);
-        session.setAttribute("basket", basket);
+        		session.setAttribute("basket", basket);
 
 				return "redirect:/index";
 			} else {
