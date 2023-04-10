@@ -80,7 +80,6 @@
 
                 <td>
                     <form action="categories/update" method="get">
-
                         <!-- Button trigger modal -->
                         <button type="button" class="btn btn-warning" data-toggle="modal"
                                 data-target="#exampleModalCenter2"
@@ -89,14 +88,14 @@
                                         '<c:out value="${category.id}"/>';">Update
                         </button>
 
-                        <!-- Modal -->
+                        <!-- Modal --> qzq12z
                         <div class="modal fade" id="exampleModalCenter2" tabindex="-1"
                              role="dialog" aria-labelledby="exampleModalCenterTitle"
                              aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered" role="document">
 
                                 <div class="modal-content">
-                                    <div class="modal-header">
+  w3zq1/                                             <div class="modal-header">
                                         <h5 class="modal-title" id="exampleModalLongTitle">Update
                                             Product Details</h5>
                                         <button type="button" class="close" data-dismiss="modal"

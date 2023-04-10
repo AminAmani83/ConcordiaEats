@@ -412,6 +412,7 @@ public class ProductDaoImpl implements ProductDao {
                 product.setPrice(rs.getFloat("price"));
                 product.setDescription(rs.getString("description"));
                 product.setImagePath(rs.getString("imagePath"));
+                product.setRating(calculateAvgProductRating(rs.getInt("id")));
                 products.add(product);
                 SearchHistory searchHistory = saveSearchHistoryToDatabase(query, userId);
             }
