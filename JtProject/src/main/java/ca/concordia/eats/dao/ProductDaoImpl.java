@@ -199,7 +199,7 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public Category updateCategory(Category category) {
         try {
-            PreparedStatement pst = con.prepareStatement("update category set name = ? where categoryid = ?");
+            PreparedStatement pst = con.prepareStatement("update category set name = ? where id = ?");
             pst.setString(1, category.getName());
             pst.setInt(2, category.getId());
             pst.executeUpdate();
@@ -212,7 +212,7 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public boolean removeCategoryById(int categoryId) {
         try {
-            PreparedStatement pst = con.prepareStatement("delete from category where categoryid = ? ;");
+            PreparedStatement pst = con.prepareStatement("delete from category where id = ? ;");
             pst.setInt(1, categoryId);
             pst.executeUpdate();
         } catch (Exception ex) {
