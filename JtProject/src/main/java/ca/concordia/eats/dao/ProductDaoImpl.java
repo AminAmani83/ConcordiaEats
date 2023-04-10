@@ -457,5 +457,35 @@ public class ProductDaoImpl implements ProductDao {
     }
 
 
+
+public Map<Integer, Float> fetchAllProductAvgRatings(){
+	Map<Integer, Float> productAvgRatings = new HashMap<Integer, Float>();
+    try {
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery("select productId, Avg(rating) as AvgRating from rating where Group by productId;");
+        while (rs.next()) {
+        	productAvgRatings.put(rs.getInt(1), rs.getFloat(2));
+        }
+    } catch (Exception ex) {
+        System.out.println("Exception Occurred: " + ex.getMessage());
+    }
+    return productAvgRatings;
+}
+public Map<Integer, Integer> fetchAllProductSumSalesQuantity(){
+	Map<Integer, Integer> productSumSalesQuantity = new HashMap<Integer, Integer>();
+    try {
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery("select productId, Sum(quantity) as SalesQuantity from purchase_details where Group by productId;");
+        while (rs.next()) {
+        	productSumSalesQuantity.put(rs.getInt(1), rs.getInt(2));
+        }
+    } catch (Exception ex) {
+        System.out.println("Exception Occurred: " + ex.getMessage());
+    }
+    return productSumSalesQuantity;	
+	
 }
 
+	
+
+}

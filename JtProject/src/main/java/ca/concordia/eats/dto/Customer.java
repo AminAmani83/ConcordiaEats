@@ -1,5 +1,7 @@
 package ca.concordia.eats.dto;
 
+import java.util.List;
+
 public class Customer extends User {
   
     private String address;
@@ -7,7 +9,9 @@ public class Customer extends User {
 
     private Favorite favorite;
     private Rating rating;
-    private Recommendation recommendation;
+    private List<Product> recommendation;
+    private Product highestRatingProduct;
+    private Product bestSellerProduct;
     
     public Customer() {
     }
@@ -56,11 +60,25 @@ public class Customer extends User {
         this.rating = rating;
     }
 
-    public Recommendation getRecommendation() {
+    public List<Product> getRecommendation() {
         return recommendation;
     }
 
-    public void setRecommendation(Recommendation recommendation) {
+    public void setRecommendation(List<Product> recommendation) {
         this.recommendation = recommendation;
+    }
+    public Product getHighestRatingProduct() {
+        return highestRatingProduct;
+    }
+
+    public void setHighestRatingProduct(Product highestRatingProduct) {
+        this.highestRatingProduct = highestRatingProduct;
+    }
+    public Product getBestSellerProduct() {
+        return bestSellerProduct;
+    }
+
+    public void setBestSellerProduct(Product bestSellerProduct) {
+        this.bestSellerProduct = bestSellerProduct;
     }
 }

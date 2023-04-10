@@ -2,11 +2,11 @@ package ca.concordia.eats.dto;
 
 import java.util.*;
 
-public class Recommendation {
+public class BestDeals {
   
     private List<Product> customerSearchedProducts;
   
-    public Recommendation() {
+    public BestDeals() {
         this.customerSearchedProducts = new ArrayList<Product>();
     }
       

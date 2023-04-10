@@ -4,6 +4,7 @@ import ca.concordia.eats.dto.Customer;
 import ca.concordia.eats.dto.Favorite;
 import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.User;
+import ca.concordia.eats.service.BestDealsService;
 import ca.concordia.eats.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -53,5 +54,30 @@ public class MainController {
         List<Product> products = productService.search(query, user.getUserId());
         model.addAttribute("products", products);
         return "search-results";
+    }
+    
+    @Autowired
+    BestDealsService bestDealsService;
+    
+    @GetMapping("/")
+    public String fetchPersonalizedRecommendatedProductsBasedSearchPatternByUser(HttpSession session, Model model) {
+        if (session.getAttribute("user") == null) return "userLogin";
+        Customer customer = (Customer) session.getAttribute("user");
+        model.addAttribute("recommendedProducts", customer.getRecommendation());
+        return "/recommendedProducts";
+    }
+    @GetMapping("/")
+    public String fetchBestSellerProduct(HttpSession session, Model model) {
+        if (session.getAttribute("user") == null) return "userLogin";
+        Customer customer = (Customer) session.getAttribute("user");
+        model.addAttribute("bestSellerProducts", customer.getBestSellerProduct());
+        return "/bestSellerProducts";
+    }
+    @GetMapping("/")
+    public String fetchHighestRatingProductByUser(HttpSession session, Model model) {
+        if (session.getAttribute("user") == null) return "userLogin";
+        Customer customer = (Customer) session.getAttribute("user");
+        model.addAttribute("highestRatingProduct", customer.getHighestRatingProduct());
+        return "/favorites";
     }
 }
