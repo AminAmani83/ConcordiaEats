@@ -49,6 +49,7 @@
         <th>ID</th>
         <th>Name</th>
         <th>Price</th>
+        <th>Rating</th>
         <th>Description</th>
         <th>Image URL</th>
     </tr>
@@ -57,6 +58,7 @@
         <td><%= product.getId() %></td>
         <td><%= product.getName() %></td>
         <td><%= product.getPrice()%></td>
+        <td><%= product.getRating()%></td>
         <td><%= product.getDescription()%></td>
         <td><img src="<%= product.getImagePath() %>" alt="<%= product.getName() %>"></td>
     </tr>
