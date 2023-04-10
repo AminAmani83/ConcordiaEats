@@ -254,21 +254,18 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public List<Product> fetchCustomerFavoriteProducts(int customerId) {
-        List<Product> customerFavoriteProducts = new LinkedList<>();
+    public List<Integer> fetchCustomerFavoriteProductIds(int customerId) {
+        List<Integer> customerFavoriteProductIds = new LinkedList<>();
         try {
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select * from favorite join product on favorite.productId = product.id join category on product.categoryId = category.id where userId=" + customerId + ";");
+            ResultSet rs = stmt.executeQuery("select productId from favorite where userId=" + customerId + ";");
             while (rs.next()) {
-                customerFavoriteProducts.add(new Product(rs.getInt(3), rs.getString(4),
-                        rs.getString(5), rs.getString(6), rs.getFloat(7),
-                        rs.getInt(8), rs.getBoolean(9), rs.getFloat(10), rs.getDouble(11),
-                        new Category(rs.getInt(12), rs.getString(13))));
+                customerFavoriteProductIds.add(rs.getInt(1));
             }
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
-        return customerFavoriteProducts;
+        return customerFavoriteProductIds;
     }
 
     /**
