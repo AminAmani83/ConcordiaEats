@@ -213,10 +213,10 @@ public class UserDaoImpl implements UserDao {
         try {
             PreparedStatement pst = con.prepareStatement("insert into user (username, password, role, email, address, phone) values(?,?,'CUSTOMER',?,?,?);");
             pst.setString(1, customer.getUsername());
-            pst.setString(1, customer.getPassword());
-            pst.setString(2, customer.getEmail());
-            pst.setString(3, customer.getAddress());
-            pst.setString(4, customer.getPhone());
+            pst.setString(2, customer.getPassword());
+            pst.setString(3, customer.getEmail());
+            pst.setString(4, customer.getAddress());
+            pst.setString(5, customer.getPhone());
             pst.executeUpdate();
 
         } catch (Exception ex) {

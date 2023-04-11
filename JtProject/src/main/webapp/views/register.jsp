@@ -19,7 +19,7 @@
     <div class="col-sm-6">
         <h3 style="margin-top: 10px">Sign Up Now</h3>
         <p>Please fill out this to register</p>
-        <form action="newuserregister" method="post">
+        <form action="newuserregister" method="post" modelAttribute="customer">
             <div class="form-group">
                 <label for="firstName">User Name</label>
                 <input type="text" name="username" id="firstName" required placeholder="Your Username*" required class="form-control form-control-lg">
@@ -29,6 +29,13 @@
                 <input type="email" class="form-control form-control-lg" required minlength="6" placeholder="Email*" required name="email" id="email"
                        aria-describedby="emailHelp">
                 <small id="emailHelp" class="form-text text-muted">We'll never share your email with
+                    anyone else.</small>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone</label>
+                <input type="tel" class="form-control form-control-lg" required minlength="10" placeholder="Phone Number*" required name="phone" id="phone"
+                       aria-describedby="phoneHelp">
+                <small id="phonelHelp" class="form-text text-muted">We'll never share your phone number with
                     anyone else.</small>
             </div>
             <div class="form-group">
