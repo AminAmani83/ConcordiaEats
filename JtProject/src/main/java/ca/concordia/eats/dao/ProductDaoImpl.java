@@ -268,7 +268,7 @@ public class ProductDaoImpl implements ProductDao {
         try {
             PreparedStatement pst = con.prepareStatement("delete from favorite where userId=?;");
             pst.setInt(1, customerId);
-            pst.executeQuery();
+            pst.executeUpdate();
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
@@ -469,7 +469,7 @@ public class ProductDaoImpl implements ProductDao {
         try {
             PreparedStatement pst = con.prepareStatement("delete from search_history where userId=?;");
             pst.setInt(1, customerId);
-            pst.executeQuery();
+            pst.executeUpdate();
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
@@ -502,7 +502,7 @@ public class ProductDaoImpl implements ProductDao {
         try {
             PreparedStatement pst = con.prepareStatement("delete from rating where userId=?;");
             pst.setInt(1, customerId);
-            pst.executeQuery();
+            pst.executeUpdate();
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }

@@ -117,7 +117,7 @@ public class OrderDaoImpl implements OrderDao {
             try {
                 PreparedStatement pst = con.prepareStatement("delete from purchase_details where purchaseId=?;");
                 pst.setInt(1, id);
-                pst.executeQuery();
+                pst.executeUpdate();
 
             } catch (Exception ex) {
                 System.out.println("Exception Occurred: " + ex.getMessage());
@@ -133,7 +133,7 @@ public class OrderDaoImpl implements OrderDao {
         try {
             PreparedStatement pst = con.prepareStatement("delete from purchase where userId=?;");
             pst.setInt(1, customerId);
-            pst.executeQuery();
+            pst.executeUpdate();
 
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
