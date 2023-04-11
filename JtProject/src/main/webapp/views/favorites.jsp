@@ -71,11 +71,17 @@
                                 <c:out value="${product.name}"/>
                             </h4>
                             <div class="rating">
-                                <i class="fa fa-star text-warning"></i>
-                                <i class="fa fa-star text-warning"></i>
-                                <i class="fa fa-star text-warning"></i>
-                                <i class="fas fa-star-half-alt text-warning"></i>
+                                <!-- Filled stars -->
+                                <c:forEach var="i" begin="1" end="${product.rating}">
+                                    <i class="fa fa-star text-warning"></i>
+                                </c:forEach>
+
+                                <!-- Half filled stars
+                                    <i class="fas fa-star-half-alt text-warning"></i> -->
                             </div>
+                            <p class="card-text">
+                                <c:out value="${product.rating}"/>
+                            </p>
                             <p class="card-text">
                                 <c:out value="${product.description}"/>
                             </p>
