@@ -48,8 +48,13 @@
                                id="startDate" required="required" placeholder="Promotion Start Date">
                         <input type="date" name="promotionEndDate" class="form-control"
                                id="endDate" required="required" placeholder="Promotion End Date">
-                        <input type="text" name="promotionType" class="form-control"
-                               id="promotionType" required="required" placeholder="Promotion Type">
+                        <label for="promotionType">Promotion Type:</label>
+                        <select name="promotionType" class="form-control" id="promotionType" required>
+                            <option value="" selected disabled hidden>Choose a promotion type</option>
+                            <option value="Discount">Discount</option>
+                            <option value="Free Shipping">Free Shipping</option>
+                            <option value="Buy One Get One Free">Buy One Get One Free</option>
+                        </select>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary"
@@ -145,9 +150,13 @@
                                                    value="promotionEndDate">
                                         </div>
                                         <div class="form-group">
-                                            <input class="form-control" type="text" name="promoType"
-                                                   id="promoType"
-                                                   value="promoType">
+                                            <label for="promoType">Promotion Type:</label>
+                                            <select name="promoType" class="form-control" id="promoType" required>
+                                                <option value="" selected disabled hidden>Choose a promotion type</option>
+                                                <option value="Discount">Discount</option>
+                                                <option value="Free Shipping">Free Shipping</option>
+                                                <option value="Buy One Get One Free">Buy One Get One Free</option>
+                                            </select>
                                         </div>
 
                                     </div>
