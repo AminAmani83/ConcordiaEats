@@ -42,7 +42,7 @@
                 </div>
                 <div class="form-group">
                     <label for="phone">Phone Number</label>
-                    <input type="text" class="form-control form-control-lg" minlength="6" placeholder="Phone"
+                    <input type="text" class="form-control form-control-lg" minlength="10" placeholder="Phone"
                            value="${phone}" name="phone" id="phone">
                 </div>
                 <div class="form-group">
