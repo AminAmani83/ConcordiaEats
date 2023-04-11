@@ -6,7 +6,7 @@ public class Purchase {
     private long timeStamp;
     private float totalPrice;
   
-    public int purchaseId() {
+    public int getPurchaseId() {
         return purchaseId;
     }
 

@@ -1,6 +1,7 @@
 package ca.concordia.eats.dao;
 
 import ca.concordia.eats.dto.Promotion;
+import ca.concordia.eats.dto.Purchase;
 import org.springframework.stereotype.Repository;
 
 import java.io.FileReader;
@@ -123,7 +124,7 @@ public class PromotionDaoImpl implements PromotionDao {
 
     @Override
     public boolean removePromotion(int promotionId) throws DAOException {
-        // TODO: removePromotionFromPurchase(promotionId);
+        removePromotionFromPurchases(promotionId);
         String sql = "DELETE FROM promotion WHERE promotion.id = ?";
         try (PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setInt(1, promotionId);
@@ -155,8 +156,39 @@ public class PromotionDaoImpl implements PromotionDao {
 
     @Override
     public boolean removePromotionFromPurchases(int promotionId) {
-        // TODO: implement this method
-        return false;
+        String sql = "UPDATE purchase" +
+                " SET promotionId = NULL" +
+                " WHERE purchase.id = ? AND promotionId = ?";
+        try (PreparedStatement stmt = con.prepareStatement(sql)) {
+            List<Purchase> allPurchases = fetchAllPurchases();
+            for (Purchase purchase: allPurchases) {
+                int purchaseId = purchase.getPurchaseId();
+                stmt.setInt(1, purchaseId);
+                stmt.setInt(2, promotionId);
+                stmt.executeUpdate();
+            }
+        } catch (SQLException | DAOException e) {
+            throw new DAOException("Error updating purchase.", e);
+        }
+        return true;
+    }
+
+    public List<Purchase> fetchAllPurchases() {
+        List<Purchase> allPurchases = new ArrayList<>();
+        try {
+            PreparedStatement stmt = con.prepareStatement("SELECT id, timeStamp, total_price FROM purchase");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Purchase purchase = new Purchase();
+                purchase.setPurchaseId(rs.getInt(1));
+                // purchase.setTimeStamp(rs.getLong(2));
+                purchase.setTotalPrice(rs.getFloat(3));
+                allPurchases.add(purchase);
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Error fetching all purchases", e);
+        }
+        return allPurchases;
     }
 
 }

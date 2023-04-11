@@ -8,15 +8,12 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.List;
 
+import ca.concordia.eats.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
-import ca.concordia.eats.dto.Basket;
-import ca.concordia.eats.dto.Category;
-import ca.concordia.eats.dto.Product;
-import ca.concordia.eats.dto.User;
 import ca.concordia.eats.utils.ConnectionUtil;
 
 @Repository
@@ -63,8 +60,9 @@ public class OrderDaoImpl implements OrderDao {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
 	}
-	
-	private void addPurchaseDetails(Integer purchaseId, List<Product> list) {
+
+
+    private void addPurchaseDetails(Integer purchaseId, List<Product> list) {
 		for (Product product : list) 
 		{ 
 			addPurchaseDetail(purchaseId, product);

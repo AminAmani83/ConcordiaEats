@@ -51,7 +51,8 @@
                         <label for="promotionType">Promotion Type:</label>
                         <select name="promotionType" class="form-control" id="promotionType" required>
                             <option value="" selected disabled hidden>Choose a promotion type</option>
-                            <option value="Discount">Discount</option>
+                            <option value="10% Site-wide Discount">Discount</option>
+                            <option value="10% purchase Discount">Discount</option>
                             <option value="Free Shipping">Free Shipping</option>
                             <option value="Buy One Get One Free">Buy One Get One Free</option>
                         </select>
@@ -153,7 +154,8 @@
                                             <label for="promoType">Promotion Type:</label>
                                             <select name="promoType" class="form-control" id="promoType" required>
                                                 <option value="" selected disabled hidden>Choose a promotion type</option>
-                                                <option value="Discount">Discount</option>
+                                                <option value="10% Site-wide Discount">Discount</option>
+                                                <option value="10% purchase Discount">Discount</option>
                                                 <option value="Free Shipping">Free Shipping</option>
                                                 <option value="Buy One Get One Free">Buy One Get One Free</option>
                                             </select>
