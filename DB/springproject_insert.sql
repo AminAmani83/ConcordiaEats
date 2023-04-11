@@ -4,11 +4,11 @@
 -- -----------------------------------------------------
 ALTER TABLE `springproject`.`promotion` AUTO_INCREMENT = 1;
 
-INSERT INTO `springproject`.`promotion` (`name`, `startDate`, `endDate`, `discountPercentage`) 
+INSERT INTO `springproject`.`promotion` (`name`, `startDate`, `endDate`, `type`) 
 VALUES 
-('10%discount', '2023-05-01', '2023-05-15', 10),
-('20%discount', '2023-06-01', '2023-06-30', 20),
-('30%discount','2023-07-01', '2023-07-15', 30);
+('Chrismas Sale', '2023-05-01', '2023-05-15', '10% Discount'),
+('New Customer Promotion', '2023-06-01', '2023-06-30', 'Free Shipping'),
+('Black Friday','2023-07-01', '2023-07-15', 'Buy One Get One Free');
 
 -- -----------------------------------------------------
 -- Table `springproject`.`user`
@@ -34,7 +34,7 @@ INSERT INTO `springproject`.`purchase` (`userId`, `timeStamp`, `total_price`, `p
 VALUES (1, '2023-04-09 11:00:00', 75.00, 2);
 
 INSERT INTO `springproject`.`purchase` (`userId`, `timeStamp`, `total_price`, `promotionId`)
-VALUES (1, '2023-04-10 12:00:00', 100.00, 3);
+VALUES (1, '2023-04-10 12:00:00', 100.00, NULL);
 
 
 -- -----------------------------------------------------

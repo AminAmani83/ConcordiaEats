@@ -8,7 +8,7 @@ public class Promotion {
     private String name;
     private Date StartDate;
     private Date EndDate;
-    private int discountPercentage;
+    private String type;
 
     public int getId() {
         return id;
@@ -40,13 +40,13 @@ public class Promotion {
         this.EndDate = endDate;
     }
 
-    public int getDiscountPercentage() {
-        return discountPercentage;
+    public String getType() {
+        return type;
     }
 
-    public void setDiscountPercentage(int discountPercentage) {
-        this.discountPercentage = discountPercentage;
+    // Setter method for the 'type' field
+    public void setType(String type) {
+        this.type = type;
     }
-
 
 }

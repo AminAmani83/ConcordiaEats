@@ -37,7 +37,8 @@ public class PromotionDaoImpl implements PromotionDao {
     public List<Promotion> fetchAllPromotions() throws DAOException {
         List<Promotion> allPromotions = new ArrayList<>();
         try {
-            PreparedStatement stmt = con.prepareStatement("SELECT promotion.id, promotion.startDate, promotion.endDate, promotion.name, promotion.discountPercentage FROM promotion");
+            PreparedStatement stmt = con.prepareStatement("SELECT promotion.id, promotion.startDate, promotion.endDate, promotion.name, promotion.type " +
+                    " FROM promotion");
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Promotion promotion = mapResultSetToPromotion(rs);
@@ -53,7 +54,7 @@ public class PromotionDaoImpl implements PromotionDao {
     public Promotion fetchPromotionById(int PromotionId) throws DAOException {
         Promotion promotion = null;
         String sql = "SELECT promotion.id, promotion.startDate, promotion.endDate, promotion.name," +
-                " promotion.discountPercentage" +
+                " promotion.type" +
                 " FROM promotion"+
                 " WHERE promotion.id = ?";
         try {
@@ -72,14 +73,14 @@ public class PromotionDaoImpl implements PromotionDao {
 
     @Override
     public Promotion createPromotion(Promotion promotion) throws DAOException {
-        String sql = "INSERT INTO promotion (id, startDate, endDate, name, discountPercentage) " +
+        String sql = "INSERT INTO promotion (id, startDate, endDate, name, type) " +
                 "VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             stmt.setInt(1, promotion.getId());
             stmt.setObject(2, promotion.getStartDate());
             stmt.setObject(3, promotion.getEndDate());
             stmt.setString(4, promotion.getName());
-            stmt.setInt(5, promotion.getDiscountPercentage());
+            stmt.setString(5, promotion.getType());
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected == 0) {
                 throw new DAOException("Creating promotion failed, no rows affected.");
@@ -101,13 +102,13 @@ public class PromotionDaoImpl implements PromotionDao {
     @Override
     public Promotion updatePromotion(Promotion promotion) throws DAOException {
         String sql = "UPDATE promotion" +
-                " SET startDate = ?, endDate = ?, name = ? , discountPercentage = ?" +
-                "WHERE promotion.id = ?";
+                " SET startDate = ?, endDate = ?, name = ? , type = ?" +
+                " WHERE promotion.id = ?";
         try (PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setObject(1, promotion.getStartDate());
             stmt.setObject(2, promotion.getEndDate());
-            stmt.setObject(3, promotion.getName());
-            stmt.setInt(4, promotion.getDiscountPercentage());
+            stmt.setString(3, promotion.getName());
+            stmt.setString(4, promotion.getType());
             stmt.setInt(5, promotion.getId());
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected == 0) {
@@ -122,6 +123,7 @@ public class PromotionDaoImpl implements PromotionDao {
 
     @Override
     public boolean removePromotion(int promotionId) throws DAOException {
+        // TODO: removePromotionFromPurchase(promotionId);
         String sql = "DELETE FROM promotion WHERE promotion.id = ?";
         try (PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setInt(1, promotionId);
@@ -147,8 +149,14 @@ public class PromotionDaoImpl implements PromotionDao {
         Date endDate = rs.getDate(3);
         promotion.setEndDate(endDate);
         promotion.setName(rs.getString(4));
-        promotion.setDiscountPercentage((rs.getInt(5)));
+        promotion.setType(rs.getString(5));
         return promotion;
+    }
+
+    @Override
+    public boolean removePromotionFromPurchases(int promotionId) {
+        // TODO: implement this method
+        return false;
     }
 
 }

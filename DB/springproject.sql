@@ -22,10 +22,10 @@ DROP TABLE IF EXISTS `springproject`.`promotion` ;
 
 CREATE TABLE IF NOT EXISTS `springproject`.`promotion` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NULL,
+  `name` VARCHAR(45) NOT NULL,
   `startDate` DATE NOT NULL,
   `endDate` DATE NULL,
-  `discountPercentage` INT NULL,
+  `type` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
@@ -219,20 +219,6 @@ CREATE TABLE IF NOT EXISTS `springproject`.`search_history` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
-USE `springproject` ;
-
--- -----------------------------------------------------
--- Placeholder table for view `springproject`.`view1`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `springproject`.`view1` (`id` INT);
-
--- -----------------------------------------------------
--- View `springproject`.`view1`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `springproject`.`view1`;
-DROP VIEW IF EXISTS `springproject`.`view1` ;
-USE `springproject`;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
