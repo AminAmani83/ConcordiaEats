@@ -1,7 +1,6 @@
 package ca.concordia.eats.service;
 
 import ca.concordia.eats.dto.Promotion;
-import ca.concordia.eats.dto.PromotionType;
 
 import java.util.List;
 

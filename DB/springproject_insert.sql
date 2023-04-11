@@ -1,28 +1,14 @@
--- -----------------------------------------------------
--- Table `springproject`.`promotion_type`
--- -----------------------------------------------------
-ALTER TABLE `springproject`.`promotion_type` AUTO_INCREMENT = 1;
-
-INSERT INTO `springproject`.`promotion_type` (`type`) VALUES ('Discount');
-INSERT INTO `springproject`.`promotion_type` (`type`) VALUES ('Free Item');
-INSERT INTO `springproject`.`promotion_type` (`type`) VALUES ('Buy One Get One Free');
-
-
 
 -- -----------------------------------------------------
 -- Table `springproject`.`promotion`
 -- -----------------------------------------------------
 ALTER TABLE `springproject`.`promotion` AUTO_INCREMENT = 1;
 
-INSERT INTO `springproject`.`promotion` (`startDate`, `endDate`, `promotionTypeId`) 
-VALUES ('2023-05-01', '2023-05-15', 1);
-
-INSERT INTO `springproject`.`promotion` (`startDate`, `endDate`, `promotionTypeId`) 
-VALUES ('2023-06-01', '2023-06-30', 2);
-
-INSERT INTO `springproject`.`promotion` (`startDate`, `endDate`, `promotionTypeId`) 
-VALUES ('2023-07-01', '2023-07-15', 3);
-
+INSERT INTO `springproject`.`promotion` (`name`, `startDate`, `endDate`) 
+VALUES 
+('10%discount', '2023-05-01', '2023-05-15'),
+('20%discount', '2023-06-01', '2023-06-30'),
+('30%discount','2023-07-01', '2023-07-15');
 
 -- -----------------------------------------------------
 -- Table `springproject`.`user`

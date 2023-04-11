@@ -16,34 +16,16 @@ CREATE SCHEMA IF NOT EXISTS `springproject` DEFAULT CHARACTER SET utf8 ;
 USE `springproject` ;
 
 -- -----------------------------------------------------
--- Table `springproject`.`promotion_type`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `springproject`.`promotion_type` ;
-
-CREATE TABLE IF NOT EXISTS `springproject`.`promotion_type` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `type` VARCHAR(255) NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `springproject`.`promotion`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `springproject`.`promotion` ;
 
 CREATE TABLE IF NOT EXISTS `springproject`.`promotion` (
   `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NULL,
   `startDate` DATE NOT NULL,
   `endDate` DATE NULL,
-  `promotionTypeId` INT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `promotions_promotion_type_idx` (`promotionTypeId` ASC) VISIBLE,
-  CONSTRAINT `promotions_promotion_type`
-    FOREIGN KEY (`promotionTypeId`)
-    REFERENCES `springproject`.`promotion_type` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 

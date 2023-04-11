@@ -309,15 +309,21 @@ public class AdminController {
 
 	}
 
-	@RequestMapping(value = "admin/sendPromotion",method = RequestMethod.GET)
-	public String createPromotion(@RequestParam("promotionName") String promotionName, Model model) {
+	@RequestMapping(value = "admin/createPromotion", method = RequestMethod.POST)
+	public String createPromotion(@RequestParam("name") String name,
+								  @RequestParam("promotionStartDate") Date startDate,
+								  @RequestParam("promotionEndDate") Date endDate,
+								  Model model) {
 		try {
 			Promotion promotion = new Promotion();
+			promotion.setStartDate(startDate);
+			promotion.setEndDate(endDate);
+			promotion.setName(name);
 			promotionService.createPromotion(promotion);
 			return "redirect:/admin/promotions";
 		} catch (ServiceException e) {
 			e.printStackTrace();
-			model.addAttribute("errorMessage", "An error occurred while creating the promotions");
+			model.addAttribute("errorMessage", "An error occurred while creating the promotion");
 			return "error";
 		}
 	}

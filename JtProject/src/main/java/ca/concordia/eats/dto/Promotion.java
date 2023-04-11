@@ -5,7 +5,7 @@ import java.util.Date;
 public class Promotion {
   
     private int id;
-    private PromotionType promotionType;
+    private String name;
     private Date StartDate;
     private Date EndDate;
 
@@ -15,6 +15,14 @@ public class Promotion {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return this.name;
     }
 
 
@@ -31,12 +39,5 @@ public class Promotion {
         this.EndDate = endDate;
     }
 
-    public PromotionType getPromotionType() {
-        return promotionType;
-    }
-
-    public void setPromotionType(PromotionType promotionType) {
-        this.promotionType = promotionType;
-    }
 
 }

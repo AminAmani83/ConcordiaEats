@@ -20,11 +20,52 @@
 <%@include file="adminHeader.jsp" %>
 <div class="container">
 
+    <!-- Button trigger modal -->
+    <button type="button" style="margin: 20px 0" class="btn btn-primary"
+            data-toggle="modal" data-target="#exampleModalCenter">Add
+        Promotion
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <form action="createPromotion" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Add New
+                            Promotion</h5>
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body  text-center">
+                        <input type="text" name="name" class="form-control"
+                               id="name" required="required" placeholder="Promotion Name">
+                        <input type="date" name="promotionStartDate" class="form-control"
+                               id="startDate" required="required" placeholder="Promotion Start Date">
+                        <input type="date" name="promotionEndDate" class="form-control"
+                               id="endDate" required="required" placeholder="Promotion End Date">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                                data-dismiss="modal">Close
+                        </button>
+                        <input type="submit" value="Save Changes" class="btn btn-primary">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <br>
+
     <table class="table">
         <thead class="thead-light">
         <tr>
             <th scope="col">SN</th>
-            <th scope="col">Promotion Type</th>
+            <th scope="col">Promotion Name</th>
             <th scope="col">Start Date</th>
             <th scope="col">End Date</th>
             <th scope="col">Delete</th>
@@ -35,7 +76,7 @@
         <c:forEach items="${allPromotions}" var="promotion">
             <tr>
                 <td><c:out value="${promotion.id}"/></td>
-                <td><c:out value="${promotion.promotionType.type}"/></td>
+                <td><c:out value="${promotion.name}"/></td>
                 <td><c:out value="${promotion.startDate}"/></td>
                 <td><c:out value="${promotion.endDate}"/></td>
 
