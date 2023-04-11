@@ -1,34 +1,34 @@
 package ca.concordia.eats.dto;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 public class Promotion {
   
-    private int promotionId;
+    private int id;
     private PromotionType promotionType;
-    private LocalDateTime promotionStartDate;
-    private LocalDateTime promotionEndDate;
+    private Date StartDate;
+    private Date EndDate;
 
-    public int getPromotionId() {
-        return promotionId;
-    }
-
-    public void setPromotionId(int promotionId) {
-        this.promotionId = promotionId;
+    public int getId() {
+        return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public LocalDateTime getPromotionStartDate() {
-        return promotionStartDate;
+
+    public Date getStartDate() {
+        return StartDate;
     }
-    public void setPromotionStartDate(LocalDateTime promotionStartDate) {
-        this.promotionStartDate = promotionStartDate;
+    public void setStartDate(Date startDate) {
+        this.StartDate = startDate;
     }
-    public LocalDateTime getPromotionEndDate() {
-        return promotionEndDate;
+    public Date getEndDate() {
+        return EndDate;
     }
-    public void setPromotionEndDate(LocalDateTime promotionEndDate) {
-        this.promotionEndDate = promotionEndDate;
+    public void setEndDate(Date endDate) {
+        this.EndDate = endDate;
     }
 
     public PromotionType getPromotionType() {

@@ -26,6 +26,7 @@ public class AdminController {
 
 	@Autowired
 	ProductService productService;
+	@Autowired
 	PromotionService promotionService;
 
 	@Autowired

@@ -4,6 +4,7 @@ import ca.concordia.eats.dao.DAOException;
 import ca.concordia.eats.dao.PromotionDao;
 import ca.concordia.eats.dto.Promotion;
 import ca.concordia.eats.dto.PromotionType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @Service
 public class PromotionServiceImpl implements PromotionService {
-
+    @Autowired
     private PromotionDao promotionDao;
 
     public PromotionServiceImpl(PromotionDao promotionDao) {

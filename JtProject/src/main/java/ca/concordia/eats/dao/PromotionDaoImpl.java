@@ -4,24 +4,42 @@ import ca.concordia.eats.dto.Promotion;
 import ca.concordia.eats.dto.PromotionType;
 import org.springframework.stereotype.Repository;
 
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.*;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 @Repository
 public class PromotionDaoImpl implements PromotionDao {
-    private Connection con;
+
+    Connection con;
+
+    public PromotionDaoImpl() throws IOException {
+        String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath()
+                .replaceAll("%20", " ");
+        String dbConfigPath = rootPath + "db.properties";
+
+        FileReader reader = new FileReader(dbConfigPath);
+        Properties dbProperties = new Properties();
+        dbProperties.load(reader);
+
+        try {
+            this.con = DriverManager.getConnection(dbProperties.getProperty("url"), dbProperties.getProperty("username"), dbProperties.getProperty("password"));
+        } catch (Exception e) {
+            System.out.println("Error connecting to the DB: " + e.getMessage());
+        }
+    }
 
     @Override
     public List<Promotion> fetchAllPromotions() throws DAOException {
         List<Promotion> allPromotions = new ArrayList<>();
         try {
-            PreparedStatement stmt = con.prepareStatement("SELECT promotion.id, promotion.startDate, promotion.endDate, promotionType.type" +
+            PreparedStatement stmt = con.prepareStatement("SELECT promotion.id, promotion.startDate, promotion.endDate, promotion_type.type" +
                     " FROM promotion, promotion_type"+
-                    "WHERE promotionTypeId = promotion_type.id");
+                    " WHERE promotionTypeId = promotion_type.id");
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Promotion promotion = mapResultSetToPromotion(rs);
@@ -57,9 +75,9 @@ public class PromotionDaoImpl implements PromotionDao {
     public Promotion createPromotion(Promotion promotion) throws DAOException {
         String sql = "INSERT INTO promotions (id, startDate, endDate, promotionTypeId) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-            stmt.setInt(1, promotion.getPromotionId());
-            stmt.setObject(2, promotion.getPromotionStartDate());
-            stmt.setObject(3, promotion.getPromotionEndDate());
+            stmt.setInt(1, promotion.getId());
+            stmt.setObject(2, promotion.getStartDate());
+            stmt.setObject(3, promotion.getEndDate());
             stmt.setInt(4, promotion.getPromotionType().getId());
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected == 0) {
@@ -67,7 +85,7 @@ public class PromotionDaoImpl implements PromotionDao {
             }
             try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    promotion.setPromotionId(generatedKeys.getInt(1));
+                    promotion.setId(generatedKeys.getInt(1));
                 } else {
                     throw new DAOException("Creating promotion failed, no ID obtained.");
                 }
@@ -85,10 +103,10 @@ public class PromotionDaoImpl implements PromotionDao {
                 " SET startDate = ?, endDate = ?, promotionTypeId = ? " +
                 "WHERE promotion.id = ?";
         try (PreparedStatement stmt = con.prepareStatement(sql)) {
-            stmt.setObject(1, promotion.getPromotionStartDate());
-            stmt.setObject(2, promotion.getPromotionEndDate());
+            stmt.setObject(1, promotion.getStartDate());
+            stmt.setObject(2, promotion.getEndDate());
             stmt.setObject(3, promotion.getPromotionType().getId());
-            stmt.setInt(4, promotion.getPromotionId());
+            stmt.setInt(4, promotion.getId());
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected == 0) {
                 throw new DAOException("Updating promotion failed, no rows affected.");
@@ -121,14 +139,14 @@ public class PromotionDaoImpl implements PromotionDao {
     public Promotion mapResultSetToPromotion(ResultSet rs) throws SQLException {
         Promotion promotion = null;
         promotion = new Promotion();
-        promotion.setPromotionId(rs.getInt(1));
+        promotion.setId(rs.getInt(1));
         Date startDate = rs.getDate(2);
-        LocalDateTime localStartDateTime = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-        promotion.setPromotionStartDate(localStartDateTime);
+        promotion.setStartDate(startDate);
         Date endDate = rs.getDate(3);
-        LocalDateTime localEndDateTime = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-        promotion.setPromotionEndDate(localEndDateTime);
-        promotion.getPromotionType().setType(rs.getString(4));
+        promotion.setEndDate(endDate);
+        PromotionType promotionType = new PromotionType();
+        promotionType.setType(rs.getString(4));
+        promotion.setPromotionType(promotionType);
         return promotion;
     }
 
