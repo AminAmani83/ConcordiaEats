@@ -15,10 +15,10 @@
                                     <div class="details">
                                         <h2>${bestSellerProduct.name}</h2>
                                         <div class="rating">
-                                            <i class="fa fa-star text-warning"></i>
-                                            <i class="fa fa-star text-warning"></i>
-                                            <i class="fa fa-star text-warning"></i>
-                                            <i class="fas fa-star-half-alt text-warning"></i>
+                                            <!-- Filled stars -->
+                                            <c:forEach var="i" begin="1" end="${bestSellerProduct.rating}">
+                                                <i class="fa fa-star text-warning"></i>
+                                            </c:forEach>
                                         </div>
                                         <p>$${bestSellerProduct.price}</p>
                                         <p>${bestSellerProduct.description}</p>
@@ -43,11 +43,10 @@
                                     <div class="details">
                                         <h2>${highestRatedProduct.name}</h2>
                                         <div class="rating">
-                                            <i class="fa fa-star text-warning"></i>
-                                            <i class="fa fa-star text-warning"></i>
-                                            <i class="fa fa-star text-warning"></i>
-                                            <i class="fa fa-star text-warning"></i>
-                                            <i class="fa fa-star text-warning"></i>
+                                            <!-- Filled stars -->
+                                            <c:forEach var="i" begin="1" end="${highestRatedProduct.rating}">
+                                                <i class="fa fa-star text-warning"></i>
+                                            </c:forEach>
                                         </div>
                                         <p>$${highestRatedProduct.price}</p>
                                         <p>${highestRatedProduct.description}</p>
@@ -72,9 +71,10 @@
                                     <div class="details">
                                         <h2>${recommendedProduct.name}</h2>
                                         <div class="rating">
-                                            <i class="fa fa-star text-warning"></i>
-                                            <i class="fa fa-star text-warning"></i>
-                                            <i class="fas fa-star-half-alt text-warning"></i>
+                                            <!-- Filled stars -->
+                                            <c:forEach var="i" begin="1" end="${recommendedProduct.rating}">
+                                                <i class="fa fa-star text-warning"></i>
+                                            </c:forEach>
                                         </div>
                                         <p>$${recommendedProduct.price}</p>
                                         <p>${recommendedProduct.description}</p>

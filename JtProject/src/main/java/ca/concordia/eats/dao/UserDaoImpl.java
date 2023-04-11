@@ -2,15 +2,21 @@ package ca.concordia.eats.dao;
 
 import ca.concordia.eats.dto.User;
 import ca.concordia.eats.dto.Customer;
+import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.UserCredentials;
+import ca.concordia.eats.utils.ConnectionUtil;
+
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.io.FileReader;
 import java.io.IOException;
+
+import javax.servlet.http.HttpSession;
 
 @Repository
 public class UserDaoImpl implements UserDao {
@@ -23,22 +29,11 @@ public class UserDaoImpl implements UserDao {
      *
      * @throws IOException
      */
+
     private Connection con;
 
     public UserDaoImpl() throws IOException {
-        String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath()
-                .replaceAll("%20", " ");
-        String dbConfigPath = rootPath + "db.properties";
-
-        FileReader reader = new FileReader(dbConfigPath);
-        Properties dbProperties = new Properties();
-        dbProperties.load(reader);
-
-        try {
-            this.con = DriverManager.getConnection(dbProperties.getProperty("url"), dbProperties.getProperty("username"), dbProperties.getProperty("password"));
-        } catch (Exception e) {
-            System.out.println("Error connecting to the DB: " + e.getMessage());
-        }
+        this.con = ConnectionUtil.getConnection();
     }
 
     @Override
@@ -130,7 +125,7 @@ public class UserDaoImpl implements UserDao {
 
         try {
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select id, username, role, email, address, phone from user where role='CUSTOMER';");
+            ResultSet rs = stmt.executeQuery("select id, username, role, address, email, phone from user where role='CUSTOMER';");
             while (rs.next()) {
                 allCustomers.add(new Customer(rs.getInt(1),
                         rs.getString(2),
@@ -157,12 +152,14 @@ public class UserDaoImpl implements UserDao {
             pst.setInt(1, userId);
             ResultSet rs = pst.executeQuery();
 
-            customer = new Customer(rs.getInt(1),
-                    rs.getString(2),
-                    rs.getString(3),
-                    rs.getString(4),
-                    rs.getString(5),
-                    rs.getString(6));
+            if (rs.next()) {
+                customer = new Customer(rs.getInt(1),
+                                        rs.getString(2),
+                                        rs.getString(3),
+                                        rs.getString(4),
+                                        rs.getString(5),
+                                        rs.getString(6));
+            }
 
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
@@ -197,11 +194,11 @@ public class UserDaoImpl implements UserDao {
     @Override
     public Customer updateCustomer(Customer customer) {
         try {
-            PreparedStatement pst = con.prepareStatement("update user set email = ?, set address = ?, set phone = ?  where id = ?;");
-            pst.setString(2, customer.getEmail());
-            pst.setString(3, customer.getAddress());
-            pst.setString(4, customer.getPhone());
-            pst.setInt(5, customer.getUserId());
+            PreparedStatement pst = con.prepareStatement("update user set email = ?, address = ?, phone = ?  where id = ?;");
+            pst.setString(1, customer.getEmail());
+            pst.setString(2, customer.getAddress());
+            pst.setString(3, customer.getPhone());
+            pst.setInt(4, customer.getUserId());
             pst.executeUpdate();
 
         } catch (Exception ex) {
@@ -216,10 +213,10 @@ public class UserDaoImpl implements UserDao {
         try {
             PreparedStatement pst = con.prepareStatement("insert into user (username, password, role, email, address, phone) values(?,?,'CUSTOMER',?,?,?);");
             pst.setString(1, customer.getUsername());
-            pst.setString(1, customer.getPassword());
-            pst.setString(2, customer.getEmail());
-            pst.setString(3, customer.getAddress());
-            pst.setString(4, customer.getPhone());
+            pst.setString(2, customer.getPassword());
+            pst.setString(3, customer.getEmail());
+            pst.setString(4, customer.getAddress());
+            pst.setString(5, customer.getPhone());
             pst.executeUpdate();
 
         } catch (Exception ex) {
@@ -287,7 +284,7 @@ public class UserDaoImpl implements UserDao {
 
                 PreparedStatement pst = con.prepareStatement("delete from user where username = ? and password = ?;");
                 pst.setString(1, userCredentials.getUsername());
-                pst.setString(1, userCredentials.getPassword());
+                pst.setString(2, userCredentials.getPassword());
                 pst.executeUpdate();
 
                 customerRemoved = true;
@@ -340,5 +337,43 @@ public class UserDaoImpl implements UserDao {
         }
         return null;
     }
+
+	
+private ProductDao productDao;
+	
+	@Override
+	public List<Product> fetchCustomerSearchedProduct(User user)     {
+		List<Product> products = productDao.fetchAllProducts();
+		List<Product>  searchedProducts = new ArrayList<>();
+        try {
+            // Create a statement
+            String query = "SELECT * FROM search_history WHERE userId = ?";
+            PreparedStatement statement = con.prepareStatement(query);
+            statement.setInt(1, user.getUserId());
+            
+            // Execute the query and get the result set
+            ResultSet resultSet = statement.executeQuery(query);
+            
+            // Create a HashMap to hold the search phrases and their counts
+            
+            // Loop through the result set and add each search phrase to the HashMap
+            while (resultSet.next()) {
+        		String  searchedphrase = resultSet.getString("phrase");
+                int userId = resultSet.getInt("userId");
+                	  for (Product product : products) {
+                          if (product.getName().toLowerCase().contains(searchedphrase.toLowerCase())) {
+                        	  searchedProducts.add(product);
+
+                          }
+                      
+            }
+
+            }}
+        catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+  		return searchedProducts;
+    }
+
 
 }

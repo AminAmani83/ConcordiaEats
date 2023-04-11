@@ -4,6 +4,8 @@ import ca.concordia.eats.dto.Category;
 import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.SearchHistory;
 import ca.concordia.eats.dto.User;
+import ca.concordia.eats.utils.ConnectionUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -18,7 +20,9 @@ import java.util.List;
 import java.util.Map;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -39,19 +43,7 @@ public class ProductDaoImpl implements ProductDao {
      * @throws IOException
      */
     public ProductDaoImpl() throws IOException {
-        String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath()
-                .replaceAll("%20", " ");
-        String dbConfigPath = rootPath + "db.properties";
-
-        FileReader reader = new FileReader(dbConfigPath);
-        Properties dbProperties = new Properties();
-        dbProperties.load(reader);
-
-        try {
-            this.con = DriverManager.getConnection(dbProperties.getProperty("url"), dbProperties.getProperty("username"), dbProperties.getProperty("password"));
-        } catch (Exception e) {
-            System.out.println("Error connecting to the DB: " + e.getMessage());
-        }
+        this.con = ConnectionUtil.getConnection();
     }
 
     @Override
@@ -207,7 +199,7 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public Category updateCategory(Category category) {
         try {
-            PreparedStatement pst = con.prepareStatement("update category set name = ? where categoryid = ?");
+            PreparedStatement pst = con.prepareStatement("update category set name = ? where id = ?");
             pst.setString(1, category.getName());
             pst.setInt(2, category.getId());
             pst.executeUpdate();
@@ -220,7 +212,7 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public boolean removeCategoryById(int categoryId) {
         try {
-            PreparedStatement pst = con.prepareStatement("delete from category where categoryid = ? ;");
+            PreparedStatement pst = con.prepareStatement("delete from category where id = ? ;");
             pst.setInt(1, categoryId);
             pst.executeUpdate();
         } catch (Exception ex) {
@@ -254,21 +246,18 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public List<Product> fetchCustomerFavoriteProducts(int customerId) {
-        List<Product> customerFavoriteProducts = new LinkedList<>();
+    public List<Integer> fetchCustomerFavoriteProductIds(int customerId) {
+        List<Integer> customerFavoriteProductIds = new LinkedList<>();
         try {
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select * from favorite join product on favorite.productId = product.id join category on product.categoryId = category.id where userId=" + customerId + ";");
+            ResultSet rs = stmt.executeQuery("select productId from favorite where userId=" + customerId + ";");
             while (rs.next()) {
-                customerFavoriteProducts.add(new Product(rs.getInt(3), rs.getString(4),
-                        rs.getString(5), rs.getString(6), rs.getFloat(7),
-                        rs.getInt(8), rs.getBoolean(9), rs.getFloat(10), rs.getDouble(11),
-                        new Category(rs.getInt(12), rs.getString(13))));
+                customerFavoriteProductIds.add(rs.getInt(1));
             }
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
-        return customerFavoriteProducts;
+        return customerFavoriteProductIds;
     }
 
     /**
@@ -381,7 +370,7 @@ public class ProductDaoImpl implements ProductDao {
     public List<Product> fetchPastPurchasedProducts(int customerId) {
 
         String sqlQuery = "SELECT p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, c.id, c.name FROM product p  JOIN category c on p.categoryid = c.id WHERE p.id IN (SELECT DISTINCT(productId) FROM purchase_details WHERE purchaseId IN (SELECT pur.id FROM purchase pur WHERE userId = ?));";
-        List<Product> pastPurchaseProducts = new LinkedList<>();
+        List<Product> pastPurchasedProducts = new ArrayList<>();
 
         try {
             PreparedStatement pst = con.prepareStatement(sqlQuery);
@@ -389,7 +378,7 @@ public class ProductDaoImpl implements ProductDao {
             ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
-                pastPurchaseProducts.add(new Product(rs.getInt(1),          // id
+                pastPurchasedProducts.add(new Product(rs.getInt(1),          // id
                                 rs.getString(2),        // name
                                 rs.getString(3),        // description
                                 rs.getString(4),        // image path
@@ -404,7 +393,7 @@ public class ProductDaoImpl implements ProductDao {
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
-        return pastPurchaseProducts;
+        return pastPurchasedProducts;
     }
 
 
@@ -423,6 +412,7 @@ public class ProductDaoImpl implements ProductDao {
                 product.setPrice(rs.getFloat("price"));
                 product.setDescription(rs.getString("description"));
                 product.setImagePath(rs.getString("imagePath"));
+                product.setRating(calculateAvgProductRating(rs.getInt("id")));
                 products.add(product);
                 SearchHistory searchHistory = saveSearchHistoryToDatabase(query, userId);
             }
@@ -457,6 +447,28 @@ public class ProductDaoImpl implements ProductDao {
             }
         }
         return searchHistory;
+    }
+
+
+    /**
+     * This method is used in the background to calculate the average product rating for one product.
+     * This average rating is displayed on the Front-End as filled stars.
+     */
+    @Override
+    public Double calculateAvgProductRating(int productId) {
+
+        Double avgRating = 0.0;
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("select AVG(rating) from rating where productId=" + productId + ";");
+            if (rs.next()) {
+                avgRating = rs.getDouble(1);
+            }
+            
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+        return avgRating;
     }
 
 

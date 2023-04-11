@@ -80,17 +80,16 @@
 
                 <td>
                     <form action="categories/update" method="get">
-
                         <!-- Button trigger modal -->
                         <button type="button" class="btn btn-warning" data-toggle="modal"
-                                data-target="#exampleModalCenter2"
+                                data-target="#exampleModalCenter2-${category.id}"
                                 onclick="document.getElementById('categoryname').value =  '<c:out
                                         value="${category.name}"/>'; document.getElementById('categoryid').value =
                                         '<c:out value="${category.id}"/>';">Update
                         </button>
 
                         <!-- Modal -->
-                        <div class="modal fade" id="exampleModalCenter2" tabindex="-1"
+                        <div class="modal fade" id="exampleModalCenter2-${category.id}" tabindex="-1"
                              role="dialog" aria-labelledby="exampleModalCenterTitle"
                              aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -105,14 +104,18 @@
                                         </button>
                                     </div>
                                     <div class="modal-body text-center">
+
+                                        <input class="form-control" type="hidden"
+                                        name="categoryid" id="categoryid" value="${category.id}">
+
                                         <div class="form-group">
                                             <input class="form-control" type="number"
-                                                   readonly="readonly" name="categoryid" id="categoryid" value="0">
+                                                   readonly="readonly" name="categoryid" id="categoryid" value="${category.id}">
                                         </div>
                                         <div class="form-group">
                                             <input class="form-control" type="text" name="categoryname"
                                                    id="categoryname"
-                                                   value="categoryname">
+                                                   value="${category.name}">
                                         </div>
 
                                     </div>

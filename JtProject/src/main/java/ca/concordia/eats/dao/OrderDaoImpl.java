@@ -1,5 +1,6 @@
 package ca.concordia.eats.dao;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -16,22 +17,19 @@ import ca.concordia.eats.dto.Basket;
 import ca.concordia.eats.dto.Category;
 import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.User;
+import ca.concordia.eats.utils.ConnectionUtil;
 
 @Repository
 public class OrderDaoImpl implements OrderDao {
 	
 	 @Autowired
-	    private JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
-	    Connection con;
+    Connection con;
 
-	    public OrderDaoImpl() {
-	        try {
-	            this.con = DriverManager.getConnection("jdbc:mysql://localhost:3306/springproject", "root", "");
-	        } catch (Exception e) {
-	            System.out.println("Error connecting to the DB: " + e.getMessage());
-	        }
-	    }
+    public OrderDaoImpl() throws IOException {
+        this.con = ConnectionUtil.getConnection();
+    }
 
 
 	public void makeOrder(User user, Basket basket) {

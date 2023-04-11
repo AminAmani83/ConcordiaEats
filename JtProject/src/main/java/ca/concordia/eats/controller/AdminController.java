@@ -5,6 +5,7 @@ import ca.concordia.eats.service.PromotionService;
 import ca.concordia.eats.service.ServiceException;
 import ca.concordia.eats.service.UserService;
 import ca.concordia.eats.service.ProductService;
+import ca.concordia.eats.utils.ConnectionUtil;
 import ca.concordia.eats.utils.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
@@ -18,8 +19,6 @@ import java.io.IOException;
 import javax.servlet.http.HttpSession;
 import java.sql.*;
 import java.util.List;
-import java.util.Properties;
-import java.io.FileReader;
 
 @Controller
 
@@ -43,19 +42,7 @@ public class AdminController {
      * @throws IOException
      */
 	public AdminController() throws IOException {
-		String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath()
-				.replaceAll("%20", " ");
-		String dbConfigPath = rootPath + "db.properties";
-
-		FileReader reader = new FileReader(dbConfigPath);
-		Properties dbProperties = new Properties();
-		dbProperties.load(reader);
-
-		try {
-			this.con = DriverManager.getConnection(dbProperties.getProperty("url"), dbProperties.getProperty("username"), dbProperties.getProperty("password"));
-		} catch(Exception e) {
-			System.out.println("Error connecting to the DB: " + e.getMessage());
-		}
+        this.con = ConnectionUtil.getConnection();
 	}
 
 	int adminLogInCheck = 0;
@@ -75,16 +62,24 @@ public class AdminController {
 		} else {
 			List<Product> allProducts = productService.fetchAllProducts();
 			Customer customer = (Customer) session.getAttribute("user");
+			
 			// Temp Products TODO: use actual results from DB
-			Product bestSellerProduct = new Product(1, "Hamburger", "Delicious", "https://tmbidigitalassetsazure.blob.core.windows.net/secure/RMS/attachments/37/1200x1200/Sausage-Sliders-with-Cran-Apple-Slaw_exps48783_SD2235819D06_24_2bC_RMS.jpg", 0f, 0, false, 0f, null, null);
-			Product highestRatedProduct = new Product(2, "Chicken Soup", "Delicious", "https://www.allrecipes.com/thmb/NgpgUebR7ixeEuToPd1c1TgaQmU=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/8814_HomemadeChickenSoup_SoupLovingNicole_LSH-2000-4ae7ff733c554fdab0796d15c8d1151f.jpg", 0f, 0, false, 0f, null, null);
-			Product recommendedProduct = new Product(3, "Hamburger", "Delicious", "https://tastesbetterfromscratch.com/wp-content/uploads/2017/04/Tiramisu-14.jpg", 0f, 0, false, 0f, null, null);
+			Product bestSellerProduct = new Product(1, "Hamburger", "Delicious", "https://tmbidigitalassetsazure.blob.core.windows.net/secure/RMS/attachments/37/1200x1200/Sausage-Sliders-with-Cran-Apple-Slaw_exps48783_SD2235819D06_24_2bC_RMS.jpg", 0f, 0, false, 0f, 3.0, null);
+//			bestSellerProduct.setRating(productService.calculateAvgProductRating(bestSellerProduct.getId()));
+
+			Product highestRatedProduct = new Product(2, "Chicken Soup", "Delicious", "https://www.allrecipes.com/thmb/NgpgUebR7ixeEuToPd1c1TgaQmU=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/8814_HomemadeChickenSoup_SoupLovingNicole_LSH-2000-4ae7ff733c554fdab0796d15c8d1151f.jpg", 0f, 0, false, 0f, 4.5, null);
+//			highestRatedProduct.setRating(productService.calculateAvgProductRating(highestRatedProduct.getId()));
+
+			Product recommendedProduct = new Product(3, "Hamburger", "Delicious", "https://tastesbetterfromscratch.com/wp-content/uploads/2017/04/Tiramisu-14.jpg", 0f, 0, false, 0f, 3.5, null);
+//			recommendedProduct.setRating(productService.calculateAvgProductRating(recommendedProduct.getId()));
+
 			model.addAttribute("username", usernameForClass);
 			model.addAttribute("allProducts", allProducts);
 			model.addAttribute("bestSellerProduct", bestSellerProduct);
 			model.addAttribute("highestRatedProduct", highestRatedProduct);
 			model.addAttribute("recommendedProduct", recommendedProduct);
 			model.addAttribute("favoriteProducts", customer.getFavorite().getCustomerFavoritedProducts());
+
 			return "index";
 		}
 	}
@@ -110,7 +105,7 @@ public class AdminController {
 				Favorite customerFavorite = new Favorite(productService.fetchCustomerFavoriteProducts(customer.getUserId()));
 				customer.setFavorite(customerFavorite);
 				session.setAttribute("user", customer);
-        session.setAttribute("basket", basket);
+        		session.setAttribute("basket", basket);
 
 				return "redirect:/index";
 			} else {
@@ -254,12 +249,12 @@ public class AdminController {
 	public String getAllCustomers(Model model) {
 		List<Customer> allCustomers = userService.getAllCustomers();
 		model.addAttribute("allCustomers", allCustomers);
-		return "displayCustomers";
+		return "customers";
 	}
 
 	/**
 	 * To allow the admin to remove customers from the customer panel.
-	 * @param userCredentials
+	 * @param customerId
 	 * @return
 	 */
 	@GetMapping("/admin/customers/delete")
@@ -272,14 +267,15 @@ public class AdminController {
 	/**
 	 * The admin can update only certain information from the customer.
 	 * The admin can only do so by 'id'.
-	 * @param userCredentials
+	 * @param customerId
 	 * @param email
 	 * @param address
 	 * @param phone
 	 * @return
 	 */
 	@GetMapping("/admin/customers/update")
-	public String updateCustomer(@RequestParam("id") int customerId, 
+	public String updateCustomer(@RequestParam("customerId") int customerId, 
+								@RequestParam("customerName") String username,
 								@RequestParam("email") String email, 
 								@RequestParam("address") String address,
 								@RequestParam("phone") String phone) {

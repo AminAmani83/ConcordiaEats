@@ -31,6 +31,7 @@ public class PromotionDaoImpl implements PromotionDao {
             System.out.println("Error connecting to the DB: " + e.getMessage());
         }
     }
+    
 
     @Override
     public List<Promotion> fetchAllPromotions() throws DAOException {

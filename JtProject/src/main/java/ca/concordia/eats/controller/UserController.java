@@ -1,29 +1,36 @@
 package ca.concordia.eats.controller;
 
 import ca.concordia.eats.dto.Customer;
+import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.UserCredentials;
 import ca.concordia.eats.service.UserService;
+import ca.concordia.eats.utils.ConnectionUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
-import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.util.Properties;
 
 @Controller
 public class UserController{
 
 	@Autowired
 	private UserService userService;
+
+	Connection con;
+
+	public UserController() throws IOException {
+		this.con = ConnectionUtil.getConnection();
+	}
 
 	@GetMapping("/register")
 	public String registerUser()
@@ -54,33 +61,9 @@ public class UserController{
      * @throws IOException
      */
 	@RequestMapping(value = "newuserregister", method = RequestMethod.POST)
-	public String newUseRegister(@RequestParam("username") String username,@RequestParam("password") String password,@RequestParam("email") String email) throws IOException
+	public String newUseRegister(@ModelAttribute("customer") Customer customer) throws IOException
 	{
-		String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
-		String dbConfigPath = rootPath + "db.properties";
-
-		FileReader reader = new FileReader(dbConfigPath);
-		Properties dbProperties = new Properties();
-		dbProperties.load(reader);
-
-		try
-		{
-			Connection con = DriverManager.getConnection(dbProperties.getProperty("url"), dbProperties.getProperty("username"), dbProperties.getProperty("password"));
-			PreparedStatement pst = con.prepareStatement("insert into users(username,password,email) values(?,?,?);");
-			pst.setString(1,username);
-			pst.setString(2, password);
-			pst.setString(3, email);
-			
-
-			//pst.setString(4, address);
-			int i = pst.executeUpdate();
-			System.out.println("data base updated"+i);
-			
-		}
-		catch(Exception e)
-		{
-			System.out.println("Exception:"+e);
-		}
+		userService.createCustomer(customer);
 		return "redirect:/";
 	}
 
