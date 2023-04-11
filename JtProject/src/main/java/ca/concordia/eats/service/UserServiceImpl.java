@@ -5,6 +5,8 @@ import ca.concordia.eats.dto.Rating;
 import ca.concordia.eats.dto.UserCredentials;
 import org.springframework.stereotype.Service;
 
+import ca.concordia.eats.dao.OrderDao;
+import ca.concordia.eats.dao.ProductDao;
 import ca.concordia.eats.dao.UserDao;
 import ca.concordia.eats.dto.User;
 import ca.concordia.eats.dto.Customer;
@@ -21,6 +23,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private OrderDao orderDao;
+
+    @Autowired
+    private ProductDao productDao;
 
     @Autowired
     ProductService productService;
@@ -95,8 +103,22 @@ public class UserServiceImpl implements UserService {
         return userDao.createCustomer(customer);
     }
 
+    /**
+     * Important: before removing a customer from the user table, we also need to erase 
+     * customer artifacts from the following tables:
+     *      - purchase & associated lines in purchase_details
+     *      - favorite
+     *      - search_history
+     *      - rating
+     */
     @Override
     public boolean removeCustomerById(int customerId) {
+
+        productDao.removeAllFavoritesByCustomerId(customerId);
+        productDao.removeAllSearchHistoryByCustomerId(customerId);
+        productDao.removeAllRatingsByCustomerId(customerId);
+        orderDao.removeAllPurchasesByCustomerId(customerId);
+
         return userDao.removeCustomerById(customerId);
     }
 }

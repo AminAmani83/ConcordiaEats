@@ -12,8 +12,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
-import java.io.FileReader;
 import java.io.IOException;
 
 import javax.servlet.http.HttpSession;
@@ -21,15 +19,7 @@ import javax.servlet.http.HttpSession;
 @Repository
 public class UserDaoImpl implements UserDao {
 
-    /**
-     * Uses the db.properties file in resources to retrieve db connection parameters
-     * username=<my-username>
-     * password=<my-secret-password>
-     * url=<jdbc-url>
-     *
-     * @throws IOException
-     */
-
+    private ProductDao productDao;
     private Connection con;
 
     public UserDaoImpl() throws IOException {
@@ -338,9 +328,7 @@ public class UserDaoImpl implements UserDao {
         return null;
     }
 
-	
-private ProductDao productDao;
-	
+		
 	@Override
 	public List<Product> fetchCustomerSearchedProduct(User user)     {
 		List<Product> products = productDao.fetchAllProducts();
