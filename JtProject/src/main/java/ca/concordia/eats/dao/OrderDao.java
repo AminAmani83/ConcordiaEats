@@ -7,4 +7,6 @@ public interface OrderDao {
 
 	public void makeOrder(User user, Basket basket);
 
+	public void removeAllPurchasesByCustomerId(int customerId);
+
 }

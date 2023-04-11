@@ -211,14 +211,15 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public boolean removeCategoryById(int categoryId) {
+        int rowsAffected = 0;
         try {
             PreparedStatement pst = con.prepareStatement("delete from category where id = ? ;");
             pst.setInt(1, categoryId);
-            pst.executeUpdate();
+            rowsAffected = pst.executeUpdate();
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
-        return true;
+        return rowsAffected == 1;
     }
 
     @Override
@@ -259,6 +260,21 @@ public class ProductDaoImpl implements ProductDao {
         }
         return customerFavoriteProductIds;
     }
+
+    /**
+     * Helper method when one wants to remove a customer; its favorite history needs to be cleared first.
+     */
+    @Override
+    public void removeAllFavoritesByCustomerId(int customerId) {
+        try {
+            PreparedStatement pst = con.prepareStatement("delete from favorite where userId=?;");
+            pst.setInt(1, customerId);
+            pst.executeUpdate();
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+    }
+
 
     /**
      * Helper method used in rateProduct.
@@ -449,6 +465,17 @@ public class ProductDaoImpl implements ProductDao {
         return searchHistory;
     }
 
+    @Override
+    public void removeAllSearchHistoryByCustomerId(int customerId) {
+        try {
+            PreparedStatement pst = con.prepareStatement("delete from search_history where userId=?;");
+            pst.setInt(1, customerId);
+            pst.executeUpdate();
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+    }
+
 
     /**
      * This method is used in the background to calculate the average product rating for one product.
@@ -470,6 +497,18 @@ public class ProductDaoImpl implements ProductDao {
         }
         return avgRating;
     }
+
+    @Override
+    public void removeAllRatingsByCustomerId(int customerId) {
+        try {
+            PreparedStatement pst = con.prepareStatement("delete from rating where userId=?;");
+            pst.setInt(1, customerId);
+            pst.executeUpdate();
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+    }                            
+
 
 
 }

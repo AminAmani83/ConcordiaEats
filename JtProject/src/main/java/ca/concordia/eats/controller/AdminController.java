@@ -169,8 +169,12 @@ public class AdminController {
 
 	@GetMapping("/admin/categories/delete")
 	public String removeCategory(@RequestParam("id") int categoryId) {
-		productService.removeCategoryById(categoryId);
-		return "redirect:/admin/categories";
+		boolean categoryRemoved = productService.removeCategoryById(categoryId);
+		if (categoryRemoved) {
+			return "redirect:/admin/categories";
+		} else {
+			return "redirect:/admin/categories?msg=removalError";
+		}
 	}
 
 	@GetMapping("/admin/categories/update")
