@@ -80,6 +80,13 @@
                 <td><c:out value="${promotion.startDate}"/></td>
                 <td><c:out value="${promotion.endDate}"/></td>
 
+                <td>
+                    <form action="promotions/delete" method="get">
+                        <input type="hidden" name="id" value="<c:out value="${promotion.id}" />">
+                        <input type="submit" value="Delete" class="btn btn-danger">
+                    </form>
+                </td>
+
             </tr>
         </c:forEach>
         </tbody>

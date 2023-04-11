@@ -96,7 +96,7 @@ public class PromotionDaoImpl implements PromotionDao {
 
     @Override
     public Promotion updatePromotion(Promotion promotion) throws DAOException {
-        String sql = "UPDATE promotions" +
+        String sql = "UPDATE promotion" +
                 " SET startDate = ?, endDate = ?, name = ? " +
                 "WHERE promotion.id = ?";
         try (PreparedStatement stmt = con.prepareStatement(sql)) {
@@ -117,7 +117,7 @@ public class PromotionDaoImpl implements PromotionDao {
 
     @Override
     public boolean removePromotion(int promotionId) throws DAOException {
-        String sql = "DELETE FROM promotions WHERE promotion_id = ?";
+        String sql = "DELETE FROM promotion WHERE promotion.id = ?";
         try (PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setInt(1, promotionId);
             int rowsAffected = stmt.executeUpdate();
