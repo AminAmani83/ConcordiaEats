@@ -1,6 +1,7 @@
 package ca.concordia.eats.controller;
 
 import ca.concordia.eats.dto.Customer;
+import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.UserCredentials;
 import ca.concordia.eats.service.UserService;
 import ca.concordia.eats.utils.ConnectionUtil;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -59,26 +61,9 @@ public class UserController{
      * @throws IOException
      */
 	@RequestMapping(value = "newuserregister", method = RequestMethod.POST)
-	public String newUseRegister(@RequestParam("username") String username,@RequestParam("password") String password,@RequestParam("email") String email) throws IOException
+	public String newUseRegister(@ModelAttribute("customer") Customer customer) throws IOException
 	{
-
-		try
-		{
-			PreparedStatement pst = con.prepareStatement("insert into users(username,password,email) values(?,?,?);");
-			pst.setString(1,username);
-			pst.setString(2, password);
-			pst.setString(3, email);
-			
-
-			//pst.setString(4, address);
-			int i = pst.executeUpdate();
-			System.out.println("data base updated"+i);
-			
-		}
-		catch(Exception e)
-		{
-			System.out.println("Exception:"+e);
-		}
+		userService.createCustomer(customer);
 		return "redirect:/";
 	}
 
