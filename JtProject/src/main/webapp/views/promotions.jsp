@@ -87,6 +87,75 @@
                     </form>
                 </td>
 
+                <td>
+                    <form action="promotions/update" method="get">
+
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-warning" data-toggle="modal"
+                                data-target="#exampleModalCenter2"
+                                onclick="document.getElementById('promotionName').value =
+                                            '<c:out value="${promotion.name}"/>';
+                                        document.getElementById('promotionId').value =
+                                            '<c:out value="${promotion.id}"/>';
+                                        document.getElementById('promotionStartDate').value =
+                                            '<c:out value="${promotion.startDate}"/>';
+                                        document.getElementById('promotionEndDate').value =
+                                            '<c:out value="${promotion.endDate}"/>';">Update
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModalCenter2" tabindex="-1"
+                             role="dialog" aria-labelledby="exampleModalCenterTitle"
+                             aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle2">Update
+                                            Product Details</h5>
+                                        <button type="button" class="close" data-dismiss="modal"
+                                                aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body text-center">
+                                        <div class="form-group">
+                                            <input class="form-control" type="number"
+                                                   readonly="readonly" name="promotionId" id="promotionId" value="0">
+                                        </div>
+                                        <div class="form-group">
+                                            <input class="form-control" type="text" name="promotionName"
+                                                   id="promotionName"
+                                                   value="promotionName">
+                                        </div>
+                                        <div class="form-group">
+                                            <input class="form-control" type="date" name="promotionStartDate"
+                                                   id="promotionStartDate"
+                                                   value="promotionStartDate">
+                                        </div>
+                                        <div class="form-group">
+                                            <input class="form-control" type="date" name="promotionEndDate"
+                                                   id="promotionEndDate"
+                                                   value="promotionEndDate">
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Close
+                                        </button>
+                                        <button type="submit" class="btn btn-primary">Update
+                                            changes
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </td>
+
             </tr>
         </c:forEach>
         </tbody>

@@ -341,6 +341,25 @@ public class AdminController {
 		}
 	}
 
+	@GetMapping("/admin/promotions/update")
+	public String updatePromotion(@RequestParam("promotionId") int id,
+								  @RequestParam("promotionName") String name,
+								  @RequestParam("promotionStartDate") Date startDate,
+								  @RequestParam("promotionEndDate") Date endDate,
+								  Model model) {
+		try {
+			Promotion promotion = promotionService.getPromotionById(id);
+			promotion.setName(name);
+			promotion.setStartDate(startDate);
+			promotion.setEndDate(endDate);
+			promotionService.updatePromotion(promotion);
+			return "redirect:/admin/promotions";
+		} catch (ServiceException e) {
+			e.printStackTrace();
+			model.addAttribute("errorMessage", "An error occurred while deleting the promotion");
+			return "error";
+		}
+	}
 
 
 
