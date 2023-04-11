@@ -63,5 +63,35 @@ public class PromotionServiceImpl implements PromotionService {
         }
     }
 
+    @Override
+    public boolean applyPromotion(int promotionId) throws ServiceException {
+        try {
+            Promotion promotion = promotionDao.fetchPromotionById(promotionId);
+            String promotionType = promotion.getType();
+
+            switch (promotionType) {
+                case "10% Site-wide Discount":
+                    System.out.println("10% Site-wide Discount");
+                    break;
+                case "10% purchase Discount":
+                    System.out.println("10% purchase Discount");
+                    break;
+                case "Free Shipping":
+                    System.out.println("Free Shipping");
+                    break;
+                case "Buy One Get One Free":
+                    System.out.println("Buy One Get One Free");
+                    break;
+                default:
+                    System.out.println("Invalid Promotion");
+                    break;
+            }
+        } catch (DAOException e) {
+            throw new ServiceException("Error applying promotion", e);
+        }
+
+        return true;
+    }
+
 }
 

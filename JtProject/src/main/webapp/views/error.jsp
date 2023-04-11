@@ -10,7 +10,8 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
           crossorigin="anonymous">
 </head>
-<body>
+<body class="bg-light">
+<%@include file="adminHeader.jsp" %>
 <div class="container">
     <div class="row">
         <div class="col-md-12">

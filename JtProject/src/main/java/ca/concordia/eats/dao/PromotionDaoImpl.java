@@ -124,12 +124,12 @@ public class PromotionDaoImpl implements PromotionDao {
 
     @Override
     public boolean removePromotion(int promotionId) throws DAOException {
-        removePromotionFromPurchases(promotionId);
+        boolean promotionIdRemoved = removePromotionFromPurchases(promotionId);
         String sql = "DELETE FROM promotion WHERE promotion.id = ?";
         try (PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setInt(1, promotionId);
             int rowsAffected = stmt.executeUpdate();
-            if (rowsAffected == 0) {
+            if (rowsAffected == 0 && !promotionIdRemoved) {
                 throw new DAOException("Deleting promotion failed, no rows affected.");
             }
         } catch (SQLException | DAOException e) {
@@ -159,10 +159,11 @@ public class PromotionDaoImpl implements PromotionDao {
         String sql = "UPDATE purchase" +
                 " SET promotionId = NULL" +
                 " WHERE purchase.id = ? AND promotionId = ?";
+        int purchaseId = 0;
         try (PreparedStatement stmt = con.prepareStatement(sql)) {
             List<Purchase> allPurchases = fetchAllPurchases();
             for (Purchase purchase: allPurchases) {
-                int purchaseId = purchase.getPurchaseId();
+                purchaseId = purchase.getPurchaseId();
                 stmt.setInt(1, purchaseId);
                 stmt.setInt(2, promotionId);
                 stmt.executeUpdate();

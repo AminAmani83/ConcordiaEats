@@ -51,8 +51,8 @@
                         <label for="promotionType">Promotion Type:</label>
                         <select name="promotionType" class="form-control" id="promotionType" required>
                             <option value="" selected disabled hidden>Choose a promotion type</option>
-                            <option value="10% Site-wide Discount">Discount</option>
-                            <option value="10% purchase Discount">Discount</option>
+                            <option value="10% Site-wide Discount">10% Site-wide Discount</option>
+                            <option value="10% purchase Discount">10% purchase Discount</option>
                             <option value="Free Shipping">Free Shipping</option>
                             <option value="Buy One Get One Free">Buy One Get One Free</option>
                         </select>
@@ -79,6 +79,7 @@
             <th scope="col">Type</th>
             <th scope="col">Delete</th>
             <th scope="col">Update</th>
+            <th scope="col">Apply</th>
         </tr>
         </thead>
         <tbody>
@@ -154,8 +155,8 @@
                                             <label for="promoType">Promotion Type:</label>
                                             <select name="promoType" class="form-control" id="promoType" required>
                                                 <option value="" selected disabled hidden>Choose a promotion type</option>
-                                                <option value="10% Site-wide Discount">Discount</option>
-                                                <option value="10% purchase Discount">Discount</option>
+                                                <option value="10% Site-wide Discount">10% Site-wide Discount</option>
+                                                <option value="10% purchase Discount">10% purchase Discount</option>
                                                 <option value="Free Shipping">Free Shipping</option>
                                                 <option value="Buy One Get One Free">Buy One Get One Free</option>
                                             </select>
@@ -175,6 +176,13 @@
                             </div>
                         </div>
 
+                    </form>
+                </td>
+
+                <td>
+                    <form action="promotions/apply" method="get">
+                        <input type="hidden" name="promoId" value="<c:out value="${promotion.id}" />">
+                        <input type="submit" value="apply" class="btn btn-success">
                     </form>
                 </td>
 

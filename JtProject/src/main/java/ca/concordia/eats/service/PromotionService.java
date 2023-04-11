@@ -10,6 +10,7 @@ public interface PromotionService {
     public Promotion createPromotion(Promotion promotion) throws ServiceException;
     public Promotion updatePromotion(Promotion promotion) throws ServiceException;
     public boolean deletePromotionById(int promotionId) throws ServiceException;
+    public boolean applyPromotion (int promotionId) throws ServiceException;
 
 }
 
