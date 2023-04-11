@@ -62,10 +62,10 @@
                                 <c:out value="${product.name}"/>
                             </h4>
                             <div class="rating">
-                                <i class="fa fa-star text-warning"></i>
-                                <i class="fa fa-star text-warning"></i>
-                                <i class="fa fa-star text-warning"></i>
-                                <i class="fas fa-star-half-alt text-warning"></i>
+                                <!-- Filled stars -->
+                                <c:forEach var="i" begin="1" end="${product.rating}">
+                                    <i class="fa fa-star text-warning"></i>
+                                </c:forEach>
                             </div>
                             <p class="card-text">
                                 <c:out value="${product.description}"/>
