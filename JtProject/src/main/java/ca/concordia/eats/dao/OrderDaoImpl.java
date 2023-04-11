@@ -114,11 +114,31 @@ public class OrderDaoImpl implements OrderDao {
     private void removePurchaseDetailsByPurchaseId(List<Integer> purchaseIds) {
 
         for (int id : purchaseIds) {
+            try {
+                PreparedStatement pst = con.prepareStatement("delete from purchase_details where purchaseId=?;");
+                pst.setInt(1, id);
+                pst.executeQuery();
 
+            } catch (Exception ex) {
+                System.out.println("Exception Occurred: " + ex.getMessage());
+            }    
         }
-
     }
 
+    /**
+     * Helper method for removeAllPurchasesByCustomerId.
+     * @param customerId
+     */
+    private void removePurchasesByCustomerId(int customerId) {
+        try {
+            PreparedStatement pst = con.prepareStatement("delete from purchase where userId=?;");
+            pst.setInt(1, customerId);
+            pst.executeQuery();
+
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }    
+    }
 
     /**
      * To remove all purchases, one first needs to remove all associated lines in 
@@ -130,8 +150,6 @@ public class OrderDaoImpl implements OrderDao {
 
         List<Integer> purchaseIds = fetchPurchaseIdsByCustomerId(customerId);
         removePurchaseDetailsByPurchaseId(purchaseIds);
-
-
+        removePurchasesByCustomerId(customerId);
     }
-
 }
