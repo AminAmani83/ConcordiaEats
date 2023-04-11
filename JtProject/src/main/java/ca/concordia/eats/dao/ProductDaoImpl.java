@@ -211,14 +211,15 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public boolean removeCategoryById(int categoryId) {
+        int rowsAffected = 0;
         try {
             PreparedStatement pst = con.prepareStatement("delete from category where id = ? ;");
             pst.setInt(1, categoryId);
-            pst.executeUpdate();
+            rowsAffected = pst.executeUpdate();
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
-        return true;
+        return rowsAffected == 1;
     }
 
     @Override
