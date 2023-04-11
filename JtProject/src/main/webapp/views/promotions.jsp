@@ -48,6 +48,8 @@
                                id="startDate" required="required" placeholder="Promotion Start Date">
                         <input type="date" name="promotionEndDate" class="form-control"
                                id="endDate" required="required" placeholder="Promotion End Date">
+                        <input type="number" name="promotionDiscountPercentage" class="form-control"
+                               id="promotionDiscountPercentage" required="required" placeholder="Discount Percentage">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary"
@@ -68,6 +70,7 @@
             <th scope="col">Promotion Name</th>
             <th scope="col">Start Date</th>
             <th scope="col">End Date</th>
+            <th scope="col">Discount Percentage</th>
             <th scope="col">Delete</th>
             <th scope="col">Update</th>
         </tr>
@@ -79,6 +82,7 @@
                 <td><c:out value="${promotion.name}"/></td>
                 <td><c:out value="${promotion.startDate}"/></td>
                 <td><c:out value="${promotion.endDate}"/></td>
+                <td><c:out value="${promotion.discountPercentage}"/></td>
 
                 <td>
                     <form action="promotions/delete" method="get">
@@ -100,7 +104,9 @@
                                         document.getElementById('promotionStartDate').value =
                                             '<c:out value="${promotion.startDate}"/>';
                                         document.getElementById('promotionEndDate').value =
-                                            '<c:out value="${promotion.endDate}"/>';">Update
+                                            '<c:out value="${promotion.endDate}"/>';
+                                        document.getElementById('discountPercentage').value =
+                                            '<c:out value="${promotion.discountPercentage}"/>';">Update
                         </button>
 
                         <!-- Modal -->
@@ -137,6 +143,11 @@
                                             <input class="form-control" type="date" name="promotionEndDate"
                                                    id="promotionEndDate"
                                                    value="promotionEndDate">
+                                        </div>
+                                        <div class="form-group">
+                                            <input class="form-control" type="number" name="discountPercentage"
+                                                   id="discountPercentage"
+                                                   value="discountPercentage">
                                         </div>
 
                                     </div>

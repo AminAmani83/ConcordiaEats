@@ -4,11 +4,11 @@
 -- -----------------------------------------------------
 ALTER TABLE `springproject`.`promotion` AUTO_INCREMENT = 1;
 
-INSERT INTO `springproject`.`promotion` (`name`, `startDate`, `endDate`) 
+INSERT INTO `springproject`.`promotion` (`name`, `startDate`, `endDate`, `discountPercentage`) 
 VALUES 
-('10%discount', '2023-05-01', '2023-05-15'),
-('20%discount', '2023-06-01', '2023-06-30'),
-('30%discount','2023-07-01', '2023-07-15');
+('10%discount', '2023-05-01', '2023-05-15', 10),
+('20%discount', '2023-06-01', '2023-06-30', 20),
+('30%discount','2023-07-01', '2023-07-15', 30);
 
 -- -----------------------------------------------------
 -- Table `springproject`.`user`

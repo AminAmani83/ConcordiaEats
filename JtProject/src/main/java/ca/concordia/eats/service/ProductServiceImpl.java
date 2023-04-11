@@ -3,6 +3,7 @@ package ca.concordia.eats.service;
 import ca.concordia.eats.dao.ProductDao;
 import ca.concordia.eats.dto.Category;
 import ca.concordia.eats.dto.Product;
+import ca.concordia.eats.dto.Promotion;
 import ca.concordia.eats.dto.Rating;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -116,5 +117,12 @@ public class ProductServiceImpl implements ProductService {
     public Double calculateAvgProductRating(int productId) {
         return productDao.calculateAvgProductRating(productId);
     }
+
+    @Override
+    public Product applyPromotion(int promotionId, int productId) {
+
+        return null;
+    }
+
 
 }

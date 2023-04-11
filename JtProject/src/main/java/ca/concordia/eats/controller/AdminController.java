@@ -310,12 +310,14 @@ public class AdminController {
 	public String createPromotion(@RequestParam("name") String name,
 								  @RequestParam("promotionStartDate") Date startDate,
 								  @RequestParam("promotionEndDate") Date endDate,
+								  @RequestParam("promotionDiscountPercentage") int discountPercentage,
 								  Model model) {
 		try {
 			Promotion promotion = new Promotion();
 			promotion.setStartDate(startDate);
 			promotion.setEndDate(endDate);
 			promotion.setName(name);
+			promotion.setDiscountPercentage(discountPercentage);
 			promotionService.createPromotion(promotion);
 			return "redirect:/admin/promotions";
 		} catch (ServiceException e) {
@@ -342,12 +344,14 @@ public class AdminController {
 								  @RequestParam("promotionName") String name,
 								  @RequestParam("promotionStartDate") Date startDate,
 								  @RequestParam("promotionEndDate") Date endDate,
+								  @RequestParam("discountPercentage") int discountPercentage,
 								  Model model) {
 		try {
 			Promotion promotion = promotionService.getPromotionById(id);
 			promotion.setName(name);
 			promotion.setStartDate(startDate);
 			promotion.setEndDate(endDate);
+			promotion.setDiscountPercentage(discountPercentage);
 			promotionService.updatePromotion(promotion);
 			return "redirect:/admin/promotions";
 		} catch (ServiceException e) {

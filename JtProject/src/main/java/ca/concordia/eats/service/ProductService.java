@@ -2,6 +2,7 @@ package ca.concordia.eats.service;
 
 import ca.concordia.eats.dto.Category;
 import ca.concordia.eats.dto.Product;
+import ca.concordia.eats.dto.Promotion;
 
 import java.util.List;
 import java.util.Map;
@@ -35,4 +36,5 @@ public interface ProductService {
     public Map<Integer, Integer> fetchAllCustomerRatings(int customerId);
     public List<Product> fetchPastPurchasedProducts(int customerId);
     public Double calculateAvgProductRating(int productId);
+    public Product applyPromotion(int promotionId, int productId);
 }
