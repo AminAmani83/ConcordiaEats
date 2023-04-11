@@ -261,6 +261,21 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     /**
+     * Helper method when one wants to remove a customer; its favorite history needs to be cleared first.
+     */
+    @Override
+    public void removeAllFavoritesByCustomerId(int customerId) {
+        try {
+            PreparedStatement pst = con.prepareStatement("delete from favorite where userId=?;");
+            pst.setInt(1, customerId);
+            pst.executeUpdate();
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+    }
+
+
+    /**
      * Helper method used in rateProduct.
      */
     @Override
@@ -449,6 +464,17 @@ public class ProductDaoImpl implements ProductDao {
         return searchHistory;
     }
 
+    @Override
+    public void removeAllSearchHistoryByCustomerId(int customerId) {
+        try {
+            PreparedStatement pst = con.prepareStatement("delete from search_history where userId=?;");
+            pst.setInt(1, customerId);
+            pst.executeUpdate();
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+    }
+
 
     /**
      * This method is used in the background to calculate the average product rating for one product.
@@ -470,6 +496,18 @@ public class ProductDaoImpl implements ProductDao {
         }
         return avgRating;
     }
+
+    @Override
+    public void removeAllRatingsByCustomerId(int customerId) {
+        try {
+            PreparedStatement pst = con.prepareStatement("delete from rating where userId=?;");
+            pst.setInt(1, customerId);
+            pst.executeUpdate();
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+    }                            
+
 
 
 }
