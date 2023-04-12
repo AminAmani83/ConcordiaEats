@@ -9,21 +9,20 @@
 </head>
 <body>
 
-
-					
 <div class="body-text">Write your name in the right fields. Also write your imaginary card number. By clicking CCV field card will turn.</div>
 
-  <form  action="../../../makeorder">
+  <form onsubmit="setTimeout(function(){alert('Your order was successfully placed. It is out for delivery and should arrive in 45 minutes or less. Thank you for shopping with ConcordiaEats');}, 0);" action="../../../makeorder">
     <div class="form-container">
       <div class="personal-information">
         <h1>Payment Information</h1>
       </div> <!-- end of personal-information -->
            
-          <input id="column-left" type="text" name="first-name" placeholder="First Name"/>
-          <input id="column-right" type="text" name="last-name" placeholder="Surname"/>
-          <input id="input-field" type="text" name="number" placeholder="Card Number"/>
-          <input id="column-left" type="text" name="expiry" placeholder="MM / YY"/>
-          <input id="column-right" type="text" name="cvc" placeholder="CCV"/>
+          <input id="column-left" type="text" name="first-name" placeholder="First Name" required/>
+          <input id="column-right" type="text" name="last-name" placeholder="Surname" required/>
+          <input id="input-field" type="text" name="number" placeholder="Card Number" required pattern="^4[0-9]{12}(?:[0-9]{3})?$"/>
+          <input id="column-left" type="text" name="expiry" required="required" placeholder="MM / YY" pattern="(0[1-9]|1[0-2])\/([0-9]{2})"/>
+		  <input id="column-right" type="text" name="cvc" placeholder="CCV" required pattern="\d{3}"/>
+
          
           <div class="card-wrapper"></div>
       
@@ -35,6 +34,7 @@
         
     </form>
   </div>
+  
 <style>
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,900,700,500);
 
