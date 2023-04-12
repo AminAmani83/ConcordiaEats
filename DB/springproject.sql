@@ -62,15 +62,8 @@ CREATE TABLE IF NOT EXISTS `springproject`.`purchase` (
   `userId` INT NOT NULL,
   `timeStamp` TIMESTAMP(6) NOT NULL,
   `total_price` DECIMAL(6,2) NOT NULL,
-  `promotionId` INT NULL,
   PRIMARY KEY (`id`),
-  INDEX `FK_purchase_promotions_idx` (`promotionId` ASC) INVISIBLE,
   INDEX `fk_purchase_user1_idx` (`userId` ASC) VISIBLE,
-  CONSTRAINT `FK_purchase_promotions`
-    FOREIGN KEY (`promotionId`)
-    REFERENCES `springproject`.`promotion` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
   CONSTRAINT `fk_purchase_user1`
     FOREIGN KEY (`userId`)
     REFERENCES `springproject`.`user` (`id`)
@@ -108,8 +101,6 @@ CREATE TABLE IF NOT EXISTS `springproject`.`product` (
   `categoryid` INT NOT NULL,
   `price` DECIMAL(6,2) NOT NULL,
   `salesCount` INT NULL,
-  `isOnSale` TINYINT NULL,
-  `discountPercent` DECIMAL NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_product_category1_idx` (`categoryid` ASC) VISIBLE,
   CONSTRAINT `fk_product_category1`
@@ -229,9 +220,12 @@ DROP TABLE IF EXISTS `springproject`.`product_has_promotion` ;
 CREATE TABLE IF NOT EXISTS `springproject`.`product_has_promotion` (
   `product_id` INT NOT NULL,
   `promotion_id` INT NOT NULL,
+  `isOnSale` TINYINT NULL,
+  `discountPercent` DECIMAL(6,2) NULL,
   PRIMARY KEY (`product_id`, `promotion_id`),
   INDEX `fk_product_has_promotion_promotion1_idx` (`promotion_id` ASC) VISIBLE,
   INDEX `fk_product_has_promotion_product1_idx` (`product_id` ASC) VISIBLE,
+  UNIQUE INDEX `product_id_UNIQUE` (`product_id` ASC) VISIBLE,
   CONSTRAINT `fk_product_has_promotion_product1`
     FOREIGN KEY (`product_id`)
     REFERENCES `springproject`.`product` (`id`)

@@ -46,7 +46,7 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public List<Product> fetchAllProducts() {
         return jdbcTemplate.query(
-                "select p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, r.rating, c.id as categoryId, c.name as categoryName from product p join category c on p.categoryid = c.id left join rating r on r.productId = p.id order by p.id desc",
+                "select p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, pp.isOnSale, pp.discountPercent, r.rating, c.id as categoryId, c.name as categoryName from product p join category c on p.categoryid = c.id left join product_has_promotion pp on p.id = pp.product_id left join rating r on r.productId = p.id order by p.id desc",
                 (rs, rowNum) ->
                         new Product(
                                 rs.getInt("id"),
@@ -65,7 +65,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Product fetchProductById(int productId) {
-        String sql = "select p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, r.rating, c.id as categoryId, c.name as categoryName from product p left join category c on p.categoryid = c.id left join rating r on r.productId = p.id where p.id = ?";
+        String sql = "select p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, pp.isOnSale, pp.discountPercent, r.rating, c.id as categoryId, c.name as categoryName from product p left join category c on p.categoryid = c.id left join rating r on r.productId = p.id left join product_has_promotion pp on p.id = pp.product_id where p.id = ?";
 
         return jdbcTemplate.queryForObject(
                 sql,
@@ -91,7 +91,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Product createProduct(Product product) {
-        String sql = "insert into product( name, description, imagePath, categoryid, price, salesCount, isOnSale, discountPercent)value(?,?,?,?,?,?,?,?)";
+        String sql = "insert into product( name, description, imagePath, categoryid, price, salesCount)value(?,?,?,?,?,?)";
         GeneratedKeyHolder generatedKeyHolder = new GeneratedKeyHolder();
         int update = jdbcTemplate.update(
                 conn -> {
@@ -109,8 +109,6 @@ public class ProductDaoImpl implements ProductDao {
                     }
                     preparedStatement.setFloat(5, product.getPrice());
                     preparedStatement.setInt(6, product.getSalesCount());
-                    preparedStatement.setBoolean(7, product.isOnSale());
-                    preparedStatement.setFloat(8, product.getDiscountPercent());
                     return preparedStatement;
 
                 }, generatedKeyHolder);
@@ -126,7 +124,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Product updateProduct(Product product) {
-        String sql = "update product set name =?, description = ?, imagePath=?, categoryid =?, price=?, salesCount=?, isOnSale=?, discountPercent=? where id = ?";
+        String sql = "update product set name =?, description = ?, imagePath=?, categoryid =?, price=?, salesCount=? where id = ?";
         Category category = product.getCategory();
         int update = jdbcTemplate.update(sql,
                 new Object[]{
@@ -136,8 +134,6 @@ public class ProductDaoImpl implements ProductDao {
                         category != null ? category.getId() : 6,
                         product.getPrice(),
                         product.getSalesCount(),
-                        product.isOnSale(),
-                        product.getDiscountPercent(),
                         product.getId()});
         if (update == 1) {
             return product;

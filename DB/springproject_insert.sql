@@ -6,10 +6,8 @@ ALTER TABLE `springproject`.`promotion` AUTO_INCREMENT = 1;
 
 INSERT INTO `springproject`.`promotion` (`name`, `startDate`, `endDate`, `type`) 
 VALUES 
-('Chrismas Sale', '2023-04-01', '2023-07-15', '10% Site-wide Discount'),
-('Easter Sale', '2023-04-01', '2023-07-15', '10% purchase Discount'),
-('New Customer Promotion', '2023-06-01', '2023-06-30', 'Free Shipping'),
-('Black Friday','2023-07-01', '2023-07-15', 'Buy One Get One Free');
+('Chrismas Sale', '2023-04-01', '2023-07-15', 'SITEWIDE_DISCOUNT_10'),
+('Easter Sale', '2023-04-01', '2023-07-15', 'SITEWIDE_DISCOUNT_20');
 
 -- -----------------------------------------------------
 -- Table `springproject`.`user`
@@ -28,14 +26,11 @@ VALUES ('admin', '123', 'ADMIN', 'jane456@gmail.com', '456 Elm St, Anytown, USA'
 -- -----------------------------------------------------
 ALTER TABLE `springproject`.`purchase` AUTO_INCREMENT = 1;
 
-INSERT INTO `springproject`.`purchase` (`userId`, `timeStamp`, `total_price`, `promotionId`)
-VALUES (1, '2023-04-08 10:00:00', 50.00, 1);
-
-INSERT INTO `springproject`.`purchase` (`userId`, `timeStamp`, `total_price`, `promotionId`)
-VALUES (1, '2023-04-09 11:00:00', 75.00, 2);
-
-INSERT INTO `springproject`.`purchase` (`userId`, `timeStamp`, `total_price`, `promotionId`)
-VALUES (1, '2023-04-10 12:00:00', 100.00, NULL);
+INSERT INTO `springproject`.`purchase` (`userId`, `timeStamp`, `total_price`)
+VALUES 
+(1, '2023-04-08 10:00:00', 50.00),
+(1, '2023-04-09 11:00:00', 75.00),
+(1, '2023-04-10 12:00:00', 100.00);
 
 
 -- -----------------------------------------------------
@@ -50,23 +45,17 @@ INSERT INTO `springproject`.`category` (`name`) VALUES ('Beverages');
 INSERT INTO `springproject`.`category` (`name`) VALUES ('Specials');
 
 
-
 -- -----------------------------------------------------
 -- Table `springproject`.`product`
 -- -----------------------------------------------------
 ALTER TABLE `springproject`.`product` AUTO_INCREMENT = 1;
 
-INSERT INTO `springproject`.`product` (`name`, `description`, `imagePath`, `categoryid`, `price`, `salesCount`, `isOnSale`, `discountPercent`) 
-VALUES ('Cheeseburger', 'A juicy beef patty with melted cheese on a soft bun.', 'https://example.com/images/cheeseburger.jpg', 1, 9.99, 50, 0, NULL);
-
-INSERT INTO `springproject`.`product` (`name`, `description`, `imagePath`, `categoryid`, `price`, `salesCount`, `isOnSale`, `discountPercent`) 
-VALUES ('Pepperoni Pizza', 'Classic pizza with tomato sauce, mozzarella cheese, and pepperoni.', 'https://example.com/images/pepperoni_pizza.jpg', 1, 12.99, 35, 1, 10.00);
-
-INSERT INTO `springproject`.`product` (`name`, `description`, `imagePath`, `categoryid`, `price`, `salesCount`, `isOnSale`, `discountPercent`) 
-VALUES ('Fried Chicken Sandwich', 'Crispy fried chicken on a toasted bun with lettuce and mayo.', 'https://example.com/images/fried_chicken_sandwich.jpg', 2, 8.99, 20, 0, NULL);
-
-INSERT INTO `springproject`.`product` (`name`, `description`, `imagePath`, `categoryid`, `price`, `salesCount`, `isOnSale`, `discountPercent`) 
-VALUES ('Spicy Tuna Roll', 'Sushi roll filled with spicy tuna, avocado, and cucumber.', 'https://example.com/images/spicy_tuna_roll.jpg', 3, 6.99, 15, 1, 5.00);
+INSERT INTO `springproject`.`product` (`name`, `description`, `imagePath`, `categoryid`, `price`, `salesCount`) 
+VALUES 
+('Cheeseburger', 'A juicy beef patty with melted cheese on a soft bun.', 'https://example.com/images/cheeseburger.jpg', 1, 9.99, 50),
+('Pepperoni Pizza', 'Classic pizza with tomato sauce, mozzarella cheese, and pepperoni.', 'https://example.com/images/pepperoni_pizza.jpg', 1, 12.99, 35),
+('Fried Chicken Sandwich', 'Crispy fried chicken on a toasted bun with lettuce and mayo.', 'https://example.com/images/fried_chicken_sandwich.jpg', 2, 8.99, 20),
+('Spicy Tuna Roll', 'Sushi roll filled with spicy tuna, avocado, and cucumber.', 'https://example.com/images/spicy_tuna_roll.jpg', 3, 6.99, 15);
 
 
 -- -----------------------------------------------------
@@ -113,3 +102,17 @@ VALUES (1, 'burger', '2022-04-07 15:30:00'),
        (1, 'fries', '2022-04-07 16:45:00'),
        (1, 'pizza', '2022-04-07 12:00:00'),
        (1, 'sandwich', '2022-04-07 14:15:00'); 
+       
+-- -----------------------------------------------------
+-- Table `springproject`.`product_has_promotion`
+-- -----------------------------------------------------
+INSERT INTO `springproject`.`product_has_promotion` (`product_id`, `promotion_id`, `isOnSale`, `discountPercent`) VALUES
+(1, 1, 1, 10.00),
+(2, 2, 0, NULL),
+(3, 1, 1, 15.50),
+(4, 1, 1, 25.00);
+
+INSERT INTO product_has_promotion (product_id, promotion_id, isOnSale, discountPercent) 
+VALUES (1, 2, 1, 20) AS alias
+ON DUPLICATE KEY UPDATE isOnSale = alias.isOnSale,
+discountPercent = alias.discountPercent, promotion_id = alias.promotion_id;

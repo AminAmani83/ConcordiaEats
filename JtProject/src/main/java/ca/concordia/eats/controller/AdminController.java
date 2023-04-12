@@ -334,7 +334,7 @@ public class AdminController {
 	@GetMapping("/admin/promotions/delete")
 	public String removePromotion(@RequestParam("id") int promotionId, Model model) {
 		try {
-			promotionService.removePromotionAndItsEffects(promotionId);
+			promotionService.removePromotion(promotionId);
 			return "redirect:/admin/promotions";
 		} catch (ServiceException e) {
 			e.printStackTrace();
@@ -367,10 +367,10 @@ public class AdminController {
 
 
 	@GetMapping("/admin/promotions/apply")
-	public String applyPromotion(@RequestParam("promoId") int id,
+	public String applyPromotion(@RequestParam("promoId") int promotionId,
 								  Model model) {
 		try {
-			boolean applicationWasSuccessful = promotionService.applyPromotion(id);
+			boolean applicationWasSuccessful = promotionService.applyPromotionToAllProducts(promotionId);
 			if (!applicationWasSuccessful) {
 				return "error";
 			}

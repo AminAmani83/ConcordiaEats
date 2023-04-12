@@ -14,8 +14,11 @@ public interface PromotionDao {
     public Promotion updatePromotion(Promotion promotion) throws DAOException;
     public boolean removePromotion(int PromotionId) throws DAOException;
     public Promotion mapResultSetToPromotion(ResultSet rs) throws SQLException;
-    public boolean removePromotionFromPurchases ();
-    public boolean removePromotionFromAllProducts();
+
+    public boolean applyDiscountPromotionToAllProducts (int promotionId, float discountPercent) throws DAOException;
+
+
+
     public List<Purchase> fetchAllPurchases();
     public Purchase updatePurchase(Purchase purchase);
 

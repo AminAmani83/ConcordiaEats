@@ -3,9 +3,7 @@ package ca.concordia.eats.service;
 import ca.concordia.eats.dao.DAOException;
 import ca.concordia.eats.dao.ProductDao;
 import ca.concordia.eats.dao.PromotionDao;
-import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.Promotion;
-import ca.concordia.eats.dto.Purchase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,7 +59,7 @@ public class PromotionServiceImpl implements PromotionService {
     }
 
     @Override
-    public boolean removePromotionById(int promotionId) throws ServiceException {
+    public boolean removePromotion(int promotionId) throws ServiceException {
         try {
             return promotionDao.removePromotion(promotionId);
         } catch (DAOException e) {
@@ -70,7 +68,7 @@ public class PromotionServiceImpl implements PromotionService {
     }
 
     @Override
-    public boolean applyPromotion(int promotionId) throws ServiceException {
+    public boolean applyPromotionToAllProducts(int promotionId) throws ServiceException {
         try {
             Promotion promotion = promotionDao.fetchPromotionById(promotionId);
             String promotionType = promotion.getType();
@@ -82,10 +80,10 @@ public class PromotionServiceImpl implements PromotionService {
 
             switch (promotionType) {
                 case "SITEWIDE_DISCOUNT_10":
-                    applySiteWideDiscount(10);
+                    promotionDao.applyDiscountPromotionToAllProducts(promotionId, 10);
                     break;
                 case "SITEWIDE_DISCOUNT_20":
-                    applyPurchaseDiscount(20);
+                    promotionDao.applyDiscountPromotionToAllProducts(promotionId, 20);
                     break;
                 default:
                     System.out.println("Invalid Promotion");
@@ -95,69 +93,6 @@ public class PromotionServiceImpl implements PromotionService {
             throw new ServiceException("Error applying promotion", e);
         }
 
-        return true;
-    }
-
-    @Override
-    public void applySiteWideDiscount(float discountPercentage) {
-        List<Product> allProducts;
-        allProducts = productDao.fetchAllProducts();
-        for (Product product : allProducts) {
-            product.setDiscountPercent(discountPercentage);
-            product.setOnSale(true);
-            productDao.updateProduct(product);
-        }
-    }
-
-    @Override
-    public void applyPurchaseDiscount(float discountPercentage) {
-        List<Purchase> allPurchases;
-        allPurchases = promotionDao.fetchAllPurchases();
-        for (Purchase purchase : allPurchases) {
-            purchase.setDiscountPercent(discountPercentage);
-            purchase.setOnSale(true);
-            promotionDao.updatePurchase(purchase);
-        }
-
-    }
-
-    @Override
-    public boolean removePromotionFromPurchases() throws ServiceException {
-        try {
-            return promotionDao.removePromotionFromPurchases();
-        } catch (DAOException e) {
-            throw new ServiceException("Error deleting promotion", e);
-        }
-    }
-
-    @Override
-    public boolean removePromotionFromProducts() throws ServiceException {
-        try {
-            return promotionDao.removePromotionFromAllProducts();
-        } catch (DAOException e) {
-            throw new ServiceException("Error deleting promotion", e);
-        }
-    }
-
-    @Override
-    public boolean removePromotionAndItsEffects(int promotionId) throws ServiceException {
-        try {
-            Promotion promotion = promotionDao.fetchPromotionById(promotionId);
-            switch (promotion.getType()) {
-                case "SITEWIDE_DISCOUNT_10":
-                    promotionDao.removePromotionFromAllProducts();
-                    break;
-                case "SITEWIDE_DISCOUNT_20":
-                    promotionDao.removePromotionFromPurchases();
-                    break;
-                default:
-                    System.out.println("Invalid Promotion");
-                    break;
-            }
-            removePromotionById(promotionId);
-        } catch (DAOException e) {
-            throw new ServiceException("Error deleting promotion", e);
-        }
         return true;
     }
 

@@ -117,8 +117,6 @@ public class PromotionDaoImpl implements PromotionDao {
 
     @Override
     public boolean removePromotion(int promotionId) throws DAOException {
-        removePromotionFromPurchases();
-        removePromotionFromAllProducts();
         String sql = "DELETE FROM promotion WHERE promotion.id = ?";
         try (PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setInt(1, promotionId);
@@ -149,41 +147,30 @@ public class PromotionDaoImpl implements PromotionDao {
     }
 
     @Override
-    public boolean removePromotionFromPurchases() {
-        String sql = "UPDATE purchase" +
-                " JOIN purchase_details ON purchase.id = purchase_details.purchaseId" +
-                " SET purchase_details.isOnSale = 0, purchase_details.discountPercent = NULL" +
-                " WHERE purchase.id = ?";
-        try (PreparedStatement stmt = con.prepareStatement(sql)) {
-            List<Purchase> allPurchases = fetchAllPurchases();
-            for (Purchase purchase: allPurchases) {
-                stmt.setInt(1, purchase.getPurchaseId());
-                stmt.executeUpdate();
-            }
-        } catch (SQLException | DAOException e) {
-            throw new DAOException("Error removing promotion from purchase.", e);
-        }
-        return true;
-    }
-
-    @Override
-    public boolean removePromotionFromAllProducts() {
-        String sql = "UPDATE product" +
-                " JOIN product_has_promotion ON product_has_promotion.product_id = product.id" +
-                " JOIN promotion ON product_has_promotion.promotion_id = promotion.id" +
-                " SET product.isOnSale = 0, product.discountPercent = NULL" +
-                " WHERE product.id = ?";
+    public boolean applyDiscountPromotionToAllProducts(int promotionId, float discountPercent) throws DAOException {
+        String sql = "INSERT INTO product_has_promotion (product_id, promotion_id, isOnSale, discountPercent) " +
+                "VALUES (?, ?, ?, ?) AS alias" +
+                " ON DUPLICATE KEY UPDATE isOnSale = alias.isOnSale, " +
+                "discountPercent = alias.discountPercent, promotion_id = alias.promotion_id";
         try (PreparedStatement stmt = con.prepareStatement(sql)) {
             List<Product> allProducts = productDao.fetchAllProducts();
             for (Product product: allProducts) {
                 stmt.setInt(1, product.getId());
-                stmt.executeUpdate();
+                stmt.setInt(2, promotionId);
+                stmt.setInt(3, 1);
+                stmt.setFloat(4, discountPercent);
+                int rowsAffected = stmt.executeUpdate();
+                if (rowsAffected == 0) {
+                    throw new DAOException("Applying promotion failed, no rows affected.");
+                }
             }
+
         } catch (SQLException | DAOException e) {
-            throw new DAOException("Error removing promotion from product.", e);
+            throw new DAOException("Error creating promotion", e);
         }
         return true;
     }
+
 
     public List<Purchase> fetchAllPurchases() {
         String sql = "SELECT purchase.id, purchase.timeStamp, purchase.total_price, " +
