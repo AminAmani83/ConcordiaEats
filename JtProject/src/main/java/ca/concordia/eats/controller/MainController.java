@@ -56,6 +56,7 @@ public class MainController {
 
         model.addAttribute("favoriteProducts", customer.getFavorite().getCustomerFavoritedProducts());
         model.addAttribute("purchasedProducts", productService.fetchPastPurchasedProducts(customer.getUserId()));
+        model.addAttribute("productCardFavSrc", "favorites");
         return "/favorites";
     }
 
