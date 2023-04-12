@@ -8,7 +8,6 @@ import ca.concordia.eats.service.ProductService;
 import ca.concordia.eats.utils.ConnectionUtil;
 import ca.concordia.eats.utils.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -335,7 +334,7 @@ public class AdminController {
 	@GetMapping("/admin/promotions/delete")
 	public String removePromotion(@RequestParam("id") int promotionId, Model model) {
 		try {
-			promotionService.deletePromotionById(promotionId);
+			promotionService.removePromotionAndItsEffects(promotionId);
 			return "redirect:/admin/promotions";
 		} catch (ServiceException e) {
 			e.printStackTrace();

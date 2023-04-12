@@ -2,7 +2,6 @@ package ca.concordia.eats.service;
 
 import ca.concordia.eats.dao.DAOException;
 import ca.concordia.eats.dao.ProductDao;
-import ca.concordia.eats.dao.ProductDaoImpl;
 import ca.concordia.eats.dao.PromotionDao;
 import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.Promotion;
@@ -10,7 +9,6 @@ import ca.concordia.eats.dto.Purchase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -63,7 +61,7 @@ public class PromotionServiceImpl implements PromotionService {
     }
 
     @Override
-    public boolean deletePromotionById(int promotionId) throws ServiceException {
+    public boolean removePromotionById(int promotionId) throws ServiceException {
         try {
             return promotionDao.removePromotion(promotionId);
         } catch (DAOException e) {
@@ -83,17 +81,11 @@ public class PromotionServiceImpl implements PromotionService {
             }
 
             switch (promotionType) {
-                case "10% Site-wide Discount":
+                case "SITEWIDE_DISCOUNT_10":
                     applySiteWideDiscount(10);
                     break;
-                case "10% purchase Discount":
-                    applyPurchaseDiscount(10);
-                    break;
-                case "Free Shipping":
-                    System.out.println("Free Shipping");
-                    break;
-                case "Buy One Get One Free":
-                    System.out.println("Buy One Get One Free");
+                case "SITEWIDE_DISCOUNT_20":
+                    applyPurchaseDiscount(20);
                     break;
                 default:
                     System.out.println("Invalid Promotion");
@@ -127,6 +119,46 @@ public class PromotionServiceImpl implements PromotionService {
             promotionDao.updatePurchase(purchase);
         }
 
+    }
+
+    @Override
+    public boolean removePromotionFromPurchases() throws ServiceException {
+        try {
+            return promotionDao.removePromotionFromPurchases();
+        } catch (DAOException e) {
+            throw new ServiceException("Error deleting promotion", e);
+        }
+    }
+
+    @Override
+    public boolean removePromotionFromProducts() throws ServiceException {
+        try {
+            return promotionDao.removePromotionFromAllProducts();
+        } catch (DAOException e) {
+            throw new ServiceException("Error deleting promotion", e);
+        }
+    }
+
+    @Override
+    public boolean removePromotionAndItsEffects(int promotionId) throws ServiceException {
+        try {
+            Promotion promotion = promotionDao.fetchPromotionById(promotionId);
+            switch (promotion.getType()) {
+                case "SITEWIDE_DISCOUNT_10":
+                    promotionDao.removePromotionFromAllProducts();
+                    break;
+                case "SITEWIDE_DISCOUNT_20":
+                    promotionDao.removePromotionFromPurchases();
+                    break;
+                default:
+                    System.out.println("Invalid Promotion");
+                    break;
+            }
+            removePromotionById(promotionId);
+        } catch (DAOException e) {
+            throw new ServiceException("Error deleting promotion", e);
+        }
+        return true;
     }
 
 

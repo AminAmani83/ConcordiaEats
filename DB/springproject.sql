@@ -221,6 +221,32 @@ CREATE TABLE IF NOT EXISTS `springproject`.`search_history` (
 ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `springproject`.`product_has_promotion`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `springproject`.`product_has_promotion` ;
+
+CREATE TABLE IF NOT EXISTS `springproject`.`product_has_promotion` (
+  `product_id` INT NOT NULL,
+  `promotion_id` INT NOT NULL,
+  PRIMARY KEY (`product_id`, `promotion_id`),
+  INDEX `fk_product_has_promotion_promotion1_idx` (`promotion_id` ASC) VISIBLE,
+  INDEX `fk_product_has_promotion_product1_idx` (`product_id` ASC) VISIBLE,
+  CONSTRAINT `fk_product_has_promotion_product1`
+    FOREIGN KEY (`product_id`)
+    REFERENCES `springproject`.`product` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_product_has_promotion_promotion1`
+    FOREIGN KEY (`promotion_id`)
+    REFERENCES `springproject`.`promotion` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

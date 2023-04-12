@@ -6,37 +6,26 @@ import ca.concordia.eats.dto.Purchase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
+
+import static ca.concordia.eats.utils.ConnectionUtil.getConnection;
 
 @Repository
 public class PromotionDaoImpl implements PromotionDao {
 
     Connection con;
     @Autowired
+    ProductDao productDao;
 
 
     public PromotionDaoImpl() throws IOException {
-        String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath()
-                .replaceAll("%20", " ");
-        String dbConfigPath = rootPath + "db.properties";
-
-        FileReader reader = new FileReader(dbConfigPath);
-        Properties dbProperties = new Properties();
-        dbProperties.load(reader);
-
-        try {
-            this.con = DriverManager.getConnection(dbProperties.getProperty("url"), dbProperties.getProperty("username"), dbProperties.getProperty("password"));
-        } catch (Exception e) {
-            System.out.println("Error connecting to the DB: " + e.getMessage());
-        }
+        this.con = getConnection();
     }
-    
+
 
     @Override
     public List<Promotion> fetchAllPromotions() throws DAOException {
@@ -128,12 +117,13 @@ public class PromotionDaoImpl implements PromotionDao {
 
     @Override
     public boolean removePromotion(int promotionId) throws DAOException {
-        boolean promotionIdRemoved = removePromotionFromPurchases(promotionId);
+        removePromotionFromPurchases();
+        removePromotionFromAllProducts();
         String sql = "DELETE FROM promotion WHERE promotion.id = ?";
         try (PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setInt(1, promotionId);
             int rowsAffected = stmt.executeUpdate();
-            if (rowsAffected == 0 && !promotionIdRemoved) {
+            if (rowsAffected == 0) {
                 throw new DAOException("Deleting promotion failed, no rows affected.");
             }
         } catch (SQLException | DAOException e) {
@@ -159,21 +149,38 @@ public class PromotionDaoImpl implements PromotionDao {
     }
 
     @Override
-    public boolean removePromotionFromPurchases(int promotionId) {
+    public boolean removePromotionFromPurchases() {
         String sql = "UPDATE purchase" +
-                " SET promotionId = NULL" +
-                " WHERE purchase.id = ? AND promotionId = ?";
-        int purchaseId = 0;
+                " JOIN purchase_details ON purchase.id = purchase_details.purchaseId" +
+                " SET purchase_details.isOnSale = 0, purchase_details.discountPercent = NULL" +
+                " WHERE purchase.id = ?";
         try (PreparedStatement stmt = con.prepareStatement(sql)) {
             List<Purchase> allPurchases = fetchAllPurchases();
             for (Purchase purchase: allPurchases) {
-                purchaseId = purchase.getPurchaseId();
-                stmt.setInt(1, purchaseId);
-                stmt.setInt(2, promotionId);
+                stmt.setInt(1, purchase.getPurchaseId());
                 stmt.executeUpdate();
             }
         } catch (SQLException | DAOException e) {
-            throw new DAOException("Error updating purchase.", e);
+            throw new DAOException("Error removing promotion from purchase.", e);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean removePromotionFromAllProducts() {
+        String sql = "UPDATE product" +
+                " JOIN product_has_promotion ON product_has_promotion.product_id = product.id" +
+                " JOIN promotion ON product_has_promotion.promotion_id = promotion.id" +
+                " SET product.isOnSale = 0, product.discountPercent = NULL" +
+                " WHERE product.id = ?";
+        try (PreparedStatement stmt = con.prepareStatement(sql)) {
+            List<Product> allProducts = productDao.fetchAllProducts();
+            for (Product product: allProducts) {
+                stmt.setInt(1, product.getId());
+                stmt.executeUpdate();
+            }
+        } catch (SQLException | DAOException e) {
+            throw new DAOException("Error removing promotion from product.", e);
         }
         return true;
     }

@@ -1,10 +1,8 @@
 package ca.concordia.eats.dao;
 
-import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.Promotion;
 import ca.concordia.eats.dto.Purchase;
 
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -16,7 +14,8 @@ public interface PromotionDao {
     public Promotion updatePromotion(Promotion promotion) throws DAOException;
     public boolean removePromotion(int PromotionId) throws DAOException;
     public Promotion mapResultSetToPromotion(ResultSet rs) throws SQLException;
-    public boolean removePromotionFromPurchases (int promotionId);
+    public boolean removePromotionFromPurchases ();
+    public boolean removePromotionFromAllProducts();
     public List<Purchase> fetchAllPurchases();
     public Purchase updatePurchase(Purchase purchase);
 
