@@ -31,54 +31,61 @@ public class OrderDaoImpl implements OrderDao {
     }
 
 
-	public void makeOrder(User user, Basket basket) {
-		
-        try {
-        	String sql = "insert into purchase(userId, timeStamp, total_price, promotionId)value(?,?,?,?)";
-        	
-            GeneratedKeyHolder generatedKeyHolder = new GeneratedKeyHolder();
-            int update = jdbcTemplate.update(
-                    conn -> {
-                        // Pre-compiling SQL
-                        PreparedStatement preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                        // Set parameters
-                        preparedStatement.setInt(1, user.getUserId());
-                        preparedStatement.setString(2, String.valueOf( new Timestamp(System.currentTimeMillis())));
-                        preparedStatement.setFloat(3, basket.getTotal());
-                        preparedStatement.setInt(4, 0);
-                        return preparedStatement;
+     // This method fills purchase_details, purchase and updates product database tables with information concerning the order as soon as the order gets checked out.
+     public void makeOrder(User user, Basket basket) {
+	        try {
+	            String purchaseSql = "insert into purchase(userId, timeStamp, total_price, promotionId) values(?,?,?,?)";
+	            GeneratedKeyHolder generatedKeyHolder = new GeneratedKeyHolder();
+	            int purchaseUpdate = jdbcTemplate.update(
+	                conn -> {
+	                    PreparedStatement preparedStatement = conn.prepareStatement(purchaseSql, Statement.RETURN_GENERATED_KEYS);
+	                    preparedStatement.setInt(1, user.getUserId());
+	                    preparedStatement.setString(2, String.valueOf(new Timestamp(System.currentTimeMillis())));
+	                    preparedStatement.setFloat(3, basket.getTotal());
+	                    preparedStatement.setInt(4, 0);
+	                    return preparedStatement;
+	                }, generatedKeyHolder);
 
-                    }, generatedKeyHolder);
-                        
-                        
-                        if (update == 1) {
-                            Integer id = generatedKeyHolder.getKey().intValue();
-                            addPurchaseDetails(id, basket.getProductsInCart());
-                        } else {
-                            return;
-                        }
-            
-        } catch (Exception ex) {
-            System.out.println("Exception Occurred: " + ex.getMessage());
-        }
-	}
-
-
-    private void addPurchaseDetails(Integer purchaseId, List<Product> list) {
-		for (Product product : list) 
-		{ 
-			addPurchaseDetail(purchaseId, product);
-		} 	
-	}
-	
-	private void addPurchaseDetail(Integer purchaseId, Product product) {
-    	String sql = "insert into purchase(userId, timeStamp, total_price, promotionId)value(?,?,?,?)";
-
-        //preparedStatement.setInt(1, purchaseId);
-        //preparedStatement.setInt(2, product.getId());
-        //preparedStatement.setInt(3, product.getSalesCount());
-    	
-	}
+	            if (purchaseUpdate == 1) {
+	                Integer purchaseId = generatedKeyHolder.getKey().intValue();
+	                String purchaseDetailSql = "insert into purchase_details(purchaseId, productId, quantity, price, isOnSale, discountPercent) values(?,?,?,?,?,?)";
+	                for (Product product : basket.getProductsInCart()) {
+	                    int purchaseDetailUpdate = jdbcTemplate.update(
+	                        conn -> {
+	                            PreparedStatement preparedStatement = conn.prepareStatement(purchaseDetailSql);
+	                            preparedStatement.setInt(1, purchaseId);
+	                            preparedStatement.setInt(2, product.getId());
+	                            preparedStatement.setInt(3, product.getSalesCount());
+	                            preparedStatement.setFloat(4, product.getPrice());
+	                            preparedStatement.setBoolean(5, product.isOnSale());
+	                            preparedStatement.setFloat(6, product.getDiscountPercent());
+	                            return preparedStatement;
+	                        }
+	                    );
+	                    if (purchaseDetailUpdate != 1) {
+	                        return;
+	                    }
+	                    // Update the salesCount variable in the product table
+	                    String updateSalesCountSql = "UPDATE product SET salesCount = salesCount + ? WHERE id = ?";
+	                    int updateSalesCount = jdbcTemplate.update(
+	                        conn -> {
+	                            PreparedStatement preparedStatement = conn.prepareStatement(updateSalesCountSql);
+	                            preparedStatement.setInt(1, product.getSalesCount());
+	                            preparedStatement.setInt(2, product.getId());
+	                            return preparedStatement;
+	                        }
+	                    );
+	                    if (updateSalesCount != 1) {
+	                        return;
+	                    }
+	                }
+	            } else {
+	                return;
+	            }
+	        } catch (Exception ex) {
+	            System.out.println("Exception Occurred: " + ex.getMessage());
+	        }
+	    }
 
 
     /**

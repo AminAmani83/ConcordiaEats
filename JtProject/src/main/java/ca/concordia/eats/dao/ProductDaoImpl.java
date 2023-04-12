@@ -85,7 +85,7 @@ public class ProductDaoImpl implements ProductDao {
                         return product;
                     }
                 },
-                new Object[]{productId}
+                new Object[]{productId, productId}
         );
     }
 

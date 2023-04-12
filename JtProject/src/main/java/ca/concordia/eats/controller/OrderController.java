@@ -17,8 +17,9 @@ public class OrderController {
 	@Autowired
 	private OrderService orderService;
 	@Autowired
-    private ProductService productService;
+    	private ProductService productService;
 
+    // This method is used to show the items in the shopping cart.
     @GetMapping("/order")
     public String shoppingCart(HttpSession session, Model model) {
     	Basket sessionBasket = (Basket) session.getAttribute("basket");
@@ -27,6 +28,7 @@ public class OrderController {
         return "order";
     }
 
+    // This method is used to add a product to the cart.
     @GetMapping("/order/add/{productId}")
     public String addProductToCart(@PathVariable("productId") Integer productId, HttpSession session, Model model) {
         Product product = productService.fetchProductById(productId);
@@ -38,10 +40,13 @@ public class OrderController {
         
         model.addAttribute("allProducts", orderService.getProductsInCart(sessionBasket));
         model.addAttribute("total", String.valueOf(orderService.getTotal(sessionBasket)));
+        model.addAttribute("tax", String.valueOf(orderService.getTaxes(sessionBasket)));
+        model.addAttribute("delivery", String.valueOf(orderService.getDelivery(sessionBasket)));
         
         return "order";
     }
     
+    // This method is used to update the quantity of a product in the cart.
     @GetMapping("/order/update/{productId}")
     public String updateProductToCart(@PathVariable("productId") Integer productId, @RequestParam("quantity") int quantity,
     		HttpSession session, Model model) {
@@ -54,11 +59,13 @@ public class OrderController {
         
         model.addAttribute("allProducts", orderService.getProductsInCart(sessionBasket));
         model.addAttribute("total", String.valueOf(orderService.getTotal(sessionBasket)));
-        
+        model.addAttribute("tax", String.valueOf(orderService.getTaxes(sessionBasket)));
+        model.addAttribute("delivery", String.valueOf(orderService.getDelivery(sessionBasket)));
         return "order";
     }
     
-    @GetMapping("/order/delete/{productId}")
+	// This method is used to remove a product from the cart
+	@GetMapping("/order/delete/{productId}")
     public String removeProductFromCart(@PathVariable("productId") Integer productId, HttpSession session, Model model) {
         Product product = productService.fetchProductById(productId);
         Basket sessionBasket = (Basket) session.getAttribute("basket");
@@ -69,7 +76,8 @@ public class OrderController {
         
         model.addAttribute("allProducts", orderService.getProductsInCart(sessionBasket));
         model.addAttribute("total", String.valueOf(orderService.getTotal(sessionBasket)));
-        
+        model.addAttribute("tax", String.valueOf(orderService.getTaxes(sessionBasket)));
+        model.addAttribute("delivery", String.valueOf(orderService.getDelivery(sessionBasket)));
         return "order";
     }
     
@@ -79,6 +87,8 @@ public class OrderController {
         return "buy";
     }
     
+    // This method is mapped to the URL "/makeorder" with the GET request method.
+    // It retrieves the Basket and User objects from the HttpSession.
     @GetMapping("/makeorder")
     public String MakeOrder(HttpSession session) {
 
