@@ -137,9 +137,6 @@
                             </form>
         
                             <p class="card-text">
-                                <c:out value="${product.rating}"/>
-                            </p>
-                            <p class="card-text">
                                 <c:out value="${product.description}"/>
                             </p>
                             <form action="basket/add" method="get">
