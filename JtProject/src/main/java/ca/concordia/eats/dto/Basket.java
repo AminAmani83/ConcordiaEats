@@ -136,13 +136,27 @@ public class Basket {
         return Double.parseDouble(formattedTax);
     }
     
-    // This method calculates and returns the delivery fee. Will be modified to take into account the type of promotion.
+    // This method calculates and returns the delivery fee.
     public double getDelivery() {
     	
-    	double delivery = 0;
+    	PromotionType promotionType = new PromotionType();
+    	
+    	double delivery;
+    	String freeDelivery = promotionType.getType();
+    	
+    	if (freeDelivery == "free delivery") {
+    		
+    		delivery = 0;
+    	}
+    	
+    	else {
+    		
+    		delivery = 5;
+    	}
     	
     	return delivery;
     }
+	
     // This method updates the quantity of a product in the cart.
     public void updateProduct(Product product, int quantity) {
 		
@@ -157,6 +171,3 @@ public class Basket {
         }
     }	
 }
-	
-
-     
