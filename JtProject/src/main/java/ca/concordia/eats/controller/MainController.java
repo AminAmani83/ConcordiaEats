@@ -43,11 +43,19 @@ public class MainController {
         return "redirect:/" + sourcePage;
     }
 
+    /**
+     * purchasedProducts is used to display the correct rating button in the front-end.
+     * @param session
+     * @param model
+     * @return
+     */
     @GetMapping("/favorites")
     public String fetchCustomerFavoriteProducts(HttpSession session, Model model) {
         if (session.getAttribute("user") == null) return "userLogin";
         Customer customer = (Customer) session.getAttribute("user");
+
         model.addAttribute("favoriteProducts", customer.getFavorite().getCustomerFavoritedProducts());
+        model.addAttribute("purchasedProducts", productService.fetchPastPurchasedProducts(customer.getUserId()));
         return "/favorites";
     }
 
@@ -70,7 +78,7 @@ public class MainController {
      * @return
      */
     @GetMapping("/product/rate-product")
-    public String rateProduct(@RequestParam("productid") int productId, 
+    public String rateProduct(@RequestParam("productId") int productId, 
                                 @RequestParam("rating") int rating,
                                 @RequestParam("src") String sourcePage,
                                 HttpSession session) {
@@ -80,7 +88,7 @@ public class MainController {
         Customer customer = (Customer) session.getAttribute("user");
         Product product = productService.fetchProductById(productId);
         Map<Integer,Integer> customerRatings = productService.fetchAllCustomerRatings(customer.getUserId());
-        List<Product> purchasedProducts = productService.fetchPastPurchasedProducts(customer.getUserId());
+        List<Product> purchasedProducts = productService.fetchPastPurchasedProducts(customer.getUserId());      // to be placed in Favorite
 
         if (purchasedProducts.contains(product)) {      // allow rating
             productService.rateProduct(customer.getUserId(), productId, rating);
