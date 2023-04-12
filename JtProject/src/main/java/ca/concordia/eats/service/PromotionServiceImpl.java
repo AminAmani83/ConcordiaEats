@@ -1,17 +1,25 @@
 package ca.concordia.eats.service;
 
 import ca.concordia.eats.dao.DAOException;
+import ca.concordia.eats.dao.ProductDao;
+import ca.concordia.eats.dao.ProductDaoImpl;
 import ca.concordia.eats.dao.PromotionDao;
+import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.Promotion;
+import ca.concordia.eats.dto.Purchase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 @Service
 public class PromotionServiceImpl implements PromotionService {
     @Autowired
     private PromotionDao promotionDao;
+    @Autowired
+    private ProductDao productDao;
 
     public PromotionServiceImpl(PromotionDao promotionDao) {
         this.promotionDao = promotionDao;
@@ -68,13 +76,18 @@ public class PromotionServiceImpl implements PromotionService {
         try {
             Promotion promotion = promotionDao.fetchPromotionById(promotionId);
             String promotionType = promotion.getType();
+            Date currentDate = new Date();
+
+            if (!currentDate.after(promotion.getStartDate()) || !currentDate.before(promotion.getEndDate())){
+                return false;
+            }
 
             switch (promotionType) {
                 case "10% Site-wide Discount":
-                    System.out.println("10% Site-wide Discount");
+                    applySiteWideDiscount(10);
                     break;
                 case "10% purchase Discount":
-                    System.out.println("10% purchase Discount");
+                    applyPurchaseDiscount(10);
                     break;
                 case "Free Shipping":
                     System.out.println("Free Shipping");
@@ -92,6 +105,30 @@ public class PromotionServiceImpl implements PromotionService {
 
         return true;
     }
+
+    @Override
+    public void applySiteWideDiscount(float discountPercentage) {
+        List<Product> allProducts;
+        allProducts = productDao.fetchAllProducts();
+        for (Product product : allProducts) {
+            product.setDiscountPercent(discountPercentage);
+            product.setOnSale(true);
+            productDao.updateProduct(product);
+        }
+    }
+
+    @Override
+    public void applyPurchaseDiscount(float discountPercentage) {
+        List<Purchase> allPurchases;
+        allPurchases = promotionDao.fetchAllPurchases();
+        for (Purchase purchase : allPurchases) {
+            purchase.setDiscountPercent(discountPercentage);
+            purchase.setOnSale(true);
+            promotionDao.updatePurchase(purchase);
+        }
+
+    }
+
 
 }
 

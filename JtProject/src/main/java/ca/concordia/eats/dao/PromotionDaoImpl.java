@@ -1,7 +1,9 @@
 package ca.concordia.eats.dao;
 
+import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.Promotion;
 import ca.concordia.eats.dto.Purchase;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.io.FileReader;
@@ -16,6 +18,8 @@ import java.util.Properties;
 public class PromotionDaoImpl implements PromotionDao {
 
     Connection con;
+    @Autowired
+
 
     public PromotionDaoImpl() throws IOException {
         String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath()
@@ -191,5 +195,32 @@ public class PromotionDaoImpl implements PromotionDao {
         }
         return allPurchases;
     }
+
+    @Override
+    public Purchase updatePurchase(Purchase purchase) {
+        String sql = "UPDATE purchase" +
+                " JOIN purchase_details ON purchase_details.purchaseId = purchase.id" +
+                " SET purchase.timeStamp = ?, purchase.total_price = ?, purchase_details.quantity = ? ," +
+                " purchase_details.price = ?, purchase_details.isOnSale = ?, purchase_details.discountPercent = ?" +
+                " WHERE promotion.id = ?";
+        try (PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setObject(1, purchase.getTimeStamp());
+            stmt.setFloat(2, purchase.getTotalPrice());
+            stmt.setInt(3, purchase.getQuantity());
+            stmt.setFloat(4, purchase.getPrice());
+            stmt.setBoolean(5, purchase.isOnSale());
+            stmt.setFloat(6, purchase.getDiscountPercent());
+            stmt.setInt(7, purchase.getPurchaseId());
+
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new DAOException("Updating purchase failed, no rows affected.");
+            }
+        } catch (SQLException | DAOException e) {
+            throw new DAOException("Error updating purchase.", e);
+        }
+        return purchase;
+    }
+
 
 }

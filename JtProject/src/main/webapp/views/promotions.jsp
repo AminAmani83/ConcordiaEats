@@ -192,6 +192,21 @@
     </table>
 </div>
 
+<div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 200px;">
+    <div class="toast" style="position: absolute; top: 0; right: 0;" data-delay="700" data-autohide="false">
+        <div class="toast-header">
+            <img src="../images/success.png" class="rounded mr-2" alt="Success">
+            <strong class="mr-auto">Success!</strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+            <!-- to be filled by JS -->
+        </div>
+    </div>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
         crossorigin="anonymous"></script>
@@ -203,5 +218,16 @@
         src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
+
+<script>
+    $(document).ready(function(){
+        const pageUrl = new URL(window.location.toLocaleString());
+        if (pageUrl.searchParams.get('msg') === 'applicationSuccess') {
+            $('.toast .toast-body').html('Promotion Applied successfully.');
+            $('.toast').toast('show');
+        }
+    });
+</script>
+
 </body>
 </html>

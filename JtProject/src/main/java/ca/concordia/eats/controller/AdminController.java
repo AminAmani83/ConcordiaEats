@@ -374,7 +374,7 @@ public class AdminController {
 			if (!applicationWasSuccessful) {
 				return "error";
 			}
-			return "redirect:/admin/promotions";
+			return "redirect:/admin/promotions?msg=applicationSuccess";
 		} catch (ServiceException e) {
 			e.printStackTrace();
 			model.addAttribute("errorMessage", "An error occurred while applying the promotion");
