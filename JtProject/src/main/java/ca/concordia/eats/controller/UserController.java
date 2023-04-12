@@ -45,6 +45,8 @@ public class UserController{
 		model.addAttribute("username",userCredentials.getUsername());
 		model.addAttribute("email",customer.getEmail());
 		model.addAttribute("phone",customer.getPhone());
+		model.addAttribute("noContactUsLink",true);
+
 		return "contact";
 	}
 	@GetMapping("/buy")
@@ -52,11 +54,7 @@ public class UserController{
 	{
 		return "buy";
 	}
-	
-	@GetMapping("/user/products")
-	public String getProduct(Model model) {
-		return "uproduct";
-	}
+
 
 	/**
      * Uses the db.properties file in resources to retrieve db connection parameters
