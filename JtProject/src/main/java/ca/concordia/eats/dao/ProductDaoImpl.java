@@ -507,12 +507,10 @@ public class ProductDaoImpl implements ProductDao {
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
-<<<<<<< HEAD
     }                            
 
 
-=======
-    }
+    
     
     @Override
     public Map<Integer, Integer> fetchAllProductSumSalesQuantity(){
@@ -542,7 +540,6 @@ public class ProductDaoImpl implements ProductDao {
         }
         return productAvgRatings;
     }
->>>>>>> refs/heads/Mojtaba
 
 }
 

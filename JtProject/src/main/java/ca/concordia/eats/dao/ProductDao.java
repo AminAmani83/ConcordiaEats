@@ -45,10 +45,7 @@ public interface ProductDao {
     public void insertNewRating(int customerId, int productId, int rating);             // helper for rateProduct
     public Double calculateAvgProductRating(int productId); 
     public void removeAllRatingsByCustomerId(int customerId);                            
-<<<<<<< HEAD
 
-=======
     public Map<Integer, Double> fetchAllProductAvgRatings();
->>>>>>> refs/heads/Mojtaba
 }
 

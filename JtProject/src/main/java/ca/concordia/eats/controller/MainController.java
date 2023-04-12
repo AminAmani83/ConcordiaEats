@@ -5,17 +5,11 @@ import ca.concordia.eats.dto.Customer;
 import ca.concordia.eats.dto.Favorite;
 import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.Rating;
-<<<<<<< HEAD
-=======
 import ca.concordia.eats.dto.Recommendation;
->>>>>>> refs/heads/Mojtaba
 import ca.concordia.eats.dto.User;
 import ca.concordia.eats.service.UserService;
 import ca.concordia.eats.service.ProductService;
-<<<<<<< HEAD
-=======
 import ca.concordia.eats.service.RecommendationService;
->>>>>>> refs/heads/Mojtaba
 
 import org.apache.jasper.tagplugins.jstl.core.Set;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,10 +75,7 @@ public class MainController {
         model.addAttribute("favoriteProducts", customer.getFavorite().getCustomerFavoritedProducts());
         model.addAttribute("productCardFavSrc", "search?query=" + query);
         model.addAttribute("query", query);
-<<<<<<< HEAD
 
-=======
->>>>>>> refs/heads/Mojtaba
         return "search-results";
     }
 
@@ -110,14 +101,14 @@ public class MainController {
         Map<Integer,Integer> customerRatings = productService.fetchAllCustomerRatings(customer.getUserId());
         List<Product> purchasedProducts = productService.fetchPastPurchasedProducts(customer.getUserId()); 
 
-<<<<<<< HEAD
+
         if (purchasedProducts.contains(product)) {      // allow rating (also checked in front-end when creating the button)
             productService.rateProduct(customer.getUserId(), productId, rating);
             customer.setRating(new Rating(customerRatings, purchasedProducts));
             product.setRating(productService.calculateAvgProductRating(productId));     // Needs to be recalculated after this rating.  
         } 
         return "redirect:/" + sourcePage;
-=======
+
         if (purchasedProducts.contains(product)) {      // allow rating (checked in front end for button)
             productService.rateProduct(customer.getUserId(), productId, rating);
             customer.setRating(new Rating(customerRatings, purchasedProducts));
@@ -156,6 +147,6 @@ public class MainController {
         recommendation.setHighestRatingProduct(highestRatingProduct);
         model.addAttribute("highestRatedProduct", recommendation.getHighestRatingProduct());
         return "/highestRatedProduct";
->>>>>>> refs/heads/Mojtaba
+
     }
 }

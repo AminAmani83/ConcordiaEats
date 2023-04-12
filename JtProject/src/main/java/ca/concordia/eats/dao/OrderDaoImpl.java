@@ -32,7 +32,6 @@ public class OrderDaoImpl implements OrderDao {
     public OrderDaoImpl() throws IOException {
         this.con = ConnectionUtil.getConnection();
     }
-<<<<<<< HEAD
 
 
      // This method fills purchase_details, purchase and updates product database tables with information concerning the order as soon as the order gets checked out.
@@ -90,8 +89,6 @@ public class OrderDaoImpl implements OrderDao {
 	            System.out.println("Exception Occurred: " + ex.getMessage());
 	        }
 	    }
-=======
->>>>>>> refs/heads/Mojtaba
 
 
     /**
@@ -115,8 +112,8 @@ public class OrderDaoImpl implements OrderDao {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
 
-<<<<<<< HEAD
-=======
+        return purchaseIds;
+
         //preparedStatement.setInt(1, purchaseId);
         //preparedStatement.setInt(2, product.getId());
         //preparedStatement.setInt(3, product.getSalesCount());
@@ -129,25 +126,7 @@ public class OrderDaoImpl implements OrderDao {
      * @param customerId
      * @return
      */
-    private List<Integer> fetchPurchaseIdsByCustomerId(int customerId) {
-
-        List<Integer> purchaseIds = new ArrayList<Integer>();
-
-        try {
-            PreparedStatement pst = con.prepareStatement("select id from purchase where userId=?;");
-            pst.setInt(1, customerId);
-            ResultSet rs = pst.executeQuery();
-
-            while (rs.next()) {
-                purchaseIds.add(rs.getInt(1));
-            }
-        } catch (Exception ex) {
-            System.out.println("Exception Occurred: " + ex.getMessage());
-        }
-
->>>>>>> refs/heads/Mojtaba
-        return purchaseIds;
-    }
+ 
 
     /**
      * Helper method for removeAllPurchasesByCustomerId

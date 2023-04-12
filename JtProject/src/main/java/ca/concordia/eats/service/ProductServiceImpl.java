@@ -137,9 +137,5 @@ public class ProductServiceImpl implements ProductService {
         return productAvgRatings;
     }
 
-    @Override
-    public Double calculateAvgProductRating(int productId) {
-        return productDao.calculateAvgProductRating(productId);
-    }
-
+    
 }

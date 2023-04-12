@@ -66,7 +66,6 @@ public class Customer extends User {
     public void setRecommendation(Recommendation recommendation) {
         this.recommendation = recommendation;
     }
-<<<<<<< HEAD
 
     public List<Product> getPurchasedProducts() {
         return purchasedProducts;
@@ -76,11 +75,9 @@ public class Customer extends User {
         this.purchasedProducts = purchasedProducts;
     }
 
-=======
     
 
    
    
    
->>>>>>> refs/heads/Mojtaba
 }

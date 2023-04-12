@@ -337,9 +337,8 @@ public class UserDaoImpl implements UserDao {
             // Create a statement
             String query = "SELECT * FROM search_history WHERE userId = ?";
             PreparedStatement statement = con.prepareStatement(query);
-            statement.setInt(1, user.getUserId());
-            PreparedStatement statement = conn.prepareStatement(query);
             statement.setInt(1, customer.getUserId());
+            
             
             // Execute the query and get the result set
             ResultSet resultSet = statement.executeQuery(query);
