@@ -67,6 +67,9 @@ public class MainController {
         List<Product> products = productService.search(query, customer.getUserId());
         model.addAttribute("products", products);
         model.addAttribute("purchasedProducts", productService.fetchPastPurchasedProducts(customer.getUserId()));
+        model.addAttribute("favoriteProducts", customer.getFavorite().getCustomerFavoritedProducts());
+        model.addAttribute("productCardFavSrc", "search?query=" + query);
+        model.addAttribute("query", query);
 
         return "search-results";
     }
