@@ -346,9 +346,9 @@ public class ProductDaoImpl implements ProductDao {
             int currentRating = fetchRatingByProductIdAndCustomerId(customerId, productId);
 
             if (currentRating == -1) {
-                insertNewRating(customerId, productId, currentRating);
+                insertNewRating(customerId, productId, rating);
             } else if (currentRating >= 0 & currentRating <= 5) {
-                updateCurrentRating(customerId, productId, currentRating);
+                updateCurrentRating(customerId, productId, rating);
             } else {
                 System.out.println("currentRating value is outside valid bounds.");
             }

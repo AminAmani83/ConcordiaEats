@@ -79,9 +79,78 @@
                                 <!-- Half filled stars
                                     <i class="fas fa-star-half-alt text-warning"></i> -->
                             </div>
-                            <p class="card-text">
-                                <c:out value="${product.rating}"/>
-                            </p>
+
+                            <c:choose>
+                                <c:when test="${purchasedProducts.contains(product)}">
+                                    <form action="product/rate-product" method="get">
+                                        <!-- Button trigger modal -->
+                                        <button type="button" class="btn btn-warning" data-toggle="modal"
+                                                data-target="#exampleModalCenter2-${product.id}"
+                                                onclick="document.getElementById('productId').value =  '<c:out
+                                                        value="${product.id}"/>'; document.getElementById('productName').value =
+                                                        '<c:out value="${product.name}"/>';">You had it, now rate it!
+                                        </button>
+                
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="exampleModalCenter2-${product.id}" tabindex="-1"
+                                                role="dialog" aria-labelledby="exampleModalCenterTitle"
+                                                aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLongTitle">Rate this product</h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body text-center">
+                
+                                                        <input class="form-control" type="hidden"
+                                                        name="productId" id="productId" value="${product.id}">
+        
+                                                        <input class="form-control" type="hidden"
+                                                        name="src" id="src" value="favorites">
+        
+                                                        <div class="form-group">
+                                                            <input class="form-control" type="text"
+                                                                    readonly="readonly" name="productName" id="productName" value="${product.name}">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <input class="form-control" type="number" name="rating"
+                                                                    min="1" max="5"
+                                                                    id="rating"
+                                                                    value="rating">
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-dismiss="modal">Close
+                                                        </button>
+                                                        <button type="submit" class="btn btn-primary">Rate it!
+                                                        </button>
+                                                    </div>
+                
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </c:when>
+                                <c:otherwise>
+                                    <div style="background: rgb(234, 188, 39); 
+                                                font-size: 16px; 
+                                                padding: 5px; 
+                                                width: 200px;
+                                                left: 100px;
+                                                position: relative;
+                                                border: 1px solid lightgray; 
+                                                margin: 5px;">
+                                    Try it first; then rate it !
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
+
                             <p class="card-text">
                                 <c:out value="${product.description}"/>
                             </p>
