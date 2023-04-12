@@ -64,7 +64,7 @@
                     <c:out value="${product.description}"/>
                 </td>
                 <td>
-                    <c:out value="${product.isOnSale}"/>
+                    <c:out value="${product.onSale}"/>
                 </td>
                 <td>
                     <form action="products/delete" method="get">
