@@ -1,12 +1,15 @@
 package ca.concordia.eats.controller;
 
+import ca.concordia.eats.dao.ProductDao;
 import ca.concordia.eats.dto.Customer;
 import ca.concordia.eats.dto.Favorite;
 import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.Rating;
+import ca.concordia.eats.dto.Recommendation;
 import ca.concordia.eats.dto.User;
 import ca.concordia.eats.service.UserService;
 import ca.concordia.eats.service.ProductService;
+import ca.concordia.eats.service.RecommendationService;
 
 import org.apache.jasper.tagplugins.jstl.core.Set;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +27,8 @@ public class MainController {
 
     @Autowired
     ProductService productService;
+    @Autowired
+    RecommendationService recommendationService;
 
     @GetMapping("/product/make-favorite")
     public String makeFavorite(@RequestParam("productid") int productId, @RequestParam("src") String sourcePage, HttpSession session) {
@@ -105,5 +110,33 @@ public class MainController {
             // Find something to do if customer cannot rate - text to be displayed??
         }
         return "redirect:/" + sourcePage;
+    }
+    @GetMapping("/recommended")
+    public String fetchPersonalizedRecommendatedProductsBasedSearchPatternByCustomer(HttpSession session, Model model) {
+        if (session.getAttribute("rating") == null) return "userLogin";
+        Customer customer = (Customer) session.getAttribute("user");
+        Product recommendedProduct= recommendationService.fetchPersonalizedRecommendedProductByCustomer(customer);
+        Recommendation recommendation = null;
+        recommendation.setRecommendendedProduct(recommendedProduct);
+        model.addAttribute("recommendedProduct", recommendation.getRecommendendedProduct());
+        return "/recommendedProduct";
+    }
+    @GetMapping("/best-seller")
+    public String fetchBestSellerProduct(HttpSession session, Model model) {
+        if (session.getAttribute("user") == null) return "userLogin";
+        Product bestSellerProduct= recommendationService.fetchBestSellerProduct();
+        Recommendation recommendation = null;
+        recommendation.setRecommendendedProduct(bestSellerProduct);
+        model.addAttribute("bestSellerProduct", recommendation.getBestSellerProduct());
+        return "/bestSellerProduct";
+    }
+    @GetMapping("/highest-rating")
+    public String fetchHighestRatingProduct(HttpSession session, Model model) {
+        if (session.getAttribute("user") == null) return "userLogin";
+        Product highestRatingProduct= recommendationService.fetchHighestRatingProduct();
+        Recommendation recommendation = null;
+        recommendation.setHighestRatingProduct(highestRatingProduct);
+        model.addAttribute("highestRatedProduct", recommendation.getHighestRatingProduct());
+        return "/highestRatedProduct";
     }
 }

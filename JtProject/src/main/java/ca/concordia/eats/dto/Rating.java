@@ -10,8 +10,9 @@ import java.util.*;
 public class Rating {
   
     Map<Integer, Integer> customerRatings = new HashMap<Integer, Integer>();      // <productId, rating>
-    List<Product> rateableProducts = new ArrayList<Product>();                    // this variable contains only past purchased Products
-  
+    List<Product> rateableProducts = new ArrayList<Product>();  
+    // this variable contains only past purchased Products
+   
     public Rating () {
     }
 

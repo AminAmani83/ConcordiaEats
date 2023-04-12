@@ -24,7 +24,7 @@ import ca.concordia.eats.dto.User;
  * Implements the UserService.java interface.
  */
 @Service
-public class BestDealsServiceImpl implements BestDealsService {
+public class RecommendationServiceImpl implements RecommendationService {
 
     @Autowired
     private UserDao userDao;
@@ -32,9 +32,9 @@ public class BestDealsServiceImpl implements BestDealsService {
     
 
 	@Override
-	public List<Product> fetchPersonalizedRecommendatedProductsByUser(Customer customer) {
+	public List<Product> fetchPersonalizedRecommendedProductsByCustomer(Customer customer) {
 		   List<Product> topSearchedProducts = null;
-	       Map<Integer, Integer> searchCountMap =  fetchMostSearchedProductsByUser(customer);
+	       Map<Integer, Integer> searchCountMap =  fetchMostSearchedProductsByCustomer(customer);
 		   List<Map.Entry<Integer, Integer>> sortedResults = new ArrayList<>(searchCountMap.entrySet());
 	       sortedResults.sort(Map.Entry.comparingByValue(Collections.reverseOrder()));
 	       for (int i = 0; i < 3 && i < sortedResults.size(); i++) {
@@ -44,7 +44,7 @@ public class BestDealsServiceImpl implements BestDealsService {
 	}
 
 	@Override
-	public  Map<Integer, Integer> fetchMostSearchedProductsByUser(Customer customer){
+	public  Map<Integer, Integer> fetchMostSearchedProductsByCustomer(Customer customer){
 	   List<Product> searchedProducts = userDao.fetchCustomerSearchedProduct(customer);
        Map<Integer, Integer> searchCountMap = new HashMap<>();
 
@@ -64,8 +64,8 @@ public class BestDealsServiceImpl implements BestDealsService {
 	@Override
 	public List<Product> fetchHighestRatingProducts() {
 		List<Product> HighestRatingProducts=new ArrayList<>();
-		Map<Integer, Float> AllProductAvgRatings= productDao.fetchAllProductAvgRatings();
-		List<Map.Entry<Integer, Float>> sortedResults = new ArrayList<>(AllProductAvgRatings.entrySet());
+		Map<Integer, Double> AllProductAvgRatings= productDao.fetchAllProductAvgRatings();
+		List<Map.Entry<Integer, Double>> sortedResults = new ArrayList<>(AllProductAvgRatings.entrySet());
 		sortedResults.sort(Map.Entry.comparingByValue(Collections.reverseOrder()));
 	       for (int i = 0;  i < sortedResults.size(); i++) {
 	    	   HighestRatingProducts.add(productDao.fetchProductById(sortedResults.get(i).getKey()));
@@ -103,9 +103,9 @@ public class BestDealsServiceImpl implements BestDealsService {
 	}
 
 	@Override
-	public Product fetchPersonalizedRecommendatedProductByUser(Customer customer) {
+	public Product fetchPersonalizedRecommendedProductByCustomer(Customer customer) {
 		Product PersonalizedRecommendatedProduct;
-		List<Product> PersonalizedRecommendatedProducts=fetchPersonalizedRecommendatedProductsByUser(customer);
+		List<Product> PersonalizedRecommendatedProducts=fetchPersonalizedRecommendedProductsByCustomer(customer);
 		PersonalizedRecommendatedProduct = PersonalizedRecommendatedProducts.get(0);
 		return PersonalizedRecommendatedProduct;		
 	}

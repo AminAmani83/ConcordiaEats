@@ -5,6 +5,7 @@ import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.SearchHistory;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +38,6 @@ public interface ProductDao {
     // OTHER : RATING
     public void rateProduct(int customerId, int productId, int rating);
     public Map<Integer, Integer> fetchAllCustomerRatings(int customerId);
-    public Map<Integer, Float> fetchAllProductAvgRatings();
     public Map<Integer, Integer> fetchAllProductSumSalesQuantity();
     public int fetchRatingByProductIdAndCustomerId(int customerId, int productId);
     public List<Product> fetchPastPurchasedProducts(int customerId);
@@ -45,6 +45,6 @@ public interface ProductDao {
     public void insertNewRating(int customerId, int productId, int rating);             // helper for rateProduct
     public Double calculateAvgProductRating(int productId); 
     public void removeAllRatingsByCustomerId(int customerId);                            
-
+    public Map<Integer, Double> fetchAllProductAvgRatings();
 }
 

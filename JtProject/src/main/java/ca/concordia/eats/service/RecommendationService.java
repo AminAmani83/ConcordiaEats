@@ -7,16 +7,16 @@ import ca.concordia.eats.dto.User;
 import java.util.List;
 import java.util.Map;
 
-public interface BestDealsService {
+public interface RecommendationService {
     // CRUD USER
 
-    public List<Product> fetchPersonalizedRecommendatedProductsByUser(Customer customer);
-    public Product fetchPersonalizedRecommendatedProductByUser(Customer customer);
+    public List<Product> fetchPersonalizedRecommendedProductsByCustomer(Customer customer);
+    public Product fetchPersonalizedRecommendedProductByCustomer(Customer customer);
     public List<Product> fetchHighestRatingProducts ();
     public  Product fetchHighestRatingProduct ();
     public List<Product> fetchBestSellerProducts ();
     public  Product fetchBestSellerProduct ();
-    public  Map<Integer, Integer> fetchMostSearchedProductsByUser (Customer customer);
+    public  Map<Integer, Integer> fetchMostSearchedProductsByCustomer (Customer customer);
 
 
 }
