@@ -179,15 +179,26 @@ public class PromotionDaoImpl implements PromotionDao {
     }
 
     public List<Purchase> fetchAllPurchases() {
+        String sql = "SELECT purchase.id, purchase.timeStamp, purchase.total_price, " +
+                " purchase_details.id, purchase_details.quantity, purchase_details.price," +
+                " purchase_details.isOnSale, purchase_details.discountPercent" +
+                " FROM purchase" +
+                " JOIN purchase_details ON purchase_details.purchaseId = purchase.id";
         List<Purchase> allPurchases = new ArrayList<>();
         try {
-            PreparedStatement stmt = con.prepareStatement("SELECT id, timeStamp, total_price FROM purchase");
+            PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Purchase purchase = new Purchase();
                 purchase.setPurchaseId(rs.getInt(1));
-                // purchase.setTimeStamp(rs.getLong(2));
+                purchase.setTimeStamp(rs.getTimestamp(2));
                 purchase.setTotalPrice(rs.getFloat(3));
+                purchase.setPurchaseDetailsId(rs.getInt(4));
+                purchase.setQuantity(rs.getInt(5));
+                purchase.setPrice(rs.getFloat(6));
+                purchase.setOnSale(rs.getBoolean(7));
+                purchase.setDiscountPercent(rs.getFloat(8));
+
                 allPurchases.add(purchase);
             }
         } catch (SQLException e) {
@@ -202,7 +213,7 @@ public class PromotionDaoImpl implements PromotionDao {
                 " JOIN purchase_details ON purchase_details.purchaseId = purchase.id" +
                 " SET purchase.timeStamp = ?, purchase.total_price = ?, purchase_details.quantity = ? ," +
                 " purchase_details.price = ?, purchase_details.isOnSale = ?, purchase_details.discountPercent = ?" +
-                " WHERE promotion.id = ?";
+                " WHERE purchase.id = ?";
         try (PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setObject(1, purchase.getTimeStamp());
             stmt.setFloat(2, purchase.getTotalPrice());

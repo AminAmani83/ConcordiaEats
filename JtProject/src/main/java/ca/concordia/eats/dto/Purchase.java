@@ -1,10 +1,12 @@
 package ca.concordia.eats.dto;
 
+import java.sql.Timestamp;
+
 public class Purchase {
   
     private int purchaseId;
     private int purchaseDetailsId;
-    private long timeStamp;
+    private Timestamp timeStamp;
     private float totalPrice;
     private int quantity;
     private float price;
@@ -19,11 +21,11 @@ public class Purchase {
         this.purchaseId = purchaseId;
     }
   
-    public long getTimeStamp() {
+    public Timestamp getTimeStamp() {
         return timeStamp;
     }
 
-    public void setTimeStamp(long timeStamp) {
+    public void setTimeStamp(Timestamp timeStamp) {
         this.timeStamp = timeStamp;
     }
   
