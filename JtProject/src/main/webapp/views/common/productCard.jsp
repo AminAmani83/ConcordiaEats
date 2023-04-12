@@ -86,7 +86,7 @@
                                                    name="rating"
                                                    min="1" max="5"
                                                    id="rating"
-                                                   value="rating">
+                                                   value="5">
                                         </div>
                                     </div>
                                     <div class="modal-footer">
