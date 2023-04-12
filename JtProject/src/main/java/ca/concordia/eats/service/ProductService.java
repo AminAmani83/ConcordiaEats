@@ -35,4 +35,9 @@ public interface ProductService {
     public Map<Integer, Integer> fetchAllCustomerRatings(int customerId);
     public List<Product> fetchPastPurchasedProducts(int customerId);
     public Double calculateAvgProductRating(int productId);
+<<<<<<< HEAD
+=======
+    public Map<Integer, Double> fetchAllProductAvgRatings();
+
+>>>>>>> refs/heads/Mojtaba
 }

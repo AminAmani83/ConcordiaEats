@@ -3,7 +3,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <%@include file="common/bootstrap.jsp" %>
+<<<<<<< HEAD
     <title>Shopping Cart</title>
+=======
+    <title>Shopping Card</title>
+>>>>>>> refs/heads/Mojtaba
 </head>
 <body>
 <section class="wrapper">
@@ -69,10 +73,14 @@
         </c:forEach>
         </tbody>
     </table>
+<<<<<<< HEAD
     <b>SubTotal:</b> $ ${total} CAD<br>
 	<b>Taxes:</b> $ ${tax} CAD<br>
 	<b>Delivery:</b> $ ${delivery} CAD<br>
 	<b>GrandTotal:</b> $ ${total + tax + delivery} CAD<br><br>
+=======
+    <b>Total:</b> ${total} $
+>>>>>>> refs/heads/Mojtaba
 
 <form action="../../../checkout" method="get">
 	<c:if test="${not empty allProducts}">
@@ -86,7 +94,11 @@
 
 </div>
     <%@include file="common/footer.jsp" %>
+<<<<<<< HEAD
 </div>
+=======
+    </div>
+>>>>>>> refs/heads/Mojtaba
 </section>
 
 </body>

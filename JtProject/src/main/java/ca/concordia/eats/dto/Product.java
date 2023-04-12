@@ -12,6 +12,8 @@ public class Product {
     private Double rating;
     private Category category;
 
+
+
     public Product() {
     }
 
@@ -133,6 +135,9 @@ public class Product {
     public void setCategory(Category category) {
         this.category = category;
     }
+    
+  
+     
 
     @Override
     public boolean equals(Object o) {

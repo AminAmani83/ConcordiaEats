@@ -330,7 +330,7 @@ public class UserDaoImpl implements UserDao {
 
 		
 	@Override
-	public List<Product> fetchCustomerSearchedProduct(User user)     {
+	public List<Product> fetchCustomerSearchedProduct(Customer customer)     {
 		List<Product> products = productDao.fetchAllProducts();
 		List<Product>  searchedProducts = new ArrayList<>();
         try {
@@ -338,6 +338,8 @@ public class UserDaoImpl implements UserDao {
             String query = "SELECT * FROM search_history WHERE userId = ?";
             PreparedStatement statement = con.prepareStatement(query);
             statement.setInt(1, user.getUserId());
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setInt(1, customer.getUserId());
             
             // Execute the query and get the result set
             ResultSet resultSet = statement.executeQuery(query);
@@ -362,6 +364,9 @@ public class UserDaoImpl implements UserDao {
         }
   		return searchedProducts;
     }
+
+
+
 
 
 }

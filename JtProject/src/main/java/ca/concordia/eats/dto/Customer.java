@@ -5,12 +5,12 @@ import java.util.List;
 public class Customer extends User {
   
     private String address;
-    private String phone;
-
+    private String phone; 
     private Favorite favorite;
     private Rating rating;
     private Recommendation recommendation;
     private List<Product> purchasedProducts;
+    
     
     public Customer() {
     }
@@ -58,7 +58,7 @@ public class Customer extends User {
     public void setRating(Rating rating) {
         this.rating = rating;
     }
-
+    
     public Recommendation getRecommendation() {
         return recommendation;
     }
@@ -66,6 +66,7 @@ public class Customer extends User {
     public void setRecommendation(Recommendation recommendation) {
         this.recommendation = recommendation;
     }
+<<<<<<< HEAD
 
     public List<Product> getPurchasedProducts() {
         return purchasedProducts;
@@ -75,4 +76,11 @@ public class Customer extends User {
         this.purchasedProducts = purchasedProducts;
     }
 
+=======
+    
+
+   
+   
+   
+>>>>>>> refs/heads/Mojtaba
 }
