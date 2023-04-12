@@ -88,11 +88,11 @@ public class MainController {
         Customer customer = (Customer) session.getAttribute("user");
         Product product = productService.fetchProductById(productId);
         Map<Integer,Integer> customerRatings = productService.fetchAllCustomerRatings(customer.getUserId());
-        List<Product> purchasedProducts = productService.fetchPastPurchasedProducts(customer.getUserId());      // to be placed in Favorite
+        List<Product> purchasedProducts = productService.fetchPastPurchasedProducts(customer.getUserId()); 
 
-        if (purchasedProducts.contains(product)) {      // allow rating
+        if (purchasedProducts.contains(product)) {      // allow rating (checked in front end for button)
             productService.rateProduct(customer.getUserId(), productId, rating);
-            customer.setRating(new Rating(customerRatings, purchasedProducts));         //TODO - maybe this needs to be deleted.
+            customer.setRating(new Rating(customerRatings, purchasedProducts));
             product.setRating(productService.calculateAvgProductRating(productId));     // Needs to be recalculated after this rating.
             
         } else {
