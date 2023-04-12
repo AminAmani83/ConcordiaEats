@@ -68,7 +68,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Product fetchProductById(int productId) {
-        String sql = "select p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, r.rating, c.id as categoryId, c.name as categoryName from product p left join category c on p.categoryid = c.id left join rating r on r.productId = p.id where p.id = ?";
+        String sql = "select p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, r.rating, c.id as categoryId, c.name as categoryName from product p left join category c on p.categoryid = c.id left join (select avg(rating) as rating, productId from rating where productId = ?) r on r.productId = p.id where p.id = ?";
 
         return jdbcTemplate.queryForObject(
                 sql,
@@ -88,7 +88,7 @@ public class ProductDaoImpl implements ProductDao {
                         return product;
                     }
                 },
-                new Object[]{productId}
+                new Object[]{productId, productId}
         );
     }
 
