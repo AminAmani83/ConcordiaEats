@@ -17,11 +17,13 @@ public interface OrderService {
     
     List<Product> getProductsInCart(Basket sessionBasket);
 
-    void checkout();
-
     float getTotal(Basket sessionBasket);
+	
+    double getTaxes(Basket sessionBasket);
+    
+    double getDelivery(Basket sessionBasket);
 
-	void makeOrder(Basket sessionBasket, User sessionUser);
+    void makeOrder(Basket sessionBasket, User sessionUser);
 
-	void updateProduct(Product product, int quantity, Basket sessionBasket);
+    void updateProduct(Product product, int quantity, Basket sessionBasket);
 }
