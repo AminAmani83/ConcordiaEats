@@ -63,9 +63,13 @@ public class MainController {
     @GetMapping("/search")
     public String search(@RequestParam("query") String query, Model model, HttpSession session) {
         if (session.getAttribute("user") == null) return "userLogin";
-        User user = (User) session.getAttribute("user");
-        List<Product> products = productService.search(query, user.getUserId());
+        Customer customer = (Customer) session.getAttribute("user");
+        List<Product> products = productService.search(query, customer.getUserId());
         model.addAttribute("products", products);
+        model.addAttribute("purchasedProducts", productService.fetchPastPurchasedProducts(customer.getUserId()));
+        model.addAttribute("favoriteProducts", customer.getFavorite().getCustomerFavoritedProducts());
+        model.addAttribute("productCardFavSrc", "search?query=" + query);
+        model.addAttribute("query", query);
         return "search-results";
     }
 

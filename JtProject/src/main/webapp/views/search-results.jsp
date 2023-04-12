@@ -1,72 +1,35 @@
-<%@ page import="ca.concordia.eats.dto.Product" %>
-<%@ page import="java.util.List" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!doctype html>
+<html lang="en">
 <head>
-    <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-top: 20px;
-        }
-
-        th, td {
-            text-align: left;
-            padding: 8px;
-        }
-
-        th {
-            background-color: #555;
-            color: white;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        tr:hover {
-            background-color: #ddd;
-        }
-
-        .product-image {
-            width: 100px;
-            height: auto;
-        }
-    </style>
-
-    <meta charset="UTF-8">
-    <title>Search Results</title>
+    <%@include file="common/bootstrap.jsp" %>
+    <title>ConcordiaEats - Search</title>
 </head>
 <body>
-<h1>Search Results</h1>
-<%
-    List<Product> products = (List<Product>) request.getAttribute("products");
-    if (products != null && !products.isEmpty()) {
-%>
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Price</th>
-        <th>Rating</th>
-        <th>Description</th>
-        <th>Image URL</th>
-    </tr>
-    <% for (Product product : products) { %>
-    <tr>
-        <td><%= product.getId() %></td>
-        <td><%= product.getName() %></td>
-        <td><%= product.getPrice()%></td>
-        <td><%= product.getRating()%></td>
-        <td><%= product.getDescription()%></td>
-        <td><img src="<%= product.getImagePath() %>" alt="<%= product.getName() %>"></td>
-    </tr>
-    <% } %>
-</table>
 
-<% } else { %>
-<p>No products found.</p>
-<% } %>
+<section class="wrapper">
+    <div class="container-fostrap">
+        <%@include file="common/header.jsp" %>
+        <h4 class="ml-5 mt-3">Search Results</h4>
+        <p class="ml-5">Search Query: <span class="text-info">${query}</span></p>
+        <div class="row px-4 justify-content-center">
+            <c:choose>
+                <c:when test="${empty products}">
+                    <div class="col-8 text-center pt-4" style="min-height: 500px">
+                        No Results Found!<br><br>
+                        Try broadening your search or browse the products on our <a href="/index">Home Page</a>.
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <c:forEach items="${products}" var="product">
+                        <%@include file="common/productCard.jsp" %>
+                    </c:forEach>
+                </c:otherwise>
+            </c:choose>
+        </div>
+        <%@include file="common/footer.jsp" %>
+    </div>
+</section>
+
 </body>
 </html>
