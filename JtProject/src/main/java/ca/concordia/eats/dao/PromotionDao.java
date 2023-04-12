@@ -17,10 +17,4 @@ public interface PromotionDao {
 
     public boolean applyDiscountPromotionToAllProducts (int promotionId, float discountPercent) throws DAOException;
 
-
-
-    public List<Purchase> fetchAllPurchases();
-    public Purchase updatePurchase(Purchase purchase);
-
-
 }
