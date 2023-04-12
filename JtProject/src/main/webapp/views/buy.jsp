@@ -11,7 +11,7 @@
 
 <div class="body-text">Write your name in the right fields. Also write your imaginary card number. By clicking CCV field card will turn.</div>
 
-  <form onsubmit="setTimeout(function(){alert('Your order was successfully placed. It is out for delivery and should arrive in 45 minutes or less. Thank you for shopping with ConcordiaEats');}, 0);" action="../../../makeorder">
+  <form onsubmit="setTimeout(function(){alert('Your order was successfully placed. It is out for delivery and should arrive in 45 minutes or less. Thank you for shopping with ConcordiaEats.');}, 0);" action="../../../makeorder">
     <div class="form-container">
       <div class="personal-information">
         <h1>Payment Information</h1>
