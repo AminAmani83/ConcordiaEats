@@ -79,6 +79,7 @@ public class AdminController {
 			model.addAttribute("highestRatedProduct", highestRatedProduct);
 			model.addAttribute("recommendedProduct", recommendedProduct);
 			model.addAttribute("favoriteProducts", customer.getFavorite().getCustomerFavoritedProducts());
+			model.addAttribute("productCardFavSrc", "index");
 
 			return "index";
 		}
