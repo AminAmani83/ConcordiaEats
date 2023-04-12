@@ -138,7 +138,7 @@ public class Basket {
     
     // This method calculates and returns the delivery fee.
     public double getDelivery() {
-    	
+    	/*
     	PromotionType promotionType = new PromotionType();
     	
     	double delivery;
@@ -153,6 +153,9 @@ public class Basket {
     		
     		delivery = 5;
     	}
+    	*/
+
+        int delivery = 5;
     	
     	return delivery;
     }
