@@ -1,17 +1,11 @@
 package ca.concordia.eats.controller;
 
-import ca.concordia.eats.dao.ProductDao;
 import ca.concordia.eats.dto.Customer;
 import ca.concordia.eats.dto.Favorite;
 import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.Rating;
-import ca.concordia.eats.dto.Recommendation;
-import ca.concordia.eats.dto.User;
-import ca.concordia.eats.service.UserService;
 import ca.concordia.eats.service.ProductService;
 import ca.concordia.eats.service.RecommendationService;
-
-import org.apache.jasper.tagplugins.jstl.core.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -59,7 +53,7 @@ public class MainController {
         if (session.getAttribute("user") == null) return "userLogin";
         Customer customer = (Customer) session.getAttribute("user");
 
-        model.addAttribute("favoriteProducts", customer.getFavorite().getCustomerFavoritedProducts());
+        model.addAttribute("favoriteProducts", productService.fetchCustomerFavoriteProducts(customer.getUserId()));
         model.addAttribute("purchasedProducts", productService.fetchPastPurchasedProducts(customer.getUserId()));
         model.addAttribute("productCardFavSrc", "favorites");
         return "/favorites";

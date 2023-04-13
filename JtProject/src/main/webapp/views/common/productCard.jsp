@@ -40,12 +40,12 @@
                         <i class="fas fa-star-half-alt text-warning"></i> -->
                     </c:when>
                     <c:otherwise>
-                        No rating yet!
+                        <span class="text-warning">No rating yet!</span>
                     </c:otherwise>
                 </c:choose>
             </div>
 
-            <div>
+            <div class="py-3">
                 <c:choose>
                     <c:when test="${purchasedProducts.contains(product)}">
                         <form action="product/rate-product" method="get">

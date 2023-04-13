@@ -1,9 +1,7 @@
 package ca.concordia.eats.dto;
 
-import java.util.*;
-
 public class Recommendation {
-    private Product recommendendedProduct;
+    private Product recommendedProduct;
     private Product highestRatingProduct;
     private Product bestSellerProduct;
 
@@ -16,12 +14,12 @@ public class Recommendation {
         this.highestRatingProduct = highestRatingProduct;
     }
   
-    public Product getRecommendendedProduct() {
-        return recommendendedProduct;
+    public Product getRecommendedProduct() {
+        return recommendedProduct;
     }
 
-    public void setRecommendendedProduct(Product recommendendedProduct) {
-        this.recommendendedProduct = recommendendedProduct;
+    public void setRecommendedProduct(Product recommendendedProduct) {
+        this.recommendedProduct = recommendendedProduct;
     }
     public Product getBestSellerProduct() {
         return bestSellerProduct;
