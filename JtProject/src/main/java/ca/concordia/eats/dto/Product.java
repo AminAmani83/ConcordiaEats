@@ -14,6 +14,7 @@ public class Product {
     private float discountPercent;
     private Double rating;
     private Category category;
+    private boolean disable;
 
     public Product() {
     }
@@ -144,7 +145,15 @@ public class Product {
         this.category = category;
     }
 
-    @Override
+    public boolean isDisable() {
+		return disable;
+	}
+
+	public void setDisable(boolean disable) {
+		this.disable = disable;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

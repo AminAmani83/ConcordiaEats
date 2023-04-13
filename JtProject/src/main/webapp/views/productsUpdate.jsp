@@ -34,8 +34,14 @@
 
                 <div class="form-group">
                     <label for="price">Price</label>
-                    <input type="number" class="form-control border border-success" required name="price" id="price"
+                    <input type="number" step="any" class="form-control border border-success" required name="price" id="price"
                            value="${ product.price }" min="1" placeholder="Price">
+                </div>
+
+                <div class="form-group">
+                    <label for="discountPercent">Discount Percent</label>
+                    <input type="number" step="0.1" class="form-control border border-success" required name="discountPercent" id="discountPercent"
+                           value="${ product.discountPercent }" min="0" max="1" placeholder="Price">
                 </div>
 
                 <div class="form-group">
