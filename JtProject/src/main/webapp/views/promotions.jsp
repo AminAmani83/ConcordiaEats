@@ -172,8 +172,8 @@
 <div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 200px;">
     <div class="toast" style="position: absolute; top: 0; right: 0;" data-delay="700" data-autohide="false">
         <div class="toast-header">
-            <img src="../images/success.png" class="rounded mr-2" alt="Success">
-            <strong class="mr-auto">Success!</strong>
+            <img src="../images/error.png" class="rounded mr-2" alt="Error">
+            <strong class="mr-auto">Error!</strong>
             <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
