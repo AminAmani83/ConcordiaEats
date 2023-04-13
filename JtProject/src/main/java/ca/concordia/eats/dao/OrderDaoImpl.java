@@ -113,7 +113,20 @@ public class OrderDaoImpl implements OrderDao {
         }
 
         return purchaseIds;
-    }
+
+        //preparedStatement.setInt(1, purchaseId);
+        //preparedStatement.setInt(2, product.getId());
+        //preparedStatement.setInt(3, product.getSalesCount());
+    	
+	}
+
+
+    /**
+     * Helper method for removeAllPurchasesByCustomerId
+     * @param customerId
+     * @return
+     */
+ 
 
     /**
      * Helper method for removeAllPurchasesByCustomerId
