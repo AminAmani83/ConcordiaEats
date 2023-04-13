@@ -126,7 +126,7 @@ CREATE TABLE IF NOT EXISTS `springproject`.`product` (
   `price` DECIMAL(6,2) NOT NULL,
   `salesCount` INT NULL,
   `isOnSale` TINYINT NULL,
-  `discountPercent` DECIMAL NULL,
+  `discountPercent` DECIMAL(6,2) NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_product_category1_idx` (`categoryid` ASC) VISIBLE,
   CONSTRAINT `fk_product_category1`
