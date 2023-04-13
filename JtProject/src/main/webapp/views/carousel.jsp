@@ -21,6 +21,9 @@
             justify-content: center;
             border-radius: 50%;
         }
+        #sliderproduct .image {
+        max-height: 540px!important;
+        }
     </style>
 				<c:set var="isBestSellerProductNotNull" value="${bestSellerProduct.id != null}" />
 	 			<c:set var="isHighestRatedProductNotNull" value="${highestRatedProduct.id != null}" />
