@@ -1,5 +1,8 @@
 package ca.concordia.eats.dto;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 public class Product {
     private Integer id;
     private String name;
@@ -11,6 +14,8 @@ public class Product {
     private float discountPercent;
     private Double rating;
     private Category category;
+
+
 
     public Product() {
     }
@@ -111,7 +116,14 @@ public class Product {
     }
 
     public float getDiscountPercent() {
+    	
         return discountPercent;
+    }
+    
+    public String getPrintedDiscountPercent() {
+    	NumberFormat fmt = NumberFormat.getPercentInstance();
+        fmt.setMaximumFractionDigits(2);
+        return fmt.format(discountPercent);
     }
 
     public void setDiscountPercent(float discountPercent) {
@@ -133,6 +145,9 @@ public class Product {
     public void setCategory(Category category) {
         this.category = category;
     }
+    
+  
+     
 
     @Override
     public boolean equals(Object o) {

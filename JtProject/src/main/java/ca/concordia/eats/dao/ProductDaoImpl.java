@@ -46,7 +46,7 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public List<Product> fetchAllProducts() {
         return jdbcTemplate.query(
-                "select p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, r.rating, c.id as categoryId, c.name as categoryName from product p join category c on p.categoryid = c.id left join rating r on r.productId = p.id order by p.id desc",
+                "select p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, r.avg_rating as rating, c.id as categoryId, c.name as categoryName from product p join category c on p.categoryid = c.id left join (select avg(rating) as avg_rating, productId from rating group by productId) r on r.productId = p.id order by p.id desc",
                 (rs, rowNum) ->
                         new Product(
                                 rs.getInt("id"),
@@ -65,7 +65,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Product fetchProductById(int productId) {
-        String sql = "select p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, r.rating, c.id as categoryId, c.name as categoryName from product p left join category c on p.categoryid = c.id left join rating r on r.productId = p.id where p.id = ?";
+        String sql = "select p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, r.rating, c.id as categoryId, c.name as categoryName from product p left join category c on p.categoryid = c.id left join (select avg(rating) as rating, productId from rating where productId = ?) r on r.productId = p.id where p.id = ?";
 
         return jdbcTemplate.queryForObject(
                 sql,
@@ -85,7 +85,7 @@ public class ProductDaoImpl implements ProductDao {
                         return product;
                     }
                 },
-                new Object[]{productId}
+                new Object[]{productId, productId}
         );
     }
 
@@ -508,6 +508,36 @@ public class ProductDaoImpl implements ProductDao {
 
 
 
+    
+    
+    @Override
+    public Map<Integer, Integer> fetchAllProductSumSalesQuantity(){
+    	Map<Integer, Integer> productSumSalesQuantity = new HashMap<Integer, Integer>();
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("select productId, Sum(quantity) as SalesQuantity from purchase_details Group by productId;");
+            while (rs.next()) {
+            	productSumSalesQuantity.put(rs.getInt(1), rs.getInt(2));
+            }
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+        return productSumSalesQuantity;	
+    	
+    }
+    @Override
+    public Map<Integer, Double> fetchAllProductAvgRatings(){
+    	Map<Integer, Double> productAvgRatings = new HashMap<Integer, Double>();
+        try {
+        	List<Product> products = fetchAllProducts();
+        	for (Product p : products) {
+            	productAvgRatings.put(p.getId(), calculateAvgProductRating(p.getId()));
+            }
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+        return productAvgRatings;
+    }
 
 }
 

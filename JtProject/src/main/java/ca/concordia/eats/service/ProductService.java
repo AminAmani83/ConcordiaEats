@@ -37,4 +37,6 @@ public interface ProductService {
     public List<Product> fetchPastPurchasedProducts(int customerId);
     public Double calculateAvgProductRating(int productId);
 
+    public Map<Integer, Double> fetchAllProductAvgRatings();
+
 }

@@ -9,6 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
+
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -113,10 +117,25 @@ public class ProductServiceImpl implements ProductService {
         return productDao.search(query, userId);
     }
 
+
+
     @Override
     public Double calculateAvgProductRating(int productId) {
         return productDao.calculateAvgProductRating(productId);
     }
 
+    @Override
+    public Map<Integer, Double> fetchAllProductAvgRatings(){
+    	Map<Integer, Double> productAvgRatings = new HashMap<Integer, Double>();
+        try {
+        	List<Product> products = fetchAllProducts();
+        	for (Product p : products) {
+            	productAvgRatings.put(p.getId(), calculateAvgProductRating(p.getId()));
+            }
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+        return productAvgRatings;
+    }
 
 }

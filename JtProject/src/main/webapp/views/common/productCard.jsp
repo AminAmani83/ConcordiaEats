@@ -73,8 +73,8 @@
                                                name="productId" id="productId"
                                                value="${product.id}">
 
-                                        <input class="form-control" type="hidden"
-                                               name="src" id="src" value="favorites">
+                                        <input class="form-control" type="hidden" readonly="readonly"
+                                               name="src" id="src" value="${productCardFavSrc}">
 
                                         <div class="form-group">
                                             <input class="form-control" type="text"
@@ -86,7 +86,7 @@
                                                    name="rating"
                                                    min="1" max="5"
                                                    id="rating"
-                                                   value="rating">
+                                                   value="5">
                                         </div>
                                     </div>
                                     <div class="modal-footer">

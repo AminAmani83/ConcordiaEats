@@ -60,13 +60,13 @@ INSERT INTO `springproject`.`product` (`name`, `description`, `imagePath`, `cate
 VALUES ('Cheeseburger', 'A juicy beef patty with melted cheese on a soft bun.', 'https://example.com/images/cheeseburger.jpg', 1, 9.99, 50, 0, NULL);
 
 INSERT INTO `springproject`.`product` (`name`, `description`, `imagePath`, `categoryid`, `price`, `salesCount`, `isOnSale`, `discountPercent`) 
-VALUES ('Pepperoni Pizza', 'Classic pizza with tomato sauce, mozzarella cheese, and pepperoni.', 'https://example.com/images/pepperoni_pizza.jpg', 1, 12.99, 35, 1, 10.00);
+VALUES ('Pepperoni Pizza', 'Classic pizza with tomato sauce, mozzarella cheese, and pepperoni.', 'https://example.com/images/pepperoni_pizza.jpg', 1, 12.99, 35, 1, 0.1);
 
 INSERT INTO `springproject`.`product` (`name`, `description`, `imagePath`, `categoryid`, `price`, `salesCount`, `isOnSale`, `discountPercent`) 
 VALUES ('Fried Chicken Sandwich', 'Crispy fried chicken on a toasted bun with lettuce and mayo.', 'https://example.com/images/fried_chicken_sandwich.jpg', 2, 8.99, 20, 0, NULL);
 
 INSERT INTO `springproject`.`product` (`name`, `description`, `imagePath`, `categoryid`, `price`, `salesCount`, `isOnSale`, `discountPercent`) 
-VALUES ('Spicy Tuna Roll', 'Sushi roll filled with spicy tuna, avocado, and cucumber.', 'https://example.com/images/spicy_tuna_roll.jpg', 3, 6.99, 15, 1, 5.00);
+VALUES ('Spicy Tuna Roll', 'Sushi roll filled with spicy tuna, avocado, and cucumber.', 'https://example.com/images/spicy_tuna_roll.jpg', 3, 6.99, 15, 1, 0.5);
 
 
 -- -----------------------------------------------------

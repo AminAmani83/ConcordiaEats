@@ -50,6 +50,7 @@ public class Basket {
     }
     
         
+    // This method adds a product to the cart, or increases its quantity if it is already in the cart.    
     public void addProduct(Product product) {
     	
     	if (products.containsKey(product)) {
@@ -62,11 +63,13 @@ public class Basket {
         }   
     }
 
+    // This method removes a product from the cart.
     public void removeProduct(Product product) {
     	
         products.remove(product);
     }
-        
+     
+    // This method returns a list of all products in the cart, along with their quantities.
     public List<Product> getProductsInCart(){
     	
     	List<Product> productList = new ArrayList<Product>();
@@ -81,7 +84,8 @@ public class Basket {
 
     	return productList;
     }
-        
+      
+    // This method calculates and returns the total cost of all products in the cart.
     public float getTotal() {
     	
     	float total = 0;
@@ -103,8 +107,63 @@ public class Basket {
         }
         return total;
     }
+    
+    // This method calculates and returns the taxes for the entire order.
+    public double getTaxes() {
+    	
+        double tax = 0;
+        double taxRate = 0.15;
+        	
+        for (Map.Entry<Product, Integer> entry : products.entrySet()) {
+            	
+            Product product = entry.getKey();
+            	
+            int quantity = entry.getValue();
+                
+            if (product.isOnSale()) {
+                	
+                tax += (product.getPrice() * (1 - product.getDiscountPercent() / 100.0f) * quantity) * taxRate;
+                	
+            } else {
+                	
+                tax += (product.getPrice() * quantity) * taxRate;
+            }
+        }
+        
+        // Format the tax value as a string with one decimal place
+        String formattedTax = String.format("%.1f", tax);
+        
+        // Convert the formatted string back to a double and return it
+        return Double.parseDouble(formattedTax);
+    }
+    
+    // This method calculates and returns the delivery fee.
+    public double getDelivery() {
+    	/*
+    	PromotionType promotionType = new PromotionType();
+    	
+    	double delivery;
+    	String freeDelivery = promotionType.getType();
+    	
+    	if (freeDelivery == "free delivery") {
+    		
+    		delivery = 0;
+    	}
+    	
+    	else {
+    		
+    		delivery = 5;
+    	}
 
-	public void updateProduct(Product product, int quantity) {
+
+    	 */
+
+        int delivery = 5;
+    	return delivery;
+    }
+	
+    // This method updates the quantity of a product in the cart.
+    public void updateProduct(Product product, int quantity) {
 		
         if (products.containsKey(product)) {
         	
@@ -113,7 +172,7 @@ public class Basket {
             	if (quantity < 1) {
             		
             		products.remove(product);
-            }
+           	}
         }
-	}	
+    }	
 }
