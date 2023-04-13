@@ -9,6 +9,66 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
+        <div class="categories">
+            <a href="#" onmouseover="showMenu()">Categories</a>
+            <ul id="menu">
+                <li><input type="checkbox" name="category" value="category1"><label>Burger</label></li>
+                <li><input type="checkbox" name="category" value="category2"><label>Soup</label></li>
+                <li><input type="checkbox" name="category" value="category3"><label>Salad</label></li>
+                <li><button onclick="searchProducts()">Search</button></li>
+            </ul>
+        </div>
+
+        <style>
+            .categories {
+                position: relative;
+                display: inline-block;
+            }
+
+            #menu {
+                display: none;
+                position: absolute;
+                top: 30px;
+                left: 0;
+                z-index: 1;
+            }
+
+            #menu li {
+                display: block;
+            }
+
+            #menu li a {
+                display: block;
+                padding: 5px 10px;
+                text-decoration: none;
+                color: #333;
+                background-color: #fff;
+            }
+
+            #menu li a:hover {
+                background-color: #f5f5f5;
+            }
+        </style>
+
+        <script>
+            function showMenu() {
+                document.getElementById("menu").style.display = "block";
+            }
+
+            function searchProducts() {
+                var selectedCategories = document.getElementsByName("category");
+                var selectedCategoriesValues = [];
+                for (var i = 0; i < selectedCategories.length; i++) {
+                    if (selectedCategories[i].checked) {
+                        selectedCategoriesValues.push(selectedCategories[i].value);
+                    }
+                }
+                var queryString = selectedCategoriesValues.join("&");
+                window.location.href = "search-results.jsp?" + queryString;
+            }
+        </script>
+
+
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto"></ul>
             <ul class="navbar-nav">
@@ -35,4 +95,5 @@
         </c:choose>
 
     </div>
+
 </nav>
