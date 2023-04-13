@@ -3,6 +3,7 @@ package ca.concordia.eats.controller;
 import ca.concordia.eats.dto.*;
 import ca.concordia.eats.service.UserService;
 import ca.concordia.eats.service.ProductService;
+import ca.concordia.eats.service.RecommendationService;
 import ca.concordia.eats.utils.ConnectionUtil;
 import ca.concordia.eats.utils.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class AdminController {
 
 	@Autowired
 	private UserService userService;
+	
+	 @Autowired
+	    RecommendationService recommendationService;
 
 	Connection con;
 
@@ -57,17 +61,22 @@ public class AdminController {
 		} else {
 			List<Product> allProducts = productService.fetchAllProducts();
 			Customer customer = (Customer) session.getAttribute("user");
-			
-			// Temp Products TODO: use actual results from DB
-			Product bestSellerProduct = new Product(1, "Hamburger", "Delicious", "https://tmbidigitalassetsazure.blob.core.windows.net/secure/RMS/attachments/37/1200x1200/Sausage-Sliders-with-Cran-Apple-Slaw_exps48783_SD2235819D06_24_2bC_RMS.jpg", 0f, 0, false, 0f, 3.0, null);
-//			bestSellerProduct.setRating(productService.calculateAvgProductRating(bestSellerProduct.getId()));
+	
+	        Product recommendedProduct= recommendationService.fetchPersonalizedRecommendedProductByCustomer(customer);
+	        Recommendation recommendation = new Recommendation();
+	        recommendation.setRecommendendedProduct(recommendedProduct);
+	        model.addAttribute("recommendedProduct", recommendation.getRecommendendedProduct());
 
-			Product highestRatedProduct = new Product(2, "Chicken Soup", "Delicious", "https://www.allrecipes.com/thmb/NgpgUebR7ixeEuToPd1c1TgaQmU=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/8814_HomemadeChickenSoup_SoupLovingNicole_LSH-2000-4ae7ff733c554fdab0796d15c8d1151f.jpg", 0f, 0, false, 0f, 4.5, null);
-//			highestRatedProduct.setRating(productService.calculateAvgProductRating(highestRatedProduct.getId()));
-
-			Product recommendedProduct = new Product(3, "Hamburger", "Delicious", "https://tastesbetterfromscratch.com/wp-content/uploads/2017/04/Tiramisu-14.jpg", 0f, 0, false, 0f, 3.5, null);
-//			recommendedProduct.setRating(productService.calculateAvgProductRating(recommendedProduct.getId()));
-
+	        Product bestSellerProduct= recommendationService.fetchBestSellerProduct();
+	        recommendation.setRecommendendedProduct(bestSellerProduct);
+	        model.addAttribute("bestSellerProduct", recommendation.getBestSellerProduct());
+	        
+	        Product highestRatedProduct= recommendationService.fetchHighestRatingProduct();
+	        recommendation.setHighestRatingProduct(highestRatedProduct);
+	        model.addAttribute("highestRatedProduct", recommendation.getHighestRatingProduct());
+	        
+	       customer.setRecommendation(recommendation);
+	        
 			model.addAttribute("username", usernameForClass);
 			model.addAttribute("allProducts", allProducts);
 			model.addAttribute("bestSellerProduct", bestSellerProduct);

@@ -16,6 +16,8 @@ public class Product {
     private Category category;
     private boolean disable;
 
+
+
     public Product() {
     }
 
@@ -144,6 +146,9 @@ public class Product {
     public void setCategory(Category category) {
         this.category = category;
     }
+    
+  
+     
 
     public boolean isDisable() {
 		return disable;

@@ -29,4 +29,5 @@ public class Purchase {
     public void setTotalPrice(float totalPrice) {
         this.totalPrice = totalPrice;
     } 
+  
 }

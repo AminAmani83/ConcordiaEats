@@ -49,6 +49,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public List<Product> fetchAllProducts() {
+
     	return jdbcTemplate.query(
                 "select p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, avg(r.rating) as rating, c.id as categoryId, c.name as categoryName from product p join category c on p.categoryid = c.id left join rating r on r.productId = p.id where p.disable=0 group by p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, c.id , c.name  order by p.id desc",
                 (rs, rowNum) ->
@@ -510,6 +511,36 @@ public class ProductDaoImpl implements ProductDao {
     }                            
 
 
+    
+    
+    @Override
+    public Map<Integer, Integer> fetchAllProductSumSalesQuantity(){
+    	Map<Integer, Integer> productSumSalesQuantity = new HashMap<Integer, Integer>();
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("select productId, Sum(quantity) as SalesQuantity from purchase_details Group by productId;");
+            while (rs.next()) {
+            	productSumSalesQuantity.put(rs.getInt(1), rs.getInt(2));
+            }
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+        return productSumSalesQuantity;	
+    	
+    }
+    @Override
+    public Map<Integer, Double> fetchAllProductAvgRatings(){
+    	Map<Integer, Double> productAvgRatings = new HashMap<Integer, Double>();
+        try {
+        	List<Product> products = fetchAllProducts();
+        	for (Product p : products) {
+            	productAvgRatings.put(p.getId(), calculateAvgProductRating(p.getId()));
+            }
+        } catch (Exception ex) {
+            System.out.println("Exception Occurred: " + ex.getMessage());
+        }
+        return productAvgRatings;
+    }
 
 }
 

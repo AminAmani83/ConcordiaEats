@@ -3,18 +3,31 @@ package ca.concordia.eats.dto;
 import java.util.*;
 
 public class Recommendation {
-  
-    private List<Product> customerSearchedProducts;
-  
-    public Recommendation() {
-        this.customerSearchedProducts = new ArrayList<Product>();
-    }
-      
-    public List<Product> getCustomerSearchedProducts() {
-        return new ArrayList(customerSearchedProducts);
+    private Product recommendendedProduct;
+    private Product highestRatingProduct;
+    private Product bestSellerProduct;
+
+    
+    public Product getHighestRatingProduct() {
+        return highestRatingProduct;
     }
 
-    public void setCustomerSearchedProducts(List<Product> customerSearchedProducts) {
-        this.customerSearchedProducts = (customerSearchedProducts == null) ? new ArrayList<Product>() : new ArrayList<Product>(customerSearchedProducts);
+    public void setHighestRatingProduct(Product highestRatingProduct) {
+        this.highestRatingProduct = highestRatingProduct;
+    }
+  
+    public Product getRecommendendedProduct() {
+        return recommendendedProduct;
+    }
+
+    public void setRecommendendedProduct(Product recommendendedProduct) {
+        this.recommendendedProduct = recommendendedProduct;
+    }
+    public Product getBestSellerProduct() {
+        return bestSellerProduct;
+    }
+
+    public void setBestSellerProduct(Product bestSellerProduct) {
+        this.bestSellerProduct = bestSellerProduct;
     }
 }

@@ -4,6 +4,7 @@
 <head>
     <%@include file="common/bootstrap.jsp" %>
     <title>Shopping Cart</title>
+    <title>Shopping Card</title>
 </head>
 <body>
 <section class="wrapper">
@@ -73,6 +74,7 @@
 	<b>Taxes:</b> $ ${tax} CAD<br>
 	<b>Delivery:</b> $ ${delivery} CAD<br>
 	<b>GrandTotal:</b> $ ${total + tax + delivery} CAD<br><br>
+    <b>Total:</b> ${total} $
 
 <form action="../../../checkout" method="get">
 	<c:if test="${not empty allProducts}">
@@ -87,6 +89,7 @@
 </div>
     <%@include file="common/footer.jsp" %>
 </div>
+    </div>
 </section>
 
 </body>
