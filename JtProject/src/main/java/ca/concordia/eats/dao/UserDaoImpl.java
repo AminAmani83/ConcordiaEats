@@ -6,6 +6,7 @@ import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.UserCredentials;
 import ca.concordia.eats.utils.ConnectionUtil;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -18,7 +19,8 @@ import javax.servlet.http.HttpSession;
 
 @Repository
 public class UserDaoImpl implements UserDao {
-
+	
+	@Autowired
     private ProductDao productDao;
     private Connection con;
 
@@ -334,14 +336,12 @@ public class UserDaoImpl implements UserDao {
 		List<Product> products = productDao.fetchAllProducts();
 		List<Product>  searchedProducts = new ArrayList<>();
         try {
+        	PreparedStatement statement = con.prepareStatement("SELECT * FROM search_history WHERE userId = ?;");
+        	statement.setInt(1,customer.getUserId());
             // Create a statement
-            String query = "SELECT * FROM search_history WHERE userId = ?";
-            PreparedStatement statement = con.prepareStatement(query);
-            statement.setInt(1, customer.getUserId());
+        	ResultSet resultSet = statement.executeQuery();
             
             
-            // Execute the query and get the result set
-            ResultSet resultSet = statement.executeQuery(query);
             
             // Create a HashMap to hold the search phrases and their counts
             

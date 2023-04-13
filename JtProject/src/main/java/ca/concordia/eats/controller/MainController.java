@@ -108,33 +108,7 @@ public class MainController {
 			} 
 			return "redirect:/" + sourcePage;
 			}
-    @GetMapping("/recommended")
-    public String fetchPersonalizedRecommendatedProductsBasedSearchPatternByCustomer(HttpSession session, Model model) {
-        if (session.getAttribute("rating") == null) return "userLogin";
-        Customer customer = (Customer) session.getAttribute("user");
-        Product recommendedProduct= recommendationService.fetchPersonalizedRecommendedProductByCustomer(customer);
-        Recommendation recommendation = null;
-        recommendation.setRecommendendedProduct(recommendedProduct);
-        model.addAttribute("recommendedProduct", recommendation.getRecommendendedProduct());
-        return "/recommendedProduct";
-    }
-    @GetMapping("/best-seller")
-    public String fetchBestSellerProduct(HttpSession session, Model model) {
-        if (session.getAttribute("user") == null) return "userLogin";
-        Product bestSellerProduct= recommendationService.fetchBestSellerProduct();
-        Recommendation recommendation = null;
-        recommendation.setRecommendendedProduct(bestSellerProduct);
-        model.addAttribute("bestSellerProduct", recommendation.getBestSellerProduct());
-        return "/bestSellerProduct";
-    }
-    @GetMapping("/highest-rating")
-    public String fetchHighestRatingProduct(HttpSession session, Model model) {
-        if (session.getAttribute("user") == null) return "userLogin";
-        Product highestRatingProduct= recommendationService.fetchHighestRatingProduct();
-        Recommendation recommendation = null;
-        recommendation.setHighestRatingProduct(highestRatingProduct);
-        model.addAttribute("highestRatedProduct", recommendation.getHighestRatingProduct());
-        return "/highestRatedProduct";
 
-    }
+
+
 }

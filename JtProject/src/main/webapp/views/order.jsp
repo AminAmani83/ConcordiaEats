@@ -88,7 +88,6 @@
 
 </div>
     <%@include file="common/footer.jsp" %>
-<<<<<<< HEAD
 </div>
     </div>
 </section>

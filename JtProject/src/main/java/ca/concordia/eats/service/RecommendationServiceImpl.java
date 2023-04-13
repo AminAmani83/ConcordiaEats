@@ -28,12 +28,13 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     @Autowired
     private UserDao userDao;
+    @Autowired
     private ProductDao productDao;
     
 
 	@Override
 	public List<Product> fetchPersonalizedRecommendedProductsByCustomer(Customer customer) {
-		   List<Product> topSearchedProducts = null;
+		   List<Product> topSearchedProducts = new ArrayList<>();
 	       Map<Integer, Integer> searchCountMap =  fetchMostSearchedProductsByCustomer(customer);
 		   List<Map.Entry<Integer, Integer>> sortedResults = new ArrayList<>(searchCountMap.entrySet());
 	       sortedResults.sort(Map.Entry.comparingByValue(Collections.reverseOrder()));

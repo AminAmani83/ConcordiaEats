@@ -517,7 +517,7 @@ public class ProductDaoImpl implements ProductDao {
     	Map<Integer, Integer> productSumSalesQuantity = new HashMap<Integer, Integer>();
         try {
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select productId, Sum(quantity) as SalesQuantity from purchase_details where Group by productId;");
+            ResultSet rs = stmt.executeQuery("select productId, Sum(quantity) as SalesQuantity from purchase_details Group by productId;");
             while (rs.next()) {
             	productSumSalesQuantity.put(rs.getInt(1), rs.getInt(2));
             }
