@@ -48,8 +48,6 @@ public class RecommendationServiceImpl implements RecommendationService {
 	public  Map<Integer, Integer> fetchMostSearchedProductsByCustomer(Customer customer){
 	   List<Product> searchedProducts = userDao.fetchCustomerSearchedProduct(customer);
        Map<Integer, Integer> searchCountMap = new HashMap<>();
-
-
        for (Product p : searchedProducts) {
            if (searchCountMap.containsKey(p.getId())) {
                searchCountMap.put(p.getId(), searchCountMap.get(p.getId()) + 1);
@@ -57,62 +55,49 @@ public class RecommendationServiceImpl implements RecommendationService {
                searchCountMap.put(p.getId(), 1);
            }
        }
-       
-      
        return searchCountMap;
 	}
 
 	@Override
 	public List<Product> fetchHighestRatingProducts() {
-		List<Product> HighestRatingProducts=new ArrayList<>();
-		Map<Integer, Double> AllProductAvgRatings= productDao.fetchAllProductAvgRatings();
-		List<Map.Entry<Integer, Double>> sortedResults = new ArrayList<>(AllProductAvgRatings.entrySet());
+		List<Product> highestRatingProducts=new ArrayList<>();
+		Map<Integer, Double> allProductAvgRatings= productDao.fetchAllProductAvgRatings();
+		List<Map.Entry<Integer, Double>> sortedResults = new ArrayList<>(allProductAvgRatings.entrySet());
 		sortedResults.sort(Map.Entry.comparingByValue(Collections.reverseOrder()));
-	       for (int i = 0;  i < sortedResults.size(); i++) {
-	    	   HighestRatingProducts.add(productDao.fetchProductById(sortedResults.get(i).getKey()));
-	       }
-		return HighestRatingProducts;
+		for (Map.Entry<Integer, Double> sortedResult : sortedResults) {
+			highestRatingProducts.add(productDao.fetchProductById(sortedResult.getKey()));
+		}
+		return highestRatingProducts;
 	}
 
 	@Override
 	public List<Product> fetchBestSellerProducts() {
-		List<Product> BestSellerProducts=new ArrayList<>();
-		Map<Integer, Integer> AllProductSumSalesQuantity= productDao.fetchAllProductSumSalesQuantity();
-		List<Map.Entry<Integer, Integer>> sortedResults = new ArrayList<>(AllProductSumSalesQuantity.entrySet());
+		List<Product> bestSellerProducts=new ArrayList<>();
+		Map<Integer, Integer> allProductSumSalesQuantity= productDao.fetchAllProductSumSalesQuantity();
+		List<Map.Entry<Integer, Integer>> sortedResults = new ArrayList<>(allProductSumSalesQuantity.entrySet());
 		sortedResults.sort(Map.Entry.comparingByValue(Collections.reverseOrder()));
-	       for (int i = 0;  i < sortedResults.size(); i++) {
-	    	   BestSellerProducts.add(productDao.fetchProductById(sortedResults.get(i).getKey()));
-	       }
-	       return BestSellerProducts;
+		for (Map.Entry<Integer, Integer> sortedResult : sortedResults) {
+			bestSellerProducts.add(productDao.fetchProductById(sortedResult.getKey()));
+		}
+		return bestSellerProducts;
 	    
 	}
 
 	@Override
 	public Product fetchHighestRatingProduct() {
-		Product HighestRatingProduct;
-		List<Product> HighestRatingProducts=fetchHighestRatingProducts();
-		HighestRatingProduct = HighestRatingProducts.get(0);
-		return HighestRatingProduct;
+		List<Product> highestRatingProducts = fetchHighestRatingProducts();
+		return highestRatingProducts.isEmpty() ? null : highestRatingProducts.get(0);
 	}
 
 	@Override
 	public Product fetchBestSellerProduct() {
-		Product BestSellerProduct;
-		List<Product> BestSellerProducts=fetchBestSellerProducts();
-		BestSellerProduct = BestSellerProducts.get(0);
-		return BestSellerProduct;
+		List<Product> bestSellerProducts = fetchBestSellerProducts();
+		return bestSellerProducts.isEmpty() ? null : bestSellerProducts.get(0);
 	}
 
 	@Override
 	public Product fetchPersonalizedRecommendedProductByCustomer(Customer customer) {
-		Product PersonalizedRecommendatedProduct;
-		List<Product> PersonalizedRecommendatedProducts=fetchPersonalizedRecommendedProductsByCustomer(customer);
-		PersonalizedRecommendatedProduct = PersonalizedRecommendatedProducts.get(0);
-		return PersonalizedRecommendatedProduct;		
+		List<Product> customerRecommendedProducts = fetchPersonalizedRecommendedProductsByCustomer(customer);
+		return customerRecommendedProducts.isEmpty() ? null : customerRecommendedProducts.get(0);
 	}
-
-
-
-
-
 }
