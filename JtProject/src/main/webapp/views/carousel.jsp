@@ -172,8 +172,8 @@
                         <div class="container text-center">
                             <div class="row">
                                 <div class="col-sm-6 image">
-                                    <img class="img-fluid" src="${bestSellerProduct.imagePath}"
-                                         alt="${bestSellerProduct.name}">
+                                    <img class="img-fluid" src="${highestRatedProduct.imagePath}"
+                                         alt="${highestRatedProduct.name}">
                                     <p class="carousel-caption" style="font-size: 1.2em">Our Highest Rated and Recommended for You!</p>
                                 </div>
                                 <div class="col-sm-6">
