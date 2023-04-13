@@ -22,25 +22,25 @@
             border-radius: 50%;
         }
     </style>
-
-
+				<c:set var="isBestSellerProductNotNull" value="${bestSellerProduct.id != null}" />
+	 			<c:set var="isHighestRatedProductNotNull" value="${highestRatedProduct.id != null}" />
+	 			<c:set var="isRecommendedProductNotNull" value="${recommendedProduct.id != null}" />
+                <c:set var="isBestSellerProductAndHighestRatedProductEqual" value="${bestSellerProduct.id == highestRatedProduct.id}" />
+				<c:set var="isBestSellerProductAndrecommendedProductEqual" value="${bestSellerProduct.id == recommendedProduct.id}" />
+				<c:set var="isRecommendedProductAndHighestRatedProductEqual" value="${highestRatedProduct.id == recommendedProduct.id}" />
+				<c:set var="isRecommendedProductAndHighestRatedProductAndBestSellerProductEqual" value="${isBestSellerProductAndHighestRatedProductEqual && isRecommendedProductAndHighestRatedProductEqual}" />
+<c:if test="${isBestSellerProductNotNull || isHighestRatedProductNotNull || isRecommendedProductNotNull}">	
 <div class="mt-5">
     <div class="container">
         <div class="row bg-light">
             <div id="sliderproduct" class="carousel slide " data-ride="carousel" data-interval="10000">
                 <div class="carousel-inner" role="listbox" data-interval="10000000">
-                <c:set var="isBestSellerProductNotNull" value="${bestSellerProduct != null}" />
-	 			<c:set var="isHighestRatedProductNotNull" value="${highestRatedProduct != null}" />
-	 			<c:set var="isRecommendedProductNotNull" value="${recommendedProduct != null}" />
-                <c:set var="isBestSellerProductAndHighestRatedProductEqual" value="${bestSellerProduct.id == highestRatedProduct.id}" />
-				<c:set var="isBestSellerProductAndrecommendedProductEqual" value="${bestSellerProduct.id == recommendedProduct.id}" />
-				<c:set var="isRecommendedProductAndHighestRatedProductEqual" value="${highestRatedProduct.id == recommendedProduct.id}" />
-				<c:set var="isRecommendedProductAndHighestRatedProductAndBestSellerProductEqual" value="${isBestSellerProductAndHighestRatedProductEqual && isRecommendedProductAndHighestRatedProductEqual}" />
+                
                 <c:choose>
                 
    					 <c:when test="${isBestSellerProductAndHighestRatedProductEqual}">
    							
-   					 
+					<c:if test="${isBestSellerProductNotNull && isHighestRatedProductNotNull}">
                     <div class="carousel-item active">
                         <div class="container text-center">
                             <div class="row">
@@ -68,8 +68,8 @@
                             </div><!--endrow-->
                         </div><!--endcontainer-->
                     </div><!--endcarousel-item-->
-                    
-                    
+					</c:if>   
+					<c:if test="${isRecommendedProductNotNull}">					                
                    	<div class="carousel-item">
                         <div class="container text-center">
                             <div class="row">
@@ -97,9 +97,12 @@
                             </div><!--endrow-->
                         </div><!--endcontainer-->
                     </div><!--endcarousel-item-->
+					</c:if>   
+
                       </c:when>
 					<c:when test="${isBestSellerProductAndrecommendedProductEqual}">  
 					   				
+				<c:if test="${isBestSellerProductNotNull && isRecommendedProductNotNull}">					                
 					
                   <div class="carousel-item active">
                         <div class="container text-center">
@@ -128,6 +131,9 @@
                             </div><!--endrow-->
                         </div><!--endcontainer-->
                     </div><!--endcarousel-item-->
+					</c:if>   
+				<c:if test="${isHighestRatedProductNotNull}">					                
+
                    	<div class="carousel-item">
                         <div class="container text-center">
                             <div class="row">
@@ -155,16 +161,20 @@
                             </div><!--endrow-->
                         </div><!--endcontainer-->
                     </div><!--endcarousel-item--> 
+                    					</c:if>   
+                    
                      </c:when>
+
                    	<c:when test="${isRecommendedProductAndHighestRatedProductEqual}">  
-                     
+				<c:if test="${isHighestRatedProductNotNull && isRecommendedProductNotNull}">					                
+
                   <div class="carousel-item active">
                         <div class="container text-center">
                             <div class="row">
                                 <div class="col-sm-6 image">
                                     <img class="img-fluid" src="${bestSellerProduct.imagePath}"
                                          alt="${bestSellerProduct.name}">
-                                    <p class="carousel-caption" style="font-size: 1.2em">Our Hight Rated and Recommended for You!</p>
+                                    <p class="carousel-caption" style="font-size: 1.2em">Our Highest Rated and Recommended for You!</p>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="details">
@@ -185,6 +195,9 @@
                             </div><!--endrow-->
                         </div><!--endcontainer-->
                     </div><!--endcarousel-item-->
+            					</c:if>   
+     				<c:if test="${isBestSellerProductNotNull}">					                
+            
                    	<div class="carousel-item">
                         <div class="container text-center">
                             <div class="row">
@@ -212,8 +225,12 @@
                             </div><!--endrow-->
                         </div><!--endcontainer-->
                     </div><!--endcarousel-item--> 
+                                                    					</c:if>   
+                    
                     </c:when>
+                    
                    <c:when test="${isRecommendedProductAndHighestRatedProductAndBestSellerProductEqual}">  
+                         				<c:if test="${isBestSellerProductNotNull && isHighestRatedProductNotNull && isRecommendedProductNotNull}">					                
                     
                   <div class="carousel-item active">
                         <div class="container text-center">
@@ -242,9 +259,13 @@
                             </div><!--endrow-->
                         </div><!--endcontainer-->
                     </div><!--endcarousel-item-->
+                   	            					</c:if>   
+                    
                    	                    </c:when>
                    	
     <c:otherwise>
+      				<c:if test="${isBestSellerProductNotNull}">					                
+    
                   <div class="carousel-item active">
                         <div class="container text-center">
                             <div class="row">
@@ -272,6 +293,9 @@
                             </div><!--endrow-->
                         </div><!--endcontainer-->
                     </div><!--endcarousel-item-->
+                    </c:if>
+                          				<c:if test="${isRecommendedProductNotNull}">					                
+                    
                    	<div class="carousel-item">
                         <div class="container text-center">
                             <div class="row">
@@ -299,6 +323,9 @@
                             </div><!--endrow-->
                         </div><!--endcontainer-->
                     </div><!--endcarousel-item--> 
+                    </c:if> 
+                        <c:if test="${isHighestRatedProductNotNull}">					                
+                    
                     <div class="carousel-item">
                         <div class="container text-center">
                             <div class="row">
@@ -326,7 +353,7 @@
                             </div><!--endrow-->
                         </div><!--endcontainer-->
                     </div><!--endcarousel-item-->
-
+</c:if>
                     
 				    </c:otherwise>
 </c:choose>
@@ -348,3 +375,4 @@
         </div><!--endcontainer-->
     </div><!--endbg-product-->
 </div>
+</c:if>
