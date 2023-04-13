@@ -1,3 +1,27 @@
+    <style>
+        .carousel-caption {
+            font-size: 1.2em;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 0.5rem;
+            border-radius: 5px;
+        }
+        .rating {
+            margin-bottom: 0.5rem;
+        }
+        .details {
+            padding: 1.5rem;
+        }
+        .carousel-control-prev-icon, .carousel-control-next-icon {
+            font-size: 2rem;
+            background-color: rgba(0, 0, 0, 0.5);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+    </style>
 <div class="mt-5">
     <div class="container">
         <div class="row bg-light">
@@ -87,11 +111,17 @@
                         </div><!--endcontainer-->
                     </div><!--endcarousel-item-->
 
-                    <a class="carousel-control-prev fa fa-angle-left" href="#sliderproduct" role="button"
+  
+                    
+                      <a class="carousel-control-prev" href="#sliderproduct" role="button"
                        data-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                        <span class="sr-only">Previous</span>
                     </a>
-                    <a class="carousel-control-next fa fa-angle-right" href="#sliderproduct" role="button"
+                    <a class="carousel-control-next" href="#sliderproduct" role="button"
                        data-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                        <span class="sr-only">Next</span>
                     </a>
                 </div><!--endslidesliderproduct-->
             </div><!--endrow-->
