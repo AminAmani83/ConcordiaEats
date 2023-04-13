@@ -3,9 +3,9 @@ package ca.concordia.eats.service;
 import ca.concordia.eats.dao.DAOException;
 import ca.concordia.eats.dao.ProductDao;
 import ca.concordia.eats.dao.PromotionDao;
+import ca.concordia.eats.dto.Basket;
 import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.Promotion;
-import ca.concordia.eats.dto.Purchase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,97 +70,47 @@ public class PromotionServiceImpl implements PromotionService {
     }
 
     @Override
-    public boolean applyPromotion(int promotionId) throws ServiceException {
+    public boolean applyAllCurrentPromotionsToBasket(Basket basket) throws ServiceException {
+        Date currentDate = new Date();
+        List<Product> allProducts = basket.getProductsInCart();
+
         try {
-            Promotion promotion = promotionDao.fetchPromotionById(promotionId);
-            String promotionType = promotion.getType();
-            Date currentDate = new Date();
+            List<Promotion> allPromotions = promotionDao.fetchAllPromotions();
+            for (Promotion promotion: allPromotions) {
+                if (!currentDate.after(promotion.getStartDate()) || !currentDate.before(promotion.getEndDate())){
+                    continue;
+                }
+                switch (promotion.getType()) {
+                    case "SITEWIDE_DISCOUNT_10":
+                        for (Product product : allProducts) {
+                            if (product.isOnSale()) continue;
+                            product.setPrice((float) (product.getPrice() * 0.9));
+                            product.setOnSale(true);
+                            System.out.println("SITEWIDE_DISCOUNT_10 applied");
+                        }
 
-            if (!currentDate.after(promotion.getStartDate()) || !currentDate.before(promotion.getEndDate())){
-                return false;
+                        break;
+                    case "SITEWIDE_DISCOUNT_20":
+                        for (Product product : allProducts) {
+                            if (product.isOnSale()) continue;
+                            product.setPrice((float) (product.getPrice() * 0.8));
+                            product.setOnSale(true);
+                            System.out.println("SITEWIDE_DISCOUNT_20 applied");
+                        }
+                        break;
+
+                    default:
+                        System.out.println("Invalid Promotion");
+                        break;
+                }
             }
 
-            switch (promotionType) {
-                case "SITEWIDE_DISCOUNT_10":
-                    applySiteWideDiscount(10);
-                    break;
-                case "SITEWIDE_DISCOUNT_20":
-                    applyPurchaseDiscount(20);
-                    break;
-                default:
-                    System.out.println("Invalid Promotion");
-                    break;
-            }
         } catch (DAOException e) {
             throw new ServiceException("Error applying promotion", e);
         }
 
         return true;
     }
-
-    @Override
-    public void applySiteWideDiscount(float discountPercentage) {
-        List<Product> allProducts;
-        allProducts = productDao.fetchAllProducts();
-        for (Product product : allProducts) {
-            product.setDiscountPercent(discountPercentage);
-            product.setOnSale(true);
-            productDao.updateProduct(product);
-        }
-    }
-
-    @Override
-    public void applyPurchaseDiscount(float discountPercentage) {
-        List<Purchase> allPurchases;
-        allPurchases = promotionDao.fetchAllPurchases();
-        for (Purchase purchase : allPurchases) {
-            purchase.setDiscountPercent(discountPercentage);
-            purchase.setOnSale(true);
-            promotionDao.updatePurchase(purchase);
-        }
-
-    }
-
-    @Override
-    public boolean removePromotionFromPurchases() throws ServiceException {
-        try {
-            return promotionDao.removePromotionFromPurchases();
-        } catch (DAOException e) {
-            throw new ServiceException("Error deleting promotion", e);
-        }
-    }
-
-    @Override
-    public boolean removePromotionFromProducts() throws ServiceException {
-        try {
-            return promotionDao.removePromotionFromAllProducts();
-        } catch (DAOException e) {
-            throw new ServiceException("Error deleting promotion", e);
-        }
-    }
-
-    @Override
-    public boolean removePromotionAndItsEffects(int promotionId) throws ServiceException {
-        try {
-            Promotion promotion = promotionDao.fetchPromotionById(promotionId);
-            switch (promotion.getType()) {
-                case "SITEWIDE_DISCOUNT_10":
-                    promotionDao.removePromotionFromAllProducts();
-                    break;
-                case "SITEWIDE_DISCOUNT_20":
-                    promotionDao.removePromotionFromPurchases();
-                    break;
-                default:
-                    System.out.println("Invalid Promotion");
-                    break;
-            }
-            removePromotionById(promotionId);
-        } catch (DAOException e) {
-            throw new ServiceException("Error deleting promotion", e);
-        }
-        return true;
-    }
-
 
 }
 

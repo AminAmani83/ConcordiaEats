@@ -117,8 +117,6 @@ public class PromotionDaoImpl implements PromotionDao {
 
     @Override
     public boolean removePromotion(int promotionId) throws DAOException {
-        removePromotionFromPurchases();
-        removePromotionFromAllProducts();
         String sql = "DELETE FROM promotion WHERE promotion.id = ?";
         try (PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setInt(1, promotionId);
@@ -147,98 +145,5 @@ public class PromotionDaoImpl implements PromotionDao {
         promotion.setType(rs.getString(5));
         return promotion;
     }
-
-    @Override
-    public boolean removePromotionFromPurchases() {
-        String sql = "UPDATE purchase" +
-                " JOIN purchase_details ON purchase.id = purchase_details.purchaseId" +
-                " SET purchase_details.isOnSale = 0, purchase_details.discountPercent = NULL" +
-                " WHERE purchase.id = ?";
-        try (PreparedStatement stmt = con.prepareStatement(sql)) {
-            List<Purchase> allPurchases = fetchAllPurchases();
-            for (Purchase purchase: allPurchases) {
-                stmt.setInt(1, purchase.getPurchaseId());
-                stmt.executeUpdate();
-            }
-        } catch (SQLException | DAOException e) {
-            throw new DAOException("Error removing promotion from purchase.", e);
-        }
-        return true;
-    }
-
-    @Override
-    public boolean removePromotionFromAllProducts() {
-        String sql = "UPDATE product" +
-                " JOIN product_has_promotion ON product_has_promotion.product_id = product.id" +
-                " JOIN promotion ON product_has_promotion.promotion_id = promotion.id" +
-                " SET product.isOnSale = 0, product.discountPercent = NULL" +
-                " WHERE product.id = ?";
-        try (PreparedStatement stmt = con.prepareStatement(sql)) {
-            List<Product> allProducts = productDao.fetchAllProducts();
-            for (Product product: allProducts) {
-                stmt.setInt(1, product.getId());
-                stmt.executeUpdate();
-            }
-        } catch (SQLException | DAOException e) {
-            throw new DAOException("Error removing promotion from product.", e);
-        }
-        return true;
-    }
-
-    public List<Purchase> fetchAllPurchases() {
-        String sql = "SELECT purchase.id, purchase.timeStamp, purchase.total_price, " +
-                " purchase_details.id, purchase_details.quantity, purchase_details.price," +
-                " purchase_details.isOnSale, purchase_details.discountPercent" +
-                " FROM purchase" +
-                " JOIN purchase_details ON purchase_details.purchaseId = purchase.id";
-        List<Purchase> allPurchases = new ArrayList<>();
-        try {
-            PreparedStatement stmt = con.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                Purchase purchase = new Purchase();
-                purchase.setPurchaseId(rs.getInt(1));
-                purchase.setTimeStamp(rs.getTimestamp(2));
-                purchase.setTotalPrice(rs.getFloat(3));
-                purchase.setPurchaseDetailsId(rs.getInt(4));
-                purchase.setQuantity(rs.getInt(5));
-                purchase.setPrice(rs.getFloat(6));
-                purchase.setOnSale(rs.getBoolean(7));
-                purchase.setDiscountPercent(rs.getFloat(8));
-
-                allPurchases.add(purchase);
-            }
-        } catch (SQLException e) {
-            throw new DAOException("Error fetching all purchases", e);
-        }
-        return allPurchases;
-    }
-
-    @Override
-    public Purchase updatePurchase(Purchase purchase) {
-        String sql = "UPDATE purchase" +
-                " JOIN purchase_details ON purchase_details.purchaseId = purchase.id" +
-                " SET purchase.timeStamp = ?, purchase.total_price = ?, purchase_details.quantity = ? ," +
-                " purchase_details.price = ?, purchase_details.isOnSale = ?, purchase_details.discountPercent = ?" +
-                " WHERE purchase.id = ?";
-        try (PreparedStatement stmt = con.prepareStatement(sql)) {
-            stmt.setObject(1, purchase.getTimeStamp());
-            stmt.setFloat(2, purchase.getTotalPrice());
-            stmt.setInt(3, purchase.getQuantity());
-            stmt.setFloat(4, purchase.getPrice());
-            stmt.setBoolean(5, purchase.isOnSale());
-            stmt.setFloat(6, purchase.getDiscountPercent());
-            stmt.setInt(7, purchase.getPurchaseId());
-
-            int rowsAffected = stmt.executeUpdate();
-            if (rowsAffected == 0) {
-                throw new DAOException("Updating purchase failed, no rows affected.");
-            }
-        } catch (SQLException | DAOException e) {
-            throw new DAOException("Error updating purchase.", e);
-        }
-        return purchase;
-    }
-
 
 }

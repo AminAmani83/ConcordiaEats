@@ -58,9 +58,10 @@
     </table>
     <b>Total:</b> ${total} $
 
-<form action="../../../checkout" method="get">
-                        <input type="submit" value="Checkout" class="btn btn-danger">
-</form>
+    <form action="../../../checkout" method="get">
+        <input type="submit" value="Checkout" class="btn btn-danger">
+    </form>
+
 
 </div>
     <%@include file="common/footer.jsp" %>

@@ -18,6 +18,7 @@ public class Basket {
     public Basket() {
     }
 
+
     public Basket(int basketId, float totalPrice, List<Product> lineItems) {
         this.basketId = basketId;
         this.totalPrice = totalPrice;

@@ -334,12 +334,12 @@ public class AdminController {
 	@GetMapping("/admin/promotions/delete")
 	public String removePromotion(@RequestParam("id") int promotionId, Model model) {
 		try {
-			promotionService.removePromotionAndItsEffects(promotionId);
+			promotionService.removePromotionById(promotionId);
 			return "redirect:/admin/promotions";
 		} catch (ServiceException e) {
 			e.printStackTrace();
 			model.addAttribute("errorMessage", "An error occurred while deleting the promotion");
-			return "error";
+			return "redirect:/admin/promotions?msg=removalError";
 		}
 	}
 
@@ -364,27 +364,6 @@ public class AdminController {
 			return "error";
 		}
 	}
-
-
-	@GetMapping("/admin/promotions/apply")
-	public String applyPromotion(@RequestParam("promoId") int id,
-								  Model model) {
-		try {
-			boolean applicationWasSuccessful = promotionService.applyPromotion(id);
-			if (!applicationWasSuccessful) {
-				return "error";
-			}
-			return "redirect:/admin/promotions?msg=applicationSuccess";
-		} catch (ServiceException e) {
-			e.printStackTrace();
-			model.addAttribute("errorMessage", "An error occurred while applying the promotion");
-			return "error";
-		}
-	}
-
-
-
-
 
 
 }

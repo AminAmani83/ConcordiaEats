@@ -66,7 +66,6 @@
             <th scope="col">Type</th>
             <th scope="col">Delete</th>
             <th scope="col">Update</th>
-            <th scope="col">Apply</th>
         </tr>
         </thead>
         <tbody>
@@ -164,13 +163,6 @@
                     </form>
                 </td>
 
-                <td>
-                    <form action="promotions/apply" method="get">
-                        <input type="hidden" name="promoId" value="<c:out value="${promotion.id}" />">
-                        <input type="submit" value="apply" class="btn btn-success">
-                    </form>
-                </td>
-
             </tr>
         </c:forEach>
         </tbody>
@@ -196,8 +188,9 @@
 <script>
     $(document).ready(function(){
         const pageUrl = new URL(window.location.toLocaleString());
-        if (pageUrl.searchParams.get('msg') === 'applicationSuccess') {
-            $('.toast .toast-body').html('Promotion Applied successfully.');
+        if (pageUrl.searchParams.get('msg') === 'removalError') {
+            $('.toast .toast-body').html('You cannot delete this promotion because it exists in purchase records' +
+                'for record-keeping.');
             $('.toast').toast('show');
         }
     });

@@ -6,8 +6,8 @@ ALTER TABLE `springproject`.`promotion` AUTO_INCREMENT = 1;
 
 INSERT INTO `springproject`.`promotion` (`name`, `startDate`, `endDate`, `type`) 
 VALUES 
-('Chrismas Sale', '2023-04-01', '2023-07-15', '10% Site-wide Discount'),
-('Easter Sale', '2023-04-01', '2023-07-15', '10% purchase Discount'),
+('Chrismas Sale', '2023-04-01', '2023-07-15', 'SITEWIDE_DISCOUNT_10'),
+('Easter Sale', '2023-04-01', '2023-07-15', 'SITEWIDE_DISCOUNT_20'),
 ('New Customer Promotion', '2023-06-01', '2023-06-30', 'Free Shipping'),
 ('Black Friday','2023-07-01', '2023-07-15', 'Buy One Get One Free');
 
