@@ -49,7 +49,7 @@
                     <c:out value="${product.price}"/>
                 </td>
                 <td>
-                    <c:out value="${(empty product.discountPercent ? 1:product.discountPercent)*100}%"/>
+                    <c:out value="${empty product.discountPercent ? '100%':product.printedDiscountPercent}"/>
                 </td>
                 <td>
                     <c:out value="${product.description}"/>
