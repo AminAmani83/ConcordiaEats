@@ -84,8 +84,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void removeFavorite(int customerId, int productId) {
-        productDao.removeFavorite(customerId, productId);
+    public boolean removeFavorite(int customerId, int productId) {
+        return productDao.removeFavorite(customerId, productId);
     }
 
     @Override

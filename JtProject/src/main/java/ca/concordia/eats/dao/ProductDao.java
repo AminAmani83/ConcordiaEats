@@ -26,7 +26,7 @@ public interface ProductDao {
 
     // OTHER : FAVORITE
     public void makeFavorite(int customerId, int productId);
-    public void removeFavorite(int customerId, int productId);
+    public boolean removeFavorite(int customerId, int productId);
     public List<Integer> fetchCustomerFavoriteProductIds(int customerId);
     public void removeAllFavoritesByCustomerId(int customerId);                         
 

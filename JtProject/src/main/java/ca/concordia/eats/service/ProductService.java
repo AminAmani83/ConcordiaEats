@@ -27,7 +27,7 @@ public interface ProductService {
 
     // OTHER : FAVORITE
     public void makeFavorite(int customerId, int productId);
-    public void removeFavorite(int customerId, int productId);
+    public boolean removeFavorite(int customerId, int productId);
     public List<Product> fetchCustomerFavoriteProducts(int customerId);
     public List<Product> search(String query, int userId);
 

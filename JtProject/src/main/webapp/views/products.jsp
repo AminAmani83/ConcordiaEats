@@ -21,10 +21,10 @@
             <th scope="col">Preview</th>
             <th scope="col" onclick="sortTable(0)">Unit Sold </b> <i class="fa fa-fw fa-sort"></i></th>
             <th scope="col">Price</th>
-            <th scope="col">Discount Price</th>
+            <th scope="col">Discount</th>
             <th scope="col">Description</th>
             <th scope="col">On Sales</th>
-            <th scope="col">Delete</th>
+            <th scope="col">Disable</th>
             <th scope="col">Update</th>
         </tr>
         <tbody>
@@ -60,7 +60,7 @@
                 <td>
                     <form action="products/delete" method="get">
                         <input type="hidden" name="id" value="${product.id}">
-                        <input type="submit" value="Delete" class="btn btn-danger">
+                        <input type="submit" value="Disable" class="btn btn-danger">
                     </form>
                 </td>
                 <td>
@@ -74,7 +74,7 @@
         </tbody>
     </table>
 </div>
-
+<script>
 function sortTable(n) {
   var table, rows, swapPosition, i, x, y, shouldSwitch, direction, switchcount = 0;
   table = document.getElementById("sortedTable");

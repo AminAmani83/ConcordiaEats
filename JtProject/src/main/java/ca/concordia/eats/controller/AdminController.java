@@ -7,11 +7,9 @@ import ca.concordia.eats.service.UserService;
 import ca.concordia.eats.service.ProductService;
 import ca.concordia.eats.service.RecommendationService;
 import ca.concordia.eats.utils.ConnectionUtil;
-import ca.concordia.eats.utils.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +17,8 @@ import java.io.IOException;
 import javax.servlet.http.HttpSession;
 import java.sql.*;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 
@@ -65,27 +65,14 @@ public class AdminController {
 		} else {
 			List<Product> allProducts = productService.fetchAllProducts();
 			Customer customer = (Customer) session.getAttribute("user");
-	
-	        Product recommendedProduct= recommendationService.fetchPersonalizedRecommendedProductByCustomer(customer);
-	        Recommendation recommendation = new Recommendation();
-	        recommendation.setRecommendendedProduct(recommendedProduct);
-	        model.addAttribute("recommendedProduct", recommendation.getRecommendendedProduct());
+			refreshRecommendedProducts(customer, allProducts);
 
-	        Product bestSellerProduct= recommendationService.fetchBestSellerProduct();
-	        recommendation.setRecommendendedProduct(bestSellerProduct);
-	        model.addAttribute("bestSellerProduct", recommendation.getBestSellerProduct());
-	        
-	        Product highestRatedProduct= recommendationService.fetchHighestRatingProduct();
-	        recommendation.setHighestRatingProduct(highestRatedProduct);
-	        model.addAttribute("highestRatedProduct", recommendation.getHighestRatingProduct());
-	        
-	       customer.setRecommendation(recommendation);
-	        
+			model.addAttribute("recommendedProduct", customer.getRecommendation().getRecommendedProduct());
+	        model.addAttribute("bestSellerProduct", customer.getRecommendation().getBestSellerProduct());
+	        model.addAttribute("highestRatedProduct", customer.getRecommendation().getHighestRatingProduct());
+
 			model.addAttribute("username", usernameForClass);
 			model.addAttribute("allProducts", allProducts);
-			model.addAttribute("bestSellerProduct", bestSellerProduct);
-			model.addAttribute("highestRatedProduct", highestRatedProduct);
-			model.addAttribute("recommendedProduct", recommendedProduct);
 			model.addAttribute("favoriteProducts", customer.getFavorite().getCustomerFavoritedProducts());
 			model.addAttribute("purchasedProducts", productService.fetchPastPurchasedProducts(customer.getUserId()));
 			model.addAttribute("productCardFavSrc", "index");
@@ -94,9 +81,22 @@ public class AdminController {
 		}
 	}
 
+	private static void refreshRecommendedProducts(Customer customer, List<Product> allProducts) {
+		Map<Integer, Product> allProductsMap = allProducts.stream().collect(Collectors.toMap(Product::getId, item -> item));
+		Product recommendedProduct = customer.getRecommendation().getRecommendedProduct();
+		if (recommendedProduct != null) {
+			customer.getRecommendation().setRecommendedProduct(allProductsMap.get(recommendedProduct.getId()));
+		}
+		Product bestSellerProduct = customer.getRecommendation().getBestSellerProduct();
+		if (bestSellerProduct != null) {
+			customer.getRecommendation().setBestSellerProduct(allProductsMap.get(bestSellerProduct.getId()));
+		}
+		Product highestRatingProduct = customer.getRecommendation().getHighestRatingProduct();
+		customer.getRecommendation().setHighestRatingProduct(allProductsMap.get(highestRatingProduct.getId()));
+	}
+
 	@GetMapping("/userloginvalidate")
 	public String userLogin(Model model) {
-		
 		return "userLogin";
 	}
 
@@ -112,10 +112,16 @@ public class AdminController {
 				Basket basket = new Basket();
 				usernameForClass = username;
 				Customer customer = userService.fetchCustomerData(userCredentials);
-				Favorite customerFavorite = new Favorite(productService.fetchCustomerFavoriteProducts(customer.getUserId()));
-				customer.setFavorite(customerFavorite);
+				customer.setFavorite(new Favorite(productService.fetchCustomerFavoriteProducts(customer.getUserId())));
+
+				Recommendation recommendation = new Recommendation();
+				recommendation.setBestSellerProduct(recommendationService.fetchBestSellerProduct());
+				recommendation.setRecommendedProduct(recommendationService.fetchPersonalizedRecommendedProductByCustomer(customer));
+				recommendation.setHighestRatingProduct(recommendationService.fetchHighestRatingProduct());
+				customer.setRecommendation(recommendation);
+
 				session.setAttribute("user", customer);
-        		session.setAttribute("basket", basket);
+				session.setAttribute("basket", basket);
 
 				return "redirect:/index";
 			} else {
@@ -228,17 +234,18 @@ public class AdminController {
 	{
 		Category category = productService.fetchCategoryById(categoryId);
 		product.setCategory(category);
-		String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+//		String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+		String fileName = "";
 		product.setImagePath(fileName);
 		productService.updateProduct(product);
-		String uploadDir = "/resources/Product Images/";
-		 
-        try {
-			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new RuntimeException("upload file failed", e);
-		}
+//		String uploadDir = "/resources/Product Images/";
+//		 
+//        try {
+//			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//			throw new RuntimeException("upload file failed", e);
+//		}
 		return "redirect:/admin/products";
 	}
 	
