@@ -34,6 +34,8 @@
                 </form>
 
                 <script>
+                    $('select').selectpicker();
+
                     const pageUrl = new URL(window.location.toLocaleString());
                     const selectedCategories = pageUrl.searchParams.getAll('category-filter[]')
 
