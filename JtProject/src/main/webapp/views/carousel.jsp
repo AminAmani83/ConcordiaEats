@@ -57,12 +57,9 @@
                                 <div class="col-sm-6">
                                     <div class="details">
                                         <h2>${bestSellerProduct.name}</h2>
-                                        <div class="rating">
-                                            <!-- Filled stars -->
-                                            <c:forEach var="i" begin="1" end="${bestSellerProduct.rating}">
-                                                <i class="fa fa-star text-warning"></i>
-                                            </c:forEach>
-                                        </div>
+                                        <c:set var="thisProduct" value="${bestSellerProduct}" />
+                                        <%@include file="common/starsRating.jsp" %>
+                                        <%@include file="common/rateAction.jsp" %>
                                         <p>$${bestSellerProduct.price}</p>
                                         <p>${bestSellerProduct.description}</p>
                                         <form action="order/add/${bestSellerProduct.id}" method="get">
@@ -86,12 +83,9 @@
                                 <div class="col-sm-6">
                                     <div class="details">
                                         <h2>${recommendedProduct.name}</h2>
-                                        <div class="rating">
-                                            <!-- Filled stars -->
-                                            <c:forEach var="i" begin="1" end="${recommendedProduct.rating}">
-                                                <i class="fa fa-star text-warning"></i>
-                                            </c:forEach>
-                                        </div>
+                                        <c:set var="thisProduct" value="${recommendedProduct}" />
+                                        <%@include file="common/starsRating.jsp" %>
+                                        <%@include file="common/rateAction.jsp" %>
                                         <p>$${recommendedProduct.price}</p>
                                         <p>${recommendedProduct.description}</p>
                                         <form action="order/add/${recommendedProduct.id}" method="get">
@@ -120,12 +114,9 @@
                                 <div class="col-sm-6">
                                     <div class="details">
                                         <h2>${bestSellerProduct.name}</h2>
-                                        <div class="rating">
-                                            <!-- Filled stars -->
-                                            <c:forEach var="i" begin="1" end="${bestSellerProduct.rating}">
-                                                <i class="fa fa-star text-warning"></i>
-                                            </c:forEach>
-                                        </div>
+                                        <c:set var="thisProduct" value="${bestSellerProduct}" />
+                                        <%@include file="common/starsRating.jsp" %>
+                                        <%@include file="common/rateAction.jsp" %>
                                         <p>$${bestSellerProduct.price}</p>
                                         <p>${bestSellerProduct.description}</p>
                                         <form action="order/add/${bestSellerProduct.id}" method="get">
@@ -150,12 +141,9 @@
                                 <div class="col-sm-6">
                                     <div class="details">
                                         <h2>${highestRatedProduct.name}</h2>
-                                        <div class="rating">
-                                            <!-- Filled stars -->
-                                            <c:forEach var="i" begin="1" end="${highestRatedProduct.rating}">
-                                                <i class="fa fa-star text-warning"></i>
-                                            </c:forEach>
-                                        </div>
+                                        <c:set var="thisProduct" value="${highestRatedProduct}" />
+                                        <%@include file="common/starsRating.jsp" %>
+                                        <%@include file="common/rateAction.jsp" %>
                                         <p>$${highestRatedProduct.price}</p>
                                         <p>${highestRatedProduct.description}</p>
                                         <form action="order/add/${highestRatedProduct.id}" method="get">
@@ -184,12 +172,9 @@
                                 <div class="col-sm-6">
                                     <div class="details">
                                         <h2>${highestRatedProduct.name}</h2>
-                                        <div class="rating">
-                                            <!-- Filled stars -->
-                                            <c:forEach var="i" begin="1" end="${highestRatedProduct.rating}">
-                                                <i class="fa fa-star text-warning"></i>
-                                            </c:forEach>
-                                        </div>
+                                        <c:set var="thisProduct" value="${highestRatedProduct}" />
+                                        <%@include file="common/starsRating.jsp" %>
+                                        <%@include file="common/rateAction.jsp" %>
                                         <p>$${highestRatedProduct.price}</p>
                                         <p>${highestRatedProduct.description}</p>
                                         <form action="order/add/${highestRatedProduct.id}" method="get">
@@ -214,12 +199,9 @@
                                 <div class="col-sm-6">
                                     <div class="details">
                                         <h2>${bestSellerProduct.name}</h2>
-                                        <div class="rating">
-                                            <!-- Filled stars -->
-                                            <c:forEach var="i" begin="1" end="${bestSellerProduct.rating}">
-                                                <i class="fa fa-star text-warning"></i>
-                                            </c:forEach>
-                                        </div>
+                                        <c:set var="thisProduct" value="${bestSellerProduct}" />
+                                        <%@include file="common/starsRating.jsp" %>
+                                        <%@include file="common/rateAction.jsp" %>
                                         <p>$${bestSellerProduct.price}</p>
                                         <p>${bestSellerProduct.description}</p>
                                         <form action="order/add/${bestSellerProduct.id}" method="get">
@@ -248,12 +230,9 @@
                                 <div class="col-sm-6">
                                     <div class="details">
                                         <h2>${bestSellerProduct.name}</h2>
-                                        <div class="rating">
-                                            <!-- Filled stars -->
-                                            <c:forEach var="i" begin="1" end="${bestSellerProduct.rating}">
-                                                <i class="fa fa-star text-warning"></i>
-                                            </c:forEach>
-                                        </div>
+                                        <c:set var="thisProduct" value="${bestSellerProduct}" />
+                                        <%@include file="common/starsRating.jsp" %>
+                                        <%@include file="common/rateAction.jsp" %>
                                         <p>$${bestSellerProduct.price}</p>
                                         <p>${bestSellerProduct.description}</p>
                                         <form action="order/add/${bestSellerProduct.id}" method="get">
@@ -282,12 +261,9 @@
                                 <div class="col-sm-6">
                                     <div class="details">
                                         <h2>${bestSellerProduct.name}</h2>
-                                        <div class="rating">
-                                            <!-- Filled stars -->
-                                            <c:forEach var="i" begin="1" end="${bestSellerProduct.rating}">
-                                                <i class="fa fa-star text-warning"></i>
-                                            </c:forEach>
-                                        </div>
+                                        <c:set var="thisProduct" value="${bestSellerProduct}" />
+                                        <%@include file="common/starsRating.jsp" %>
+                                        <%@include file="common/rateAction.jsp" %>
                                         <p>$${bestSellerProduct.price}</p>
                                         <p>${bestSellerProduct.description}</p>
                                         <form action="order/add/${bestSellerProduct.id}" method="get">
@@ -312,12 +288,9 @@
                                 <div class="col-sm-6">
                                     <div class="details">
                                         <h2>${recommendedProduct.name}</h2>
-                                        <div class="rating">
-                                            <!-- Filled stars -->
-                                            <c:forEach var="i" begin="1" end="${recommendedProduct.rating}">
-                                                <i class="fa fa-star text-warning"></i>
-                                            </c:forEach>
-                                        </div>
+                                        <c:set var="thisProduct" value="${recommendedProduct}" />
+                                        <%@include file="common/starsRating.jsp" %>
+                                        <%@include file="common/rateAction.jsp" %>
                                         <p>$${recommendedProduct.price}</p>
                                         <p>${recommendedProduct.description}</p>
                                         <form action="order/add/${recommendedProduct.id}" method="get">
@@ -342,12 +315,9 @@
                                 <div class="col-sm-6">
                                     <div class="details">
                                         <h2>${highestRatedProduct.name}</h2>
-                                        <div class="rating">
-                                            <!-- Filled stars -->
-                                            <c:forEach var="i" begin="1" end="${highestRatedProduct.rating}">
-                                                <i class="fa fa-star text-warning"></i>
-                                            </c:forEach>
-                                        </div>
+                                        <c:set var="thisProduct" value="${highestRatedProduct}" />
+                                        <%@include file="common/starsRating.jsp" %>
+                                        <%@include file="common/rateAction.jsp" %>
                                         <p>$${highestRatedProduct.price}</p>
                                         <p>${highestRatedProduct.description}</p>
                                         <form action="order/add/${highestRatedProduct.id}" method="get">
