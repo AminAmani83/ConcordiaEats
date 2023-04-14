@@ -53,7 +53,7 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public List<Product> fetchAllProducts() {
         return jdbcTemplate.query(
-                "select p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, r.avg_rating as rating, c.id as categoryId, c.name as categoryName from product p join category c on p.categoryid = c.id left join (select avg(rating) as avg_rating, productId from rating group by productId) r on r.productId = p.id order by p.id desc",
+                "select p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, r.avg_rating as rating, c.id as categoryId, c.name as categoryName from product p join category c on p.categoryid = c.id left join (select avg(rating) as avg_rating, productId from rating group by productId) r on r.productId = p.id where p.disable = 0 order by p.id desc",
                 (rs, rowNum) ->
                         new Product(
                                 rs.getInt("id"),
