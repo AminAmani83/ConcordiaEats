@@ -1,6 +1,8 @@
 package ca.concordia.eats.controller;
 
 import ca.concordia.eats.dto.*;
+import ca.concordia.eats.service.PromotionService;
+import ca.concordia.eats.service.ServiceException;
 import ca.concordia.eats.service.UserService;
 import ca.concordia.eats.service.ProductService;
 import ca.concordia.eats.service.RecommendationService;
@@ -23,6 +25,8 @@ public class AdminController {
 
 	@Autowired
 	ProductService productService;
+	@Autowired
+	PromotionService promotionService;
 
 	@Autowired
 	private UserService userService;
@@ -183,7 +187,7 @@ public class AdminController {
 		productService.createCategory(category);
 		return "redirect:/admin/categories";
 	}
-	
+
 	@GetMapping("/admin/categories/delete")
 	public String removeCategory(@RequestParam("id") int categoryId) {
 		boolean categoryRemoved = productService.removeCategoryById(categoryId);
@@ -193,7 +197,7 @@ public class AdminController {
 			return "redirect:/admin/categories?msg=removalError";
 		}
 	}
-	
+
 	@GetMapping("/admin/categories/update")
 	public String updateCategory(@RequestParam("categoryid") int categoryId, @RequestParam("categoryname") String categoryName) {
 		productService.updateCategory(new Category(categoryId, categoryName));
@@ -312,4 +316,80 @@ public class AdminController {
 
 		return "redirect:/admin/customers";
 	}
+
+
+	@GetMapping("/admin/promotions")
+	public String getAllPromotions(Model model) {
+		try {
+			List<Promotion> allPromotions = promotionService.getAllPromotions();
+			model.addAttribute("allPromotions", allPromotions);
+			return "promotions";
+		} catch (ServiceException e) {
+			e.printStackTrace();
+			model.addAttribute("errorMessage", "An error occurred while retrieving the promotions");
+			return "error";
+		}
+
+	}
+
+	@RequestMapping(value = "admin/create", method = RequestMethod.POST)
+	public String createPromotion(@RequestParam("name") String name,
+								  @RequestParam("promotionStartDate") Date startDate,
+								  @RequestParam("promotionEndDate") Date endDate,
+								  @RequestParam("promotionType") String promotionType,
+								  Model model) {
+		try {
+			Promotion promotion = new Promotion();
+			promotion.setStartDate(startDate);
+			promotion.setEndDate(endDate);
+			promotion.setName(name);
+			promotion.setType(promotionType);
+			promotionService.createPromotion(promotion);
+			return "redirect:/admin/promotions";
+		} catch (ServiceException e) {
+			e.printStackTrace();
+			model.addAttribute("errorMessage", "An error occurred while creating the promotion");
+			return "error";
+		}
+	}
+
+	@GetMapping("/admin/promotions/delete")
+	public String removePromotion(@RequestParam("id") int promotionId, Model model) {
+		try {
+			boolean promotionRemoved = promotionService.removePromotionById(promotionId);
+			if (promotionRemoved) {
+				return "redirect:/admin/promotions";
+			} else {
+				return "redirect:/admin/categories?msg=removalError";
+			}
+		} catch (ServiceException e) {
+			e.printStackTrace();
+			model.addAttribute("errorMessage", "An error occurred while deleting the promotion");
+			return "redirect:/admin/promotions?msg=removalError";
+		}
+	}
+
+	@GetMapping("/admin/promotions/update")
+	public String updatePromotion(@RequestParam("promotionId") int id,
+								  @RequestParam("promotionName") String name,
+								  @RequestParam("promotionStartDate") Date startDate,
+								  @RequestParam("promotionEndDate") Date endDate,
+								  @RequestParam("promoType") String promoType,
+								  Model model) {
+		try {
+			Promotion promotion = promotionService.getPromotionById(id);
+			promotion.setName(name);
+			promotion.setStartDate(startDate);
+			promotion.setEndDate(endDate);
+			promotion.setType(promoType);
+			promotionService.updatePromotion(promotion);
+			return "redirect:/admin/promotions";
+		} catch (ServiceException e) {
+			e.printStackTrace();
+			model.addAttribute("errorMessage", "An error occurred while deleting the promotion");
+			return "error";
+		}
+	}
+
+
 }

@@ -1,5 +1,7 @@
 package ca.concordia.eats.utils;
 
+import ca.concordia.eats.dao.DAOException;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;

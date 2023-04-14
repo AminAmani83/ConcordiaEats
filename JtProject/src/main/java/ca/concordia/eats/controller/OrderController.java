@@ -17,7 +17,9 @@ public class OrderController {
 	@Autowired
 	private OrderService orderService;
 	@Autowired
-    	private ProductService productService;
+    private ProductService productService;
+    @Autowired
+    private PromotionService promotionService;
 
     // This method is used to show the items in the shopping cart.
     @GetMapping("/order")
@@ -31,7 +33,7 @@ public class OrderController {
 
     // This method is used to add a product to the cart.
     @GetMapping("/order/add/{productId}")
-    public String addProductToCart(@PathVariable("productId") Integer productId, HttpSession session, Model model) {
+    public String addProductToCart(@PathVariable("productId") Integer productId, HttpSession session, Model model) throws ServiceException {
         Product product = productService.fetchProductById(productId);
         Basket sessionBasket = (Basket) session.getAttribute("basket");
         if (product != null)
@@ -44,7 +46,7 @@ public class OrderController {
         model.addAttribute("tax", String.valueOf(orderService.getTaxes(sessionBasket)));
         model.addAttribute("delivery", String.valueOf(orderService.getDelivery(sessionBasket)));
         model.addAttribute("noCategoryFilter", true);
-        
+
         return "order";
     }
     
@@ -99,8 +101,11 @@ public class OrderController {
     	User sessionUser = (User) session.getAttribute("user");
     	orderService.makeOrder(sessionBasket, sessionUser);
     	sessionBasket = new Basket();
+
     	session.setAttribute("basket", sessionBasket);
     	
         return "redirect:/index";
     }
+
+
 }

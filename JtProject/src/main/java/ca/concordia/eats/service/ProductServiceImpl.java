@@ -3,6 +3,7 @@ package ca.concordia.eats.service;
 import ca.concordia.eats.dao.ProductDao;
 import ca.concordia.eats.dto.Category;
 import ca.concordia.eats.dto.Product;
+import ca.concordia.eats.dto.Promotion;
 import ca.concordia.eats.dto.Rating;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -115,14 +116,14 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> search(String query, int userId) {
         return productDao.search(query, userId);
     }
-    
- 
+
+
 
     @Override
     public Double calculateAvgProductRating(int productId) {
         return productDao.calculateAvgProductRating(productId);
     }
-    
+
     @Override
     public Map<Integer, Double> fetchAllProductAvgRatings(){
     	Map<Integer, Double> productAvgRatings = new HashMap<Integer, Double>();
@@ -137,5 +138,4 @@ public class ProductServiceImpl implements ProductService {
         return productAvgRatings;
     }
 
-    
 }

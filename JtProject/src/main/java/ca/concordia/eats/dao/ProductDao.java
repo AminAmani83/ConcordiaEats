@@ -44,7 +44,8 @@ public interface ProductDao {
     public void updateCurrentRating(int customerId, int productId, int rating);         // helper for rateProduct
     public void insertNewRating(int customerId, int productId, int rating);             // helper for rateProduct
     public Double calculateAvgProductRating(int productId); 
-    public void removeAllRatingsByCustomerId(int customerId);                            
+    public void removeAllRatingsByCustomerId(int customerId);
+
 
     public Map<Integer, Double> fetchAllProductAvgRatings();
 }

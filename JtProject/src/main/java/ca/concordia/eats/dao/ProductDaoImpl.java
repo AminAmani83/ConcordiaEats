@@ -1,9 +1,6 @@
 package ca.concordia.eats.dao;
 
-import ca.concordia.eats.dto.Category;
-import ca.concordia.eats.dto.Product;
-import ca.concordia.eats.dto.SearchHistory;
-import ca.concordia.eats.dto.User;
+import ca.concordia.eats.dto.*;
 import ca.concordia.eats.utils.ConnectionUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -515,7 +512,8 @@ public class ProductDaoImpl implements ProductDao {
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
-    }                            
+    }
+
 
 
     

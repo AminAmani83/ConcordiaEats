@@ -1,28 +1,15 @@
--- -----------------------------------------------------
--- Table `springproject`.`promotion_type`
--- -----------------------------------------------------
-ALTER TABLE `springproject`.`promotion_type` AUTO_INCREMENT = 1;
-
-INSERT INTO `springproject`.`promotion_type` (`type`) VALUES ('Discount');
-INSERT INTO `springproject`.`promotion_type` (`type`) VALUES ('Free Item');
-INSERT INTO `springproject`.`promotion_type` (`type`) VALUES ('Buy One Get One Free');
-
-
 
 -- -----------------------------------------------------
 -- Table `springproject`.`promotion`
 -- -----------------------------------------------------
 ALTER TABLE `springproject`.`promotion` AUTO_INCREMENT = 1;
 
-INSERT INTO `springproject`.`promotion` (`startDate`, `endDate`, `promotionTypeId`) 
-VALUES ('2023-05-01', '2023-05-15', 1);
-
-INSERT INTO `springproject`.`promotion` (`startDate`, `endDate`, `promotionTypeId`) 
-VALUES ('2023-06-01', '2023-06-30', 2);
-
-INSERT INTO `springproject`.`promotion` (`startDate`, `endDate`, `promotionTypeId`) 
-VALUES ('2023-07-01', '2023-07-15', 3);
-
+INSERT INTO `springproject`.`promotion` (`name`, `startDate`, `endDate`, `type`) 
+VALUES 
+('Chrismas Sale', '2023-04-01', '2023-07-15', 'SITEWIDE_DISCOUNT_10'),
+('Easter Sale', '2023-04-01', '2023-07-15', 'SITEWIDE_DISCOUNT_20'),
+('New Customer Promotion', '2023-06-01', '2023-06-30', 'Free Shipping'),
+('Black Friday','2023-07-01', '2023-07-15', 'Buy One Get One Free');
 
 -- -----------------------------------------------------
 -- Table `springproject`.`user`
@@ -34,7 +21,6 @@ VALUES ('jay', '123', 'CUSTOMER', 'john123@gmail.com', '123 Main St, Anytown, US
 
 INSERT INTO `springproject`.`user` (`username`, `password`, `role`, `email`, `address`, `phone`)
 VALUES ('admin', '123', 'ADMIN', 'jane456@gmail.com', '456 Elm St, Anytown, USA', '+1 (555) 234-5678');
--- the user table autoincrement starts at 3 which needs to be fixed
 
 
 -- -----------------------------------------------------
@@ -49,7 +35,7 @@ INSERT INTO `springproject`.`purchase` (`userId`, `timeStamp`, `total_price`, `p
 VALUES (1, '2023-04-09 11:00:00', 75.00, 2);
 
 INSERT INTO `springproject`.`purchase` (`userId`, `timeStamp`, `total_price`, `promotionId`)
-VALUES (1, '2023-04-10 12:00:00', 100.00, 3);
+VALUES (1, '2023-04-10 12:00:00', 100.00, NULL);
 
 
 -- -----------------------------------------------------

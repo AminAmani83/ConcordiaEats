@@ -18,6 +18,7 @@ public class Basket {
     public Basket() {
     }
 
+
     public Basket(int basketId, float totalPrice, List<Product> lineItems) {
         this.basketId = basketId;
         this.totalPrice = totalPrice;
@@ -138,7 +139,7 @@ public class Basket {
     
     // This method calculates and returns the delivery fee.
     public double getDelivery() {
-    	
+    	/*
     	PromotionType promotionType = new PromotionType();
     	
     	double delivery;
@@ -153,7 +154,11 @@ public class Basket {
     		
     		delivery = 5;
     	}
-    	
+
+
+    	 */
+
+        int delivery = 5;
     	return delivery;
     }
 	
