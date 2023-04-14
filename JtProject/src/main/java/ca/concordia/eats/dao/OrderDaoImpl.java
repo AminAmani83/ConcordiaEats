@@ -30,8 +30,13 @@ public class OrderDaoImpl implements OrderDao {
         this.con = ConnectionUtil.getConnection();
     }
 
+	// used for testing
+	public OrderDaoImpl(JdbcTemplate jdbcTemplate, Connection con) {
+		this.jdbcTemplate = jdbcTemplate;
+		this.con = con;
+	}
 
-     // This method fills purchase_details, purchase and updates product database tables with information concerning the order as soon as the order gets checked out.
+	// This method fills purchase_details, purchase and updates product database tables with information concerning the order as soon as the order gets checked out.
      public void makeOrder(User user, Basket basket) {
 	        try {
 	            String purchaseSql = "insert into purchase(userId, timeStamp, total_price, promotionId) values(?,?,?,?)";

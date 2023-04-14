@@ -26,6 +26,11 @@ public class PromotionDaoImpl implements PromotionDao {
         this.con = getConnection();
     }
 
+    // used for testing
+    public PromotionDaoImpl(Connection con, ProductDao productDao) {
+        this.con = con;
+        this.productDao = productDao;
+    }
 
     @Override
     public List<Promotion> fetchAllPromotions() throws DAOException {
@@ -134,8 +139,7 @@ public class PromotionDaoImpl implements PromotionDao {
 
     @Override
     public Promotion mapResultSetToPromotion(ResultSet rs) throws SQLException {
-        Promotion promotion = null;
-        promotion = new Promotion();
+        Promotion promotion = new Promotion();
         promotion.setId(rs.getInt(1));
         Date startDate = rs.getDate(2);
         promotion.setStartDate(startDate);
