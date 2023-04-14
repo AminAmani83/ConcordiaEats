@@ -59,6 +59,7 @@
                                         <h2>${bestSellerProduct.name}</h2>
                                         <c:set var="thisProduct" value="${bestSellerProduct}" />
                                         <%@include file="common/starsRating.jsp" %>
+                                        <%@include file="common/rateAction.jsp" %>
                                         <p>$${bestSellerProduct.price}</p>
                                         <p>${bestSellerProduct.description}</p>
                                         <form action="order/add/${bestSellerProduct.id}" method="get">
@@ -84,6 +85,7 @@
                                         <h2>${recommendedProduct.name}</h2>
                                         <c:set var="thisProduct" value="${recommendedProduct}" />
                                         <%@include file="common/starsRating.jsp" %>
+                                        <%@include file="common/rateAction.jsp" %>
                                         <p>$${recommendedProduct.price}</p>
                                         <p>${recommendedProduct.description}</p>
                                         <form action="order/add/${recommendedProduct.id}" method="get">
@@ -114,6 +116,7 @@
                                         <h2>${bestSellerProduct.name}</h2>
                                         <c:set var="thisProduct" value="${bestSellerProduct}" />
                                         <%@include file="common/starsRating.jsp" %>
+                                        <%@include file="common/rateAction.jsp" %>
                                         <p>$${bestSellerProduct.price}</p>
                                         <p>${bestSellerProduct.description}</p>
                                         <form action="order/add/${bestSellerProduct.id}" method="get">
@@ -140,6 +143,7 @@
                                         <h2>${highestRatedProduct.name}</h2>
                                         <c:set var="thisProduct" value="${highestRatedProduct}" />
                                         <%@include file="common/starsRating.jsp" %>
+                                        <%@include file="common/rateAction.jsp" %>
                                         <p>$${highestRatedProduct.price}</p>
                                         <p>${highestRatedProduct.description}</p>
                                         <form action="order/add/${highestRatedProduct.id}" method="get">
@@ -170,6 +174,7 @@
                                         <h2>${highestRatedProduct.name}</h2>
                                         <c:set var="thisProduct" value="${highestRatedProduct}" />
                                         <%@include file="common/starsRating.jsp" %>
+                                        <%@include file="common/rateAction.jsp" %>
                                         <p>$${highestRatedProduct.price}</p>
                                         <p>${highestRatedProduct.description}</p>
                                         <form action="order/add/${highestRatedProduct.id}" method="get">
@@ -196,6 +201,7 @@
                                         <h2>${bestSellerProduct.name}</h2>
                                         <c:set var="thisProduct" value="${bestSellerProduct}" />
                                         <%@include file="common/starsRating.jsp" %>
+                                        <%@include file="common/rateAction.jsp" %>
                                         <p>$${bestSellerProduct.price}</p>
                                         <p>${bestSellerProduct.description}</p>
                                         <form action="order/add/${bestSellerProduct.id}" method="get">
@@ -226,6 +232,7 @@
                                         <h2>${bestSellerProduct.name}</h2>
                                         <c:set var="thisProduct" value="${bestSellerProduct}" />
                                         <%@include file="common/starsRating.jsp" %>
+                                        <%@include file="common/rateAction.jsp" %>
                                         <p>$${bestSellerProduct.price}</p>
                                         <p>${bestSellerProduct.description}</p>
                                         <form action="order/add/${bestSellerProduct.id}" method="get">
@@ -256,6 +263,7 @@
                                         <h2>${bestSellerProduct.name}</h2>
                                         <c:set var="thisProduct" value="${bestSellerProduct}" />
                                         <%@include file="common/starsRating.jsp" %>
+                                        <%@include file="common/rateAction.jsp" %>
                                         <p>$${bestSellerProduct.price}</p>
                                         <p>${bestSellerProduct.description}</p>
                                         <form action="order/add/${bestSellerProduct.id}" method="get">
@@ -282,6 +290,7 @@
                                         <h2>${recommendedProduct.name}</h2>
                                         <c:set var="thisProduct" value="${recommendedProduct}" />
                                         <%@include file="common/starsRating.jsp" %>
+                                        <%@include file="common/rateAction.jsp" %>
                                         <p>$${recommendedProduct.price}</p>
                                         <p>${recommendedProduct.description}</p>
                                         <form action="order/add/${recommendedProduct.id}" method="get">
@@ -308,6 +317,7 @@
                                         <h2>${highestRatedProduct.name}</h2>
                                         <c:set var="thisProduct" value="${highestRatedProduct}" />
                                         <%@include file="common/starsRating.jsp" %>
+                                        <%@include file="common/rateAction.jsp" %>
                                         <p>$${highestRatedProduct.price}</p>
                                         <p>${highestRatedProduct.description}</p>
                                         <form action="order/add/${highestRatedProduct.id}" method="get">
