@@ -21,6 +21,11 @@
             justify-content: center;
             border-radius: 50%;
         }
+        #sliderproduct .image  {
+        max-height: 340px!important;
+        }
+        
+       
     </style>
 				<c:set var="isBestSellerProductNotNull" value="${bestSellerProduct.id != null}" />
 	 			<c:set var="isHighestRatedProductNotNull" value="${highestRatedProduct.id != null}" />
@@ -45,7 +50,7 @@
                         <div class="container text-center">
                             <div class="row">
                                 <div class="col-sm-6 image">
-                                    <img class="img-fluid" src="${bestSellerProduct.imagePath}"
+                                    <img class="img-fluid img-responsive" src="${bestSellerProduct.imagePath}"
                                          alt="${bestSellerProduct.name}">
                                     <p class="carousel-caption" style="font-size: 1.2em">Our Best Seller and Highest Rated!</p>
                                 </div>
@@ -172,8 +177,8 @@
                         <div class="container text-center">
                             <div class="row">
                                 <div class="col-sm-6 image">
-                                    <img class="img-fluid" src="${bestSellerProduct.imagePath}"
-                                         alt="${bestSellerProduct.name}">
+                                    <img class="img-fluid" src="${highestRatedProduct.imagePath}"
+                                         alt="${highestRatedProduct.name}">
                                     <p class="carousel-caption" style="font-size: 1.2em">Our Highest Rated and Recommended for You!</p>
                                 </div>
                                 <div class="col-sm-6">
