@@ -91,7 +91,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> fetchCustomerFavoriteProducts(int customerId) {
         List<Integer> customerFavoriteProductIds = productDao.fetchCustomerFavoriteProductIds(customerId);
-        return productDao.fetchAllProducts().stream().filter(p -> customerFavoriteProductIds.contains(p.getId())).collect(Collectors.toList());
+        return productDao.fetchAllProducts().stream().filter(p -> customerFavoriteProductIds.contains(p.getId()) && !p.isDisable()).collect(Collectors.toList());
     }
 
 
@@ -128,7 +128,7 @@ public class ProductServiceImpl implements ProductService {
     public Map<Integer, Double> fetchAllProductAvgRatings(){
     	Map<Integer, Double> productAvgRatings = new HashMap<Integer, Double>();
         try {
-        	List<Product> products = fetchAllProducts();
+        	List<Product> products = fetchAllProducts().stream().filter(p -> !p.isDisable()).collect(Collectors.toList());
         	for (Product p : products) {
             	productAvgRatings.put(p.getId(), calculateAvgProductRating(p.getId()));
             }

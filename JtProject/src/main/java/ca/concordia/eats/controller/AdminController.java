@@ -17,6 +17,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpSession;
 import java.sql.*;
 import java.util.*;
+import java.util.Date;
 import java.util.stream.Collectors;
 
 @Controller
@@ -32,7 +33,7 @@ public class AdminController {
 	private UserService userService;
 	
 	 @Autowired
-	    RecommendationService recommendationService;
+	 RecommendationService recommendationService;
 
 	Connection con;
 
@@ -62,7 +63,7 @@ public class AdminController {
 		if (usernameForClass.equalsIgnoreCase("")) {
 			return "userLogin";
 		} else {
-			List<Product> allProducts = productService.fetchAllProducts();
+			List<Product> allProducts = productService.fetchAllProducts().stream().filter(p -> !p.isDisable()).collect(Collectors.toList());
 			List<Category> nonEmptyCategories = allProducts.stream().map(Product::getCategory).distinct()
 					.sorted(Comparator.comparing(Category::getName)).collect(Collectors.toList());
 			Customer customer = (Customer) session.getAttribute("user");

@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class OrderController {
 
-	@Autowired
-	private OrderService orderService;
-	@Autowired
+    @Autowired
+    private OrderService orderService;
+    @Autowired
     private ProductService productService;
     @Autowired
     private PromotionService promotionService;
@@ -24,7 +24,7 @@ public class OrderController {
     // This method is used to show the items in the shopping cart.
     @GetMapping("/order")
     public String shoppingCart(HttpSession session, Model model) {
-    	Basket sessionBasket = (Basket) session.getAttribute("basket");
+        Basket sessionBasket = (Basket) session.getAttribute("basket");
         model.addAttribute("allProducts", orderService.getProductsInCart(sessionBasket));
         model.addAttribute("total", String.valueOf(orderService.getTotal(sessionBasket)));
         model.addAttribute("noCategoryFilter", true);
@@ -33,14 +33,13 @@ public class OrderController {
 
     // This method is used to add a product to the cart.
     @GetMapping("/order/add/{productId}")
-    public String addProductToCart(@PathVariable("productId") Integer productId, HttpSession session, Model model) throws ServiceException {
+    public String addProductToCart(@PathVariable("productId") Integer productId, HttpSession session, Model model) {
         Product product = productService.fetchProductById(productId);
         Basket sessionBasket = (Basket) session.getAttribute("basket");
-        if (product != null)
-        {
-        	orderService.addProduct(product, sessionBasket);
+        if (product != null) {
+            orderService.addProduct(product, sessionBasket);
         }
-        
+
         model.addAttribute("allProducts", orderService.getProductsInCart(sessionBasket));
         model.addAttribute("total", String.valueOf(orderService.getTotal(sessionBasket)));
         model.addAttribute("tax", String.valueOf(orderService.getTaxes(sessionBasket)));
@@ -49,18 +48,17 @@ public class OrderController {
 
         return "order";
     }
-    
+
     // This method is used to update the quantity of a product in the cart.
     @GetMapping("/order/update/{productId}")
     public String updateProductToCart(@PathVariable("productId") Integer productId, @RequestParam("quantity") int quantity,
-    		HttpSession session, Model model) {
+                                      HttpSession session, Model model) {
         Product product = productService.fetchProductById(productId);
         Basket sessionBasket = (Basket) session.getAttribute("basket");
-        if (product != null)
-        {
-        	orderService.updateProduct(product, quantity, sessionBasket);
+        if (product != null) {
+            orderService.updateProduct(product, quantity, sessionBasket);
         }
-        
+
         model.addAttribute("allProducts", orderService.getProductsInCart(sessionBasket));
         model.addAttribute("total", String.valueOf(orderService.getTotal(sessionBasket)));
         model.addAttribute("tax", String.valueOf(orderService.getTaxes(sessionBasket)));
@@ -68,17 +66,16 @@ public class OrderController {
         model.addAttribute("noCategoryFilter", true);
         return "order";
     }
-    
-	// This method is used to remove a product from the cart
-	@GetMapping("/order/delete/{productId}")
+
+    // This method is used to remove a product from the cart
+    @GetMapping("/order/delete/{productId}")
     public String removeProductFromCart(@PathVariable("productId") Integer productId, HttpSession session, Model model) {
         Product product = productService.fetchProductById(productId);
         Basket sessionBasket = (Basket) session.getAttribute("basket");
-        if (product != null)
-        {
-        	orderService.removeProduct(product, sessionBasket);
+        if (product != null) {
+            orderService.removeProduct(product, sessionBasket);
         }
-        
+
         model.addAttribute("allProducts", orderService.getProductsInCart(sessionBasket));
         model.addAttribute("total", String.valueOf(orderService.getTotal(sessionBasket)));
         model.addAttribute("tax", String.valueOf(orderService.getTaxes(sessionBasket)));
@@ -86,26 +83,25 @@ public class OrderController {
         model.addAttribute("noCategoryFilter", true);
         return "order";
     }
-    
+
     @GetMapping("/checkout")
     public String CheckOut(HttpSession session) {
         return "buy";
     }
-    
+
     // This method is mapped to the URL "/makeorder" with the GET request method.
     // It retrieves the Basket and User objects from the HttpSession.
     @GetMapping("/makeorder")
     public String MakeOrder(HttpSession session) {
 
-    	Basket sessionBasket = (Basket) session.getAttribute("basket");
-    	User sessionUser = (User) session.getAttribute("user");
-    	orderService.makeOrder(sessionBasket, sessionUser);
-    	sessionBasket = new Basket();
+        Basket sessionBasket = (Basket) session.getAttribute("basket");
+        User sessionUser = (User) session.getAttribute("user");
+        orderService.makeOrder(sessionBasket, sessionUser);
+        sessionBasket = new Basket();
 
-    	session.setAttribute("basket", sessionBasket);
-    	
+        session.setAttribute("basket", sessionBasket);
+
         return "redirect:/index";
     }
-
 
 }

@@ -496,7 +496,7 @@ public class ProductDaoImpl implements ProductDao {
             if (rs.next()) {
                 avgRating = rs.getDouble(1);
             }
-            
+
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
@@ -515,31 +515,29 @@ public class ProductDaoImpl implements ProductDao {
     }
 
 
-
-    
-    
     @Override
-    public Map<Integer, Integer> fetchAllProductSumSalesQuantity(){
-    	Map<Integer, Integer> productSumSalesQuantity = new HashMap<Integer, Integer>();
+    public Map<Integer, Integer> fetchAllProductSumSalesQuantity() {
+        Map<Integer, Integer> productSumSalesQuantity = new HashMap<Integer, Integer>();
         try {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("select productId, Sum(quantity) as SalesQuantity from purchase_details Group by productId;");
             while (rs.next()) {
-            	productSumSalesQuantity.put(rs.getInt(1), rs.getInt(2));
+                productSumSalesQuantity.put(rs.getInt(1), rs.getInt(2));
             }
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
-        return productSumSalesQuantity;	
-    	
+        return productSumSalesQuantity;
+
     }
+
     @Override
-    public Map<Integer, Double> fetchAllProductAvgRatings(){
-    	Map<Integer, Double> productAvgRatings = new HashMap<Integer, Double>();
+    public Map<Integer, Double> fetchAllProductAvgRatings() {
+        Map<Integer, Double> productAvgRatings = new HashMap<Integer, Double>();
         try {
-        	List<Product> products = fetchAllProducts();
-        	for (Product p : products) {
-            	productAvgRatings.put(p.getId(), calculateAvgProductRating(p.getId()));
+            List<Product> products = fetchAllProducts();
+            for (Product p : products) {
+                productAvgRatings.put(p.getId(), calculateAvgProductRating(p.getId()));
             }
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());

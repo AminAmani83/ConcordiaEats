@@ -1,6 +1,5 @@
 package ca.concordia.eats.dto;
 
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 public class Product {
@@ -15,7 +14,6 @@ public class Product {
     private Double rating;
     private Category category;
     private boolean disable;
-
 
 
     public Product() {
