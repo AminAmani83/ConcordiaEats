@@ -11,8 +11,6 @@ public interface PromotionService {
     public Promotion createPromotion(Promotion promotion) throws ServiceException;
     public Promotion updatePromotion(Promotion promotion) throws ServiceException;
     public boolean removePromotionById(int promotionId) throws ServiceException;
-
-    public boolean applyAllCurrentPromotionsToBasket(Basket basket) throws ServiceException;
-
+    List<Promotion> fetchAllActivePromotions() throws ServiceException;
 }
 

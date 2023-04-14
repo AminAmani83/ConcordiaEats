@@ -21,7 +21,7 @@
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <form action="createPromotion" method="post">
+                <form action="create" method="post">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">Add New
                             Promotion</h5>
@@ -190,7 +190,7 @@
         const pageUrl = new URL(window.location.toLocaleString());
         if (pageUrl.searchParams.get('msg') === 'removalError') {
             $('.toast .toast-body').html('You cannot delete this promotion because it exists in purchase records' +
-                'for record-keeping.');
+                ' for record-keeping.');
             $('.toast').toast('show');
         }
     });

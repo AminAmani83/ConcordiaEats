@@ -45,7 +45,6 @@ public class OrderController {
         model.addAttribute("tax", String.valueOf(orderService.getTaxes(sessionBasket)));
         model.addAttribute("delivery", String.valueOf(orderService.getDelivery(sessionBasket)));
 
-        promotionService.applyAllCurrentPromotionsToBasket(sessionBasket);
         return "order";
     }
     

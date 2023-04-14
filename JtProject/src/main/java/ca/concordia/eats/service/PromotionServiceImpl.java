@@ -3,12 +3,11 @@ package ca.concordia.eats.service;
 import ca.concordia.eats.dao.DAOException;
 import ca.concordia.eats.dao.ProductDao;
 import ca.concordia.eats.dao.PromotionDao;
-import ca.concordia.eats.dto.Basket;
-import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.Promotion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -70,47 +69,19 @@ public class PromotionServiceImpl implements PromotionService {
     }
 
     @Override
-    public boolean applyAllCurrentPromotionsToBasket(Basket basket) throws ServiceException {
+    public List<Promotion> fetchAllActivePromotions() throws ServiceException {
         Date currentDate = new Date();
-        List<Product> allProducts = basket.getProductsInCart();
-
-        try {
-            List<Promotion> allPromotions = promotionDao.fetchAllPromotions();
-            for (Promotion promotion: allPromotions) {
-                if (!currentDate.after(promotion.getStartDate()) || !currentDate.before(promotion.getEndDate())){
-                    continue;
-                }
-                switch (promotion.getType()) {
-                    case "SITEWIDE_DISCOUNT_10":
-                        for (Product product : allProducts) {
-                            if (product.isOnSale()) continue;
-                            product.setPrice((float) (product.getPrice() * 0.9));
-                            product.setOnSale(true);
-                            System.out.println("SITEWIDE_DISCOUNT_10 applied");
-                        }
-
-                        break;
-                    case "SITEWIDE_DISCOUNT_20":
-                        for (Product product : allProducts) {
-                            if (product.isOnSale()) continue;
-                            product.setPrice((float) (product.getPrice() * 0.8));
-                            product.setOnSale(true);
-                            System.out.println("SITEWIDE_DISCOUNT_20 applied");
-                        }
-                        break;
-
-                    default:
-                        System.out.println("Invalid Promotion");
-                        break;
-                }
+        List<Promotion> allPromotions = getAllPromotions();
+        List<Promotion> allCurrentPromotions = new ArrayList<>();
+        for (Promotion promotion: allPromotions) {
+            if (!currentDate.after(promotion.getStartDate()) || !currentDate.before(promotion.getEndDate())){
+                continue;
             }
-
-        } catch (DAOException e) {
-            throw new ServiceException("Error applying promotion", e);
+            allCurrentPromotions.add(promotion);
         }
-
-        return true;
+        return allCurrentPromotions;
     }
+
 
 }
 

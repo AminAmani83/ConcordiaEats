@@ -320,7 +320,7 @@ public class AdminController {
 
 	}
 
-	@RequestMapping(value = "admin/createPromotion", method = RequestMethod.POST)
+	@RequestMapping(value = "admin/create", method = RequestMethod.POST)
 	public String createPromotion(@RequestParam("name") String name,
 								  @RequestParam("promotionStartDate") Date startDate,
 								  @RequestParam("promotionEndDate") Date endDate,
@@ -344,8 +344,12 @@ public class AdminController {
 	@GetMapping("/admin/promotions/delete")
 	public String removePromotion(@RequestParam("id") int promotionId, Model model) {
 		try {
-			promotionService.removePromotionById(promotionId);
-			return "redirect:/admin/promotions";
+			boolean promotionRemoved = promotionService.removePromotionById(promotionId);
+			if (promotionRemoved) {
+				return "redirect:/admin/promotions";
+			} else {
+				return "redirect:/admin/categories?msg=removalError";
+			}
 		} catch (ServiceException e) {
 			e.printStackTrace();
 			model.addAttribute("errorMessage", "An error occurred while deleting the promotion");

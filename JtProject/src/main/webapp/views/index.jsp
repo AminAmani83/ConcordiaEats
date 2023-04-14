@@ -7,6 +7,7 @@
 </head>
 <body>
 
+
 <section class="wrapper">
     <div class="container-fostrap">
         <%@include file="common/header.jsp" %>
