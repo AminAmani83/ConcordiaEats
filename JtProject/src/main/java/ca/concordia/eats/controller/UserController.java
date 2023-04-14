@@ -37,6 +37,7 @@ public class UserController{
 	{
 		return "register";
 	}
+
 	@GetMapping("/contact")
 	public String contact(HttpSession session, Model model) {
 		Customer customer = (Customer) session.getAttribute("user");
@@ -46,9 +47,11 @@ public class UserController{
 		model.addAttribute("email",customer.getEmail());
 		model.addAttribute("phone",customer.getPhone());
 		model.addAttribute("noContactUsLink",true);
+		model.addAttribute("noCategoryFilter", true);
 
 		return "contact";
 	}
+
 	@GetMapping("/buy")
 	public String buy()
 	{
@@ -82,6 +85,7 @@ public class UserController{
 		model.addAttribute("email",customer.getEmail());
 		model.addAttribute("address",customer.getAddress());
 		model.addAttribute("phone",customer.getPhone());
+		model.addAttribute("noCategoryFilter", true);
 
 		return "updateProfile";
 	}

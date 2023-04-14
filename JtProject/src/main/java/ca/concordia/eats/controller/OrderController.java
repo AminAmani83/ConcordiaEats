@@ -27,6 +27,7 @@ public class OrderController {
     	Basket sessionBasket = (Basket) session.getAttribute("basket");
         model.addAttribute("allProducts", orderService.getProductsInCart(sessionBasket));
         model.addAttribute("total", String.valueOf(orderService.getTotal(sessionBasket)));
+        model.addAttribute("noCategoryFilter", true);
         return "order";
     }
 
@@ -44,6 +45,7 @@ public class OrderController {
         model.addAttribute("total", String.valueOf(orderService.getTotal(sessionBasket)));
         model.addAttribute("tax", String.valueOf(orderService.getTaxes(sessionBasket)));
         model.addAttribute("delivery", String.valueOf(orderService.getDelivery(sessionBasket)));
+        model.addAttribute("noCategoryFilter", true);
 
         return "order";
     }
@@ -63,6 +65,7 @@ public class OrderController {
         model.addAttribute("total", String.valueOf(orderService.getTotal(sessionBasket)));
         model.addAttribute("tax", String.valueOf(orderService.getTaxes(sessionBasket)));
         model.addAttribute("delivery", String.valueOf(orderService.getDelivery(sessionBasket)));
+        model.addAttribute("noCategoryFilter", true);
         return "order";
     }
     
@@ -80,12 +83,12 @@ public class OrderController {
         model.addAttribute("total", String.valueOf(orderService.getTotal(sessionBasket)));
         model.addAttribute("tax", String.valueOf(orderService.getTaxes(sessionBasket)));
         model.addAttribute("delivery", String.valueOf(orderService.getDelivery(sessionBasket)));
+        model.addAttribute("noCategoryFilter", true);
         return "order";
     }
     
     @GetMapping("/checkout")
     public String CheckOut(HttpSession session) {
-
         return "buy";
     }
     

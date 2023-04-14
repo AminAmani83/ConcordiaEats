@@ -422,7 +422,7 @@ public class ProductDaoImpl implements ProductDao {
     public List<Product> search(String query, int userId) {
         List<Product> products = new ArrayList<>();
         try {
-            String sql = "SELECT * FROM product WHERE name LIKE ?";
+            String sql = "select p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, r.avg_rating as rating, c.id as categoryId, c.name as categoryName from product p join category c on p.categoryid = c.id left join (select avg(rating) as avg_rating, productId from rating group by productId) r on r.productId = p.id WHERE p.name LIKE ?";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, "%" + query + "%");
             ResultSet rs = stmt.executeQuery();
@@ -434,14 +434,14 @@ public class ProductDaoImpl implements ProductDao {
                 product.setDescription(rs.getString("description"));
                 product.setImagePath(rs.getString("imagePath"));
                 product.setRating(calculateAvgProductRating(rs.getInt("id")));
+                product.setCategory(new Category(rs.getInt("categoryId"), rs.getString("categoryName")));
                 products.add(product);
-                SearchHistory searchHistory = saveSearchHistoryToDatabase(query, userId);
             }
+            saveSearchHistoryToDatabase(query, userId);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return products;
-
     }
 
 
