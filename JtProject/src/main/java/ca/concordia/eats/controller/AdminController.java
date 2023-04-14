@@ -1,6 +1,8 @@
 package ca.concordia.eats.controller;
 
 import ca.concordia.eats.dto.*;
+import ca.concordia.eats.service.PromotionService;
+import ca.concordia.eats.service.ServiceException;
 import ca.concordia.eats.service.UserService;
 import ca.concordia.eats.service.ProductService;
 import ca.concordia.eats.service.RecommendationService;
@@ -14,8 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import javax.servlet.http.HttpSession;
 import java.sql.*;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.Date;
 import java.util.stream.Collectors;
 
 @Controller
@@ -24,12 +26,14 @@ public class AdminController {
 
 	@Autowired
 	ProductService productService;
+	@Autowired
+	PromotionService promotionService;
 
 	@Autowired
 	private UserService userService;
 	
 	 @Autowired
-	    RecommendationService recommendationService;
+	 RecommendationService recommendationService;
 
 	Connection con;
 
@@ -55,11 +59,13 @@ public class AdminController {
 	}
 
 	@GetMapping("/index")
-	public String index(Model model, HttpSession session) {
+	public String index(Model model, HttpSession session, @RequestParam("category-filter[]") Optional<String[]> categoryFilterNames) {
 		if (usernameForClass.equalsIgnoreCase("")) {
 			return "userLogin";
 		} else {
-			List<Product> allProducts = productService.fetchAllProducts();
+			List<Product> allProducts = productService.fetchAllProducts().stream().filter(p -> !p.isDisable()).collect(Collectors.toList());
+			List<Category> nonEmptyCategories = allProducts.stream().map(Product::getCategory).distinct()
+					.sorted(Comparator.comparing(Category::getName)).collect(Collectors.toList());
 			Customer customer = (Customer) session.getAttribute("user");
 			refreshRecommendedProducts(customer, allProducts);
 
@@ -67,8 +73,15 @@ public class AdminController {
 	        model.addAttribute("bestSellerProduct", customer.getRecommendation().getBestSellerProduct());
 	        model.addAttribute("highestRatedProduct", customer.getRecommendation().getHighestRatingProduct());
 
+			if (categoryFilterNames.isPresent()) {
+				allProducts = allProducts.stream()
+						.filter(p -> Arrays.asList(categoryFilterNames.get()).contains(p.getCategory().getName()))
+						.collect(Collectors.toList());
+			}
+
 			model.addAttribute("username", usernameForClass);
 			model.addAttribute("allProducts", allProducts);
+			model.addAttribute("allCategories", nonEmptyCategories);
 			model.addAttribute("favoriteProducts", customer.getFavorite().getCustomerFavoritedProducts());
 			model.addAttribute("purchasedProducts", productService.fetchPastPurchasedProducts(customer.getUserId()));
 			model.addAttribute("productCardFavSrc", "index");
@@ -133,7 +146,6 @@ public class AdminController {
 
 	@GetMapping("/admin")
 	public String adminLogin(Model model) {
-		
 		return "adminlogin";
 	}
 
@@ -147,13 +159,11 @@ public class AdminController {
 
 	@GetMapping("/loginvalidate")
 	public String adminLog(Model model) {
-		
 		return "adminlogin";
 	}
 
 	@RequestMapping(value = "loginvalidate", method = RequestMethod.POST)
 	public String adminLogin(@RequestParam("username") String username, @RequestParam("password") String pass, Model model) {
-		
 		if(username.equalsIgnoreCase("admin") && pass.equalsIgnoreCase("123")) {
 			adminLogInCheck =1;
 			return "redirect:/adminhome";
@@ -178,7 +188,7 @@ public class AdminController {
 		productService.createCategory(category);
 		return "redirect:/admin/categories";
 	}
-	
+
 	@GetMapping("/admin/categories/delete")
 	public String removeCategory(@RequestParam("id") int categoryId) {
 		boolean categoryRemoved = productService.removeCategoryById(categoryId);
@@ -188,7 +198,7 @@ public class AdminController {
 			return "redirect:/admin/categories?msg=removalError";
 		}
 	}
-	
+
 	@GetMapping("/admin/categories/update")
 	public String updateCategory(@RequestParam("categoryid") int categoryId, @RequestParam("categoryname") String categoryName) {
 		productService.updateCategory(new Category(categoryId, categoryName));
@@ -307,4 +317,80 @@ public class AdminController {
 
 		return "redirect:/admin/customers";
 	}
+
+
+	@GetMapping("/admin/promotions")
+	public String getAllPromotions(Model model) {
+		try {
+			List<Promotion> allPromotions = promotionService.getAllPromotions();
+			model.addAttribute("allPromotions", allPromotions);
+			return "promotions";
+		} catch (ServiceException e) {
+			e.printStackTrace();
+			model.addAttribute("errorMessage", "An error occurred while retrieving the promotions");
+			return "error";
+		}
+
+	}
+
+	@RequestMapping(value = "admin/create", method = RequestMethod.POST)
+	public String createPromotion(@RequestParam("name") String name,
+								  @RequestParam("promotionStartDate") Date startDate,
+								  @RequestParam("promotionEndDate") Date endDate,
+								  @RequestParam("promotionType") String promotionType,
+								  Model model) {
+		try {
+			Promotion promotion = new Promotion();
+			promotion.setStartDate(startDate);
+			promotion.setEndDate(endDate);
+			promotion.setName(name);
+			promotion.setType(promotionType);
+			promotionService.createPromotion(promotion);
+			return "redirect:/admin/promotions";
+		} catch (ServiceException e) {
+			e.printStackTrace();
+			model.addAttribute("errorMessage", "An error occurred while creating the promotion");
+			return "error";
+		}
+	}
+
+	@GetMapping("/admin/promotions/delete")
+	public String removePromotion(@RequestParam("id") int promotionId, Model model) {
+		try {
+			boolean promotionRemoved = promotionService.removePromotionById(promotionId);
+			if (promotionRemoved) {
+				return "redirect:/admin/promotions";
+			} else {
+				return "redirect:/admin/categories?msg=removalError";
+			}
+		} catch (ServiceException e) {
+			e.printStackTrace();
+			model.addAttribute("errorMessage", "An error occurred while deleting the promotion");
+			return "redirect:/admin/promotions?msg=removalError";
+		}
+	}
+
+	@GetMapping("/admin/promotions/update")
+	public String updatePromotion(@RequestParam("promotionId") int id,
+								  @RequestParam("promotionName") String name,
+								  @RequestParam("promotionStartDate") Date startDate,
+								  @RequestParam("promotionEndDate") Date endDate,
+								  @RequestParam("promoType") String promoType,
+								  Model model) {
+		try {
+			Promotion promotion = promotionService.getPromotionById(id);
+			promotion.setName(name);
+			promotion.setStartDate(startDate);
+			promotion.setEndDate(endDate);
+			promotion.setType(promoType);
+			promotionService.updatePromotion(promotion);
+			return "redirect:/admin/promotions";
+		} catch (ServiceException e) {
+			e.printStackTrace();
+			model.addAttribute("errorMessage", "An error occurred while deleting the promotion");
+			return "error";
+		}
+	}
+
+
 }

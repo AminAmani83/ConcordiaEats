@@ -86,6 +86,7 @@
   	<a href="/index">Continue Shopping</a>
 </form>
 
+
 </div>
     <%@include file="common/footer.jsp" %>
 </div>

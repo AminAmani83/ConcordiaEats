@@ -3,6 +3,7 @@ package ca.concordia.eats.service;
 import ca.concordia.eats.dao.ProductDao;
 import ca.concordia.eats.dto.Category;
 import ca.concordia.eats.dto.Product;
+import ca.concordia.eats.dto.Promotion;
 import ca.concordia.eats.dto.Rating;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -83,14 +84,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void removeFavorite(int customerId, int productId) {
-        productDao.removeFavorite(customerId, productId);
+    public boolean removeFavorite(int customerId, int productId) {
+        return productDao.removeFavorite(customerId, productId);
     }
 
     @Override
     public List<Product> fetchCustomerFavoriteProducts(int customerId) {
         List<Integer> customerFavoriteProductIds = productDao.fetchCustomerFavoriteProductIds(customerId);
-        return productDao.fetchAllProducts().stream().filter(p -> customerFavoriteProductIds.contains(p.getId())).collect(Collectors.toList());
+        return productDao.fetchAllProducts().stream().filter(p -> customerFavoriteProductIds.contains(p.getId()) && !p.isDisable()).collect(Collectors.toList());
     }
 
 
@@ -115,19 +116,19 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> search(String query, int userId) {
         return productDao.search(query, userId);
     }
-    
- 
+
+
 
     @Override
     public Double calculateAvgProductRating(int productId) {
         return productDao.calculateAvgProductRating(productId);
     }
-    
+
     @Override
     public Map<Integer, Double> fetchAllProductAvgRatings(){
     	Map<Integer, Double> productAvgRatings = new HashMap<Integer, Double>();
         try {
-        	List<Product> products = fetchAllProducts();
+        	List<Product> products = fetchAllProducts().stream().filter(p -> !p.isDisable()).collect(Collectors.toList());
         	for (Product p : products) {
             	productAvgRatings.put(p.getId(), calculateAvgProductRating(p.getId()));
             }
@@ -137,5 +138,4 @@ public class ProductServiceImpl implements ProductService {
         return productAvgRatings;
     }
 
-    
 }

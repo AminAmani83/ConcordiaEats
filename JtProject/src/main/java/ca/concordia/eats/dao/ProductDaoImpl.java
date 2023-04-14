@@ -1,9 +1,6 @@
 package ca.concordia.eats.dao;
 
-import ca.concordia.eats.dto.Category;
-import ca.concordia.eats.dto.Product;
-import ca.concordia.eats.dto.SearchHistory;
-import ca.concordia.eats.dto.User;
+import ca.concordia.eats.dto.*;
 import ca.concordia.eats.utils.ConnectionUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,10 +44,16 @@ public class ProductDaoImpl implements ProductDao {
         this.con = ConnectionUtil.getConnection();
     }
 
+    // Used for Testing
+    public ProductDaoImpl(JdbcTemplate jdbcTemplate, Connection con) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.con = con;
+    }
+
     @Override
     public List<Product> fetchAllProducts() {
         return jdbcTemplate.query(
-                "select p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, r.avg_rating as rating, c.id as categoryId, c.name as categoryName from product p join category c on p.categoryid = c.id left join (select avg(rating) as avg_rating, productId from rating group by productId) r on r.productId = p.id order by p.id desc",
+                "select p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, r.avg_rating as rating, c.id as categoryId, c.name as categoryName from product p join category c on p.categoryid = c.id left join (select avg(rating) as avg_rating, productId from rating group by productId) r on r.productId = p.id where p.disable = 0 order by p.id desc",
                 (rs, rowNum) ->
                         new Product(
                                 rs.getInt("id"),
@@ -235,15 +238,17 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public void removeFavorite(int customerId, int productId) {
+    public boolean removeFavorite(int customerId, int productId) {
+        int rowsAffected = 0;
         try {
             PreparedStatement pst = con.prepareStatement("delete from favorite where userId=? and productId=?;");
             pst.setInt(1, customerId);
             pst.setInt(2, productId);
-            pst.executeUpdate();
+            rowsAffected = pst.executeUpdate();
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
+        return rowsAffected == 1;
     }
 
     @Override
@@ -417,7 +422,7 @@ public class ProductDaoImpl implements ProductDao {
     public List<Product> search(String query, int userId) {
         List<Product> products = new ArrayList<>();
         try {
-            String sql = "SELECT * FROM product WHERE name LIKE ?";
+            String sql = "select p.id, p.name, p.description, p.imagePath, p.price, p.salesCount, p.isOnSale, p.discountPercent, r.avg_rating as rating, c.id as categoryId, c.name as categoryName from product p join category c on p.categoryid = c.id left join (select avg(rating) as avg_rating, productId from rating group by productId) r on r.productId = p.id WHERE p.name LIKE ?";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, "%" + query + "%");
             ResultSet rs = stmt.executeQuery();
@@ -429,14 +434,14 @@ public class ProductDaoImpl implements ProductDao {
                 product.setDescription(rs.getString("description"));
                 product.setImagePath(rs.getString("imagePath"));
                 product.setRating(calculateAvgProductRating(rs.getInt("id")));
+                product.setCategory(new Category(rs.getInt("categoryId"), rs.getString("categoryName")));
                 products.add(product);
-                SearchHistory searchHistory = saveSearchHistoryToDatabase(query, userId);
             }
+            saveSearchHistoryToDatabase(query, userId);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return products;
-
     }
 
 
@@ -491,7 +496,7 @@ public class ProductDaoImpl implements ProductDao {
             if (rs.next()) {
                 avgRating = rs.getDouble(1);
             }
-            
+
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
@@ -507,33 +512,32 @@ public class ProductDaoImpl implements ProductDao {
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
-    }                            
+    }
 
 
-    
-    
     @Override
-    public Map<Integer, Integer> fetchAllProductSumSalesQuantity(){
-    	Map<Integer, Integer> productSumSalesQuantity = new HashMap<Integer, Integer>();
+    public Map<Integer, Integer> fetchAllProductSumSalesQuantity() {
+        Map<Integer, Integer> productSumSalesQuantity = new HashMap<Integer, Integer>();
         try {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("select productId, Sum(quantity) as SalesQuantity from purchase_details Group by productId;");
             while (rs.next()) {
-            	productSumSalesQuantity.put(rs.getInt(1), rs.getInt(2));
+                productSumSalesQuantity.put(rs.getInt(1), rs.getInt(2));
             }
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
-        return productSumSalesQuantity;	
-    	
+        return productSumSalesQuantity;
+
     }
+
     @Override
-    public Map<Integer, Double> fetchAllProductAvgRatings(){
-    	Map<Integer, Double> productAvgRatings = new HashMap<Integer, Double>();
+    public Map<Integer, Double> fetchAllProductAvgRatings() {
+        Map<Integer, Double> productAvgRatings = new HashMap<Integer, Double>();
         try {
-        	List<Product> products = fetchAllProducts();
-        	for (Product p : products) {
-            	productAvgRatings.put(p.getId(), calculateAvgProductRating(p.getId()));
+            List<Product> products = fetchAllProducts();
+            for (Product p : products) {
+                productAvgRatings.put(p.getId(), calculateAvgProductRating(p.getId()));
             }
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());

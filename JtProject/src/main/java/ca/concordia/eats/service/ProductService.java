@@ -2,6 +2,7 @@ package ca.concordia.eats.service;
 
 import ca.concordia.eats.dto.Category;
 import ca.concordia.eats.dto.Product;
+import ca.concordia.eats.dto.Promotion;
 
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,7 @@ public interface ProductService {
 
     // OTHER : FAVORITE
     public void makeFavorite(int customerId, int productId);
-    public void removeFavorite(int customerId, int productId);
+    public boolean removeFavorite(int customerId, int productId);
     public List<Product> fetchCustomerFavoriteProducts(int customerId);
     public List<Product> search(String query, int userId);
 

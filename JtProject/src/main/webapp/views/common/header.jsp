@@ -9,64 +9,46 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="categories">
-            <a href="#" onmouseover="showMenu()">Categories</a>
-            <ul id="menu">
-                <li><input type="checkbox" name="category" value="category1"><label>Burger</label></li>
-                <li><input type="checkbox" name="category" value="category2"><label>Soup</label></li>
-                <li><input type="checkbox" name="category" value="category3"><label>Salad</label></li>
-                <li><button onclick="searchProducts()">Search</button></li>
-            </ul>
-        </div>
+        <c:choose>
+            <c:when test="${!noCategoryFilter}">
+                <c:catch var="exception"><span hidden>${query}</span></c:catch>
+                <form method="get" class="pl-3" action="">
+                    <div class="input-group">
+                        <select class="selectpicker border-right-0 border" multiple data-live-search="true"
+                                id="category-filter" name="category-filter[]" title="Filter By Category">
+                            <c:forEach items="${allCategories}" var="category">
+                                <option class="category-filter-option">${category.name}</option>
+                            </c:forEach>
+                            <c:choose>
+                                <c:when test="${empty exception}">
+                                    <input type="hidden" name="query" value="${query}"/>
+                                </c:when>
+                            </c:choose>
+                        </select>
+                        <span class="input-group-append">
+                          <button class="btn btn-outline-secondary border-left-0 border" type="submit">
+                                <i class="fas fa-filter"></i>
+                          </button>
+                        </span>
+                    </div>
+                </form>
 
-        <style>
-            .categories {
-                position: relative;
-                display: inline-block;
-            }
+                <script>
+                    $('select').selectpicker();
 
-            #menu {
-                display: none;
-                position: absolute;
-                top: 30px;
-                left: 0;
-                z-index: 1;
-            }
+                    const pageUrl = new URL(window.location.toLocaleString());
+                    const selectedCategories = pageUrl.searchParams.getAll('category-filter[]')
 
-            #menu li {
-                display: block;
-            }
-
-            #menu li a {
-                display: block;
-                padding: 5px 10px;
-                text-decoration: none;
-                color: #333;
-                background-color: #fff;
-            }
-
-            #menu li a:hover {
-                background-color: #f5f5f5;
-            }
-        </style>
-
-        <script>
-            function showMenu() {
-                document.getElementById("menu").style.display = "block";
-            }
-
-            function searchProducts() {
-                var selectedCategories = document.getElementsByName("category");
-                var selectedCategoriesValues = [];
-                for (var i = 0; i < selectedCategories.length; i++) {
-                    if (selectedCategories[i].checked) {
-                        selectedCategoriesValues.push(selectedCategories[i].value);
+                    let catOptions = document.getElementById('category-filter').getElementsByTagName('option');
+                    for (let i = 0; i < catOptions.length; i++) {
+                        if (selectedCategories.includes(catOptions[i].innerText)) {
+                            catOptions[i].selected = true;
+                        }
                     }
-                }
-                var queryString = selectedCategoriesValues.join("&");
-                window.location.href = "search-results.jsp?" + queryString;
-            }
-        </script>
+                </script>
+
+            </c:when>
+        </c:choose>
 
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -97,3 +79,4 @@
     </div>
 
 </nav>
+

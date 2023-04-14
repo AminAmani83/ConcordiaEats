@@ -28,6 +28,12 @@ public class UserDaoImpl implements UserDao {
         this.con = ConnectionUtil.getConnection();
     }
 
+    // Used for testing
+    public UserDaoImpl(ProductDao productDao, Connection con) {
+        this.productDao = productDao;
+        this.con = con;
+    }
+
     @Override
     public List<User> getAllUsers() {
         List<User> allUsers = new LinkedList<>();

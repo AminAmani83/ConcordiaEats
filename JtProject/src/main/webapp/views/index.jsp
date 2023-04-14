@@ -7,12 +7,13 @@
 </head>
 <body>
 
+
 <section class="wrapper">
     <div class="container-fostrap">
         <%@include file="common/header.jsp" %>
         <%@include file="carousel.jsp" %>
 
-        <div class="row px-4">
+        <div class="row px-4" style="min-height: 100px">
             <c:forEach items="${allProducts}" var="product">
                 <%@include file="common/productCard.jsp" %>
             </c:forEach>
