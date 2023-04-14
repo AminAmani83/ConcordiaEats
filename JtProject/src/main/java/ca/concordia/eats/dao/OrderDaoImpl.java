@@ -46,7 +46,7 @@ public class OrderDaoImpl implements OrderDao {
 	                    PreparedStatement preparedStatement = conn.prepareStatement(purchaseSql, Statement.RETURN_GENERATED_KEYS);
 	                    preparedStatement.setInt(1, user.getUserId());
 	                    preparedStatement.setString(2, String.valueOf(new Timestamp(System.currentTimeMillis())));
-	                    preparedStatement.setFloat(3, basket.getTotal(promotionDao));
+	                    preparedStatement.setFloat(3, basket.getTotal(promotionDao.fetchAllPromotions()));
 	                    preparedStatement.setInt(4, 0);
 	                    return preparedStatement;
 	                }, generatedKeyHolder);

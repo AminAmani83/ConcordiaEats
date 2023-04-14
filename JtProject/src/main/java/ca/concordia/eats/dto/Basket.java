@@ -90,7 +90,7 @@ public class Basket {
     }
       
     // This method calculates and returns the total cost of all products in the cart.
-   public float getTotal(PromotionDao promotionDao) {
+   public float getTotal(List<Promotion> activePromotions) {
         float total = 0;
         
         for (Map.Entry<Product, Integer> entry : products.entrySet()) {
@@ -102,19 +102,6 @@ public class Basket {
             } else {
                 total += product.getPrice() * quantity;
             }
-        }
-        
-        // Fetch all active promotions
-        List<Promotion> activePromotions = new ArrayList<>();
-        try {
-            activePromotions = promotionDao.fetchAllPromotions().stream()
-                    .filter(promotion -> {
-                        Date currentDate = new Date();
-                        return !currentDate.after(promotion.getStartDate()) && currentDate.before(promotion.getEndDate());
-                    })
-                    .collect(Collectors.toList());
-        } catch (Exception e) {
-            //throw new ServiceException("Error fetching active promotions", e);
         }
 
         // Apply promotions if present

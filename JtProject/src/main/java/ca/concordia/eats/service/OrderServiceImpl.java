@@ -9,6 +9,7 @@ import ca.concordia.eats.dao.OrderDao;
 import ca.concordia.eats.dao.PromotionDao;
 import ca.concordia.eats.dto.Basket;
 import ca.concordia.eats.dto.Product;
+import ca.concordia.eats.dto.Promotion;
 import ca.concordia.eats.dto.User;
 
 
@@ -21,7 +22,7 @@ public class OrderServiceImpl implements OrderService {
     private PromotionDao promotionDao;
 	
 	// This method adds a product to the session basket.
-    	@Override
+    @Override
 	public void addProduct(Product product, Basket sessionBasket) {
         Basket basket = sessionBasket;
         
@@ -45,9 +46,8 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	// This method returns the total cost of the products in the session basket.
-	public float getTotal(Basket sessionBasket) {
-       
-		return sessionBasket.getTotal(promotionDao);
+	public float getTotal(Basket sessionBasket) {	
+		return sessionBasket.getTotal(promotionDao.fetchAllPromotions());
 	}
 	
 	// This method returns the taxes for the products in the session basket.
