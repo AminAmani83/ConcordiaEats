@@ -47,6 +47,12 @@ public class ProductDaoImpl implements ProductDao {
         this.con = ConnectionUtil.getConnection();
     }
 
+    // Used for Testing
+    public ProductDaoImpl(JdbcTemplate jdbcTemplate, Connection con) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.con = con;
+    }
+
     @Override
     public List<Product> fetchAllProducts() {
         return jdbcTemplate.query(
@@ -235,15 +241,17 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public void removeFavorite(int customerId, int productId) {
+    public boolean removeFavorite(int customerId, int productId) {
+        int rowsAffected = 0;
         try {
             PreparedStatement pst = con.prepareStatement("delete from favorite where userId=? and productId=?;");
             pst.setInt(1, customerId);
             pst.setInt(2, productId);
-            pst.executeUpdate();
+            rowsAffected = pst.executeUpdate();
         } catch (Exception ex) {
             System.out.println("Exception Occurred: " + ex.getMessage());
         }
+        return rowsAffected == 1;
     }
 
     @Override
