@@ -60,6 +60,11 @@
                               placeholder="Product Details">${ product.description }</textarea>
                 </div>
 
+                <div class="form-group">
+                    <label for="isOnSale">On Sale</label>
+                    <input type="checkbox" name="onSale" <c:if test="${product.onSale}">checked</c:if>  id="onSale" value="true"/>
+                </div>
+
                 <p>Product Image</p>
                 <div class="custom-file">
                     <input type="file" class="custom-file-input" name="productImage" value="${ product.imagePath }"
