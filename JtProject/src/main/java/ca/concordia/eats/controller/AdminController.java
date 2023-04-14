@@ -14,8 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import javax.servlet.http.HttpSession;
 import java.sql.*;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -55,11 +54,13 @@ public class AdminController {
 	}
 
 	@GetMapping("/index")
-	public String index(Model model, HttpSession session) {
+	public String index(Model model, HttpSession session, @RequestParam("category-filter[]") Optional<String[]> categoryFilterNames) {
 		if (usernameForClass.equalsIgnoreCase("")) {
 			return "userLogin";
 		} else {
 			List<Product> allProducts = productService.fetchAllProducts();
+			List<Category> nonEmptyCategories = allProducts.stream().map(Product::getCategory).distinct()
+					.sorted(Comparator.comparing(Category::getName)).collect(Collectors.toList());
 			Customer customer = (Customer) session.getAttribute("user");
 			refreshRecommendedProducts(customer, allProducts);
 
@@ -67,8 +68,15 @@ public class AdminController {
 	        model.addAttribute("bestSellerProduct", customer.getRecommendation().getBestSellerProduct());
 	        model.addAttribute("highestRatedProduct", customer.getRecommendation().getHighestRatingProduct());
 
+			if (categoryFilterNames.isPresent()) {
+				allProducts = allProducts.stream()
+						.filter(p -> Arrays.asList(categoryFilterNames.get()).contains(p.getCategory().getName()))
+						.collect(Collectors.toList());
+			}
+
 			model.addAttribute("username", usernameForClass);
 			model.addAttribute("allProducts", allProducts);
+			model.addAttribute("allCategories", nonEmptyCategories);
 			model.addAttribute("favoriteProducts", customer.getFavorite().getCustomerFavoritedProducts());
 			model.addAttribute("purchasedProducts", productService.fetchPastPurchasedProducts(customer.getUserId()));
 			model.addAttribute("productCardFavSrc", "index");
@@ -133,7 +141,6 @@ public class AdminController {
 
 	@GetMapping("/admin")
 	public String adminLogin(Model model) {
-		
 		return "adminlogin";
 	}
 
@@ -147,13 +154,11 @@ public class AdminController {
 
 	@GetMapping("/loginvalidate")
 	public String adminLog(Model model) {
-		
 		return "adminlogin";
 	}
 
 	@RequestMapping(value = "loginvalidate", method = RequestMethod.POST)
 	public String adminLogin(@RequestParam("username") String username, @RequestParam("password") String pass, Model model) {
-		
 		if(username.equalsIgnoreCase("admin") && pass.equalsIgnoreCase("123")) {
 			adminLogInCheck =1;
 			return "redirect:/adminhome";

@@ -1,9 +1,6 @@
 package ca.concordia.eats.controller;
 
-import ca.concordia.eats.dto.Customer;
-import ca.concordia.eats.dto.Favorite;
-import ca.concordia.eats.dto.Product;
-import ca.concordia.eats.dto.Rating;
+import ca.concordia.eats.dto.*;
 import ca.concordia.eats.service.ProductService;
 import ca.concordia.eats.service.RecommendationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 public class MainController {
@@ -56,15 +53,27 @@ public class MainController {
         model.addAttribute("favoriteProducts", productService.fetchCustomerFavoriteProducts(customer.getUserId()));
         model.addAttribute("purchasedProducts", productService.fetchPastPurchasedProducts(customer.getUserId()));
         model.addAttribute("productCardFavSrc", "favorites");
+        model.addAttribute("noCategoryFilter", true);
         return "/favorites";
     }
 
     @GetMapping("/search")
-    public String search(@RequestParam("query") String query, Model model, HttpSession session) {
+    public String search(@RequestParam("query") String query, Model model, HttpSession session, @RequestParam("category-filter[]") Optional<String[]> categoryFilterNames) {
         if (session.getAttribute("user") == null) return "userLogin";
         Customer customer = (Customer) session.getAttribute("user");
         List<Product> products = productService.search(query, customer.getUserId());
+
+        List<Category> nonEmptyCategories = products.stream().map(Product::getCategory).distinct()
+                .sorted(Comparator.comparing(Category::getName)).collect(Collectors.toList());
+
+        if (categoryFilterNames.isPresent()) {
+            products = products.stream()
+                    .filter(p -> Arrays.asList(categoryFilterNames.get()).contains(p.getCategory().getName()))
+                    .collect(Collectors.toList());
+        }
+
         model.addAttribute("products", products);
+        model.addAttribute("allCategories", nonEmptyCategories);
         model.addAttribute("purchasedProducts", productService.fetchPastPurchasedProducts(customer.getUserId()));
         model.addAttribute("favoriteProducts", customer.getFavorite().getCustomerFavoritedProducts());
         model.addAttribute("productCardFavSrc", "search?query=" + query);
@@ -102,7 +111,5 @@ public class MainController {
 			} 
 			return "redirect:/" + sourcePage;
 			}
-
-
 
 }
