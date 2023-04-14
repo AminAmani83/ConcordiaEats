@@ -1,23 +1,30 @@
 package ca.concordia.eats.dto;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import ca.concordia.eats.dto.Product;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import ca.concordia.eats.dao.DAOException;
+import ca.concordia.eats.dao.PromotionDao;
 
 
 public class Basket {
   
+    @Autowired
+    PromotionDao promotionDao;
+    
     private int basketId;
     private float totalPrice;
     private List<Product> lineItems;
     private Map<Product, Integer> products = new HashMap<>();
-
     
     public Basket() {
     }
-
 
     public Basket(int basketId, float totalPrice, List<Product> lineItems) {
         this.basketId = basketId;
@@ -54,7 +61,6 @@ public class Basket {
     public void addProduct(Product product) {
     	
     	if (products.containsKey(product)) {
-    		
     		products.replace(product, products.get(product) + 1);
     		
         } else {
@@ -65,7 +71,6 @@ public class Basket {
 
     // This method removes a product from the cart.
     public void removeProduct(Product product) {
-    	
         products.remove(product);
     }
      
@@ -86,11 +91,8 @@ public class Basket {
     }
       
     // This method calculates and returns the total cost of all products in the cart.
-   public float getTotal() throws ServiceException, IOException {
+   public float getTotal() {
         float total = 0;
-        PromotionDao promotionDao = new PromotionDaoImpl(); // create a new instance of PromotionDaoImpl
-
-
         
         for (Map.Entry<Product, Integer> entry : products.entrySet()) {
             Product product = entry.getKey();
@@ -113,7 +115,7 @@ public class Basket {
                     })
                     .collect(Collectors.toList());
         } catch (DAOException e) {
-            throw new ServiceException("Error fetching active promotions", e);
+            //throw new ServiceException("Error fetching active promotions", e);
         }
 
         // Apply promotions if present
