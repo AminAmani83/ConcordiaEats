@@ -86,25 +86,46 @@ public class Basket {
     }
       
     // This method calculates and returns the total cost of all products in the cart.
-    public float getTotal() {
-    	
-    	float total = 0;
-    	
+   public float getTotal() throws ServiceException, IOException {
+        float total = 0;
+        PromotionDao promotionDao = new PromotionDaoImpl(); // create a new instance of PromotionDaoImpl
+
+
+        
         for (Map.Entry<Product, Integer> entry : products.entrySet()) {
-        	
-        	Product product = entry.getKey();
-        	
+            Product product = entry.getKey();
             int quantity = entry.getValue();
             
             if (product.isOnSale()) {
-            	
-            	total += product.getPrice() * (1 - product.getDiscountPercent() / 100.0f) * quantity;
-            	
+                total += product.getPrice() * (1 - product.getDiscountPercent() / 100.0f) * quantity;
             } else {
-            	
-            	total += product.getPrice() * quantity;
+                total += product.getPrice() * quantity;
             }
         }
+        
+        // Fetch all active promotions
+        List<Promotion> activePromotions = new ArrayList<>();
+        try {
+            activePromotions = promotionDao.fetchAllPromotions().stream()
+                    .filter(promotion -> {
+                        Date currentDate = new Date();
+                        return !currentDate.after(promotion.getStartDate()) && currentDate.before(promotion.getEndDate());
+                    })
+                    .collect(Collectors.toList());
+        } catch (DAOException e) {
+            throw new ServiceException("Error fetching active promotions", e);
+        }
+
+        // Apply promotions if present
+        if (!activePromotions.isEmpty()) {
+            Promotion promotion = activePromotions.get(0); // Assuming only one active promotion at a time
+            if (promotion.getName().equals("SITEWIDE_DISCOUNT_10")) {
+                total *= 0.9;
+            } else if (promotion.getName().equals("SITEWIDE_DISCOUNT_20")) {
+                total *= 0.8;
+            }
+        }
+        
         return total;
     }
     
