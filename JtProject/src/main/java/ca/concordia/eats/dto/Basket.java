@@ -8,15 +8,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import ca.concordia.eats.dao.DAOException;
 import ca.concordia.eats.dao.PromotionDao;
-
+import ca.concordia.eats.dao.PromotionDaoImpl;
+import ca.concordia.eats.service.PromotionService;
 
 public class Basket {
-  
-    @Autowired
-    PromotionDao promotionDao;
     
     private int basketId;
     private float totalPrice;
@@ -91,7 +90,7 @@ public class Basket {
     }
       
     // This method calculates and returns the total cost of all products in the cart.
-   public float getTotal() {
+   public float getTotal(PromotionDao promotionDao) {
         float total = 0;
         
         for (Map.Entry<Product, Integer> entry : products.entrySet()) {
@@ -114,7 +113,7 @@ public class Basket {
                         return !currentDate.after(promotion.getStartDate()) && currentDate.before(promotion.getEndDate());
                     })
                     .collect(Collectors.toList());
-        } catch (DAOException e) {
+        } catch (Exception e) {
             //throw new ServiceException("Error fetching active promotions", e);
         }
 
