@@ -1,16 +1,20 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <%@include file="common/bootstrap.jsp" %>
     <title>Shopping Cart</title>
-    <title>Shopping Card</title>
 </head>
 <body>
 <section class="wrapper">
     <div class="container-fostrap">
 <%@include file="common/header.jsp" %>
 <div class="container-fluid" style="min-height: 500px;">
+
+	<br><c:if test="${delivery == 0.0}">
+        <b style="background-color: yellow;">There is currently an active promotion: Free Delivery!</b><br>
+    </c:if><br>
 
     <table class="table">
         <tr>
@@ -71,10 +75,9 @@
         </tbody>
     </table>
     <b>SubTotal:</b> $ ${total} CAD<br>
-	<b>Taxes:</b> $ ${tax} CAD<br>
+	<b>Taxes:</b> $ ${total * 0.15} CAD<br>
 	<b>Delivery:</b> $ ${delivery} CAD<br>
-	<b>GrandTotal:</b> $ ${total + tax + delivery} CAD<br><br>
-    <b>Total:</b> ${total} $
+	<b>GrandTotal:</b> $ ${total * 1.15 + delivery} CAD<br><br>
 
 <form action="../../../checkout" method="get">
 	<c:if test="${not empty allProducts}">
