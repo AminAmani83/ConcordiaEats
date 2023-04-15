@@ -147,28 +147,18 @@ public class Basket {
     }
     
     // This method calculates and returns the delivery fee.
-    public double getDelivery() {
-    	/*
-    	PromotionType promotionType = new PromotionType();
+    public double getDelivery(List<Promotion> activePromotions) {
     	
-    	double delivery;
-    	String freeDelivery = promotionType.getType();
-    	
-    	if (freeDelivery == "free delivery") {
-    		
-    		delivery = 0;
+    	double delivery = 5.0;
+   
+    	if (!activePromotions.isEmpty()) {
+            Promotion promotion = activePromotions.get(0); // Assuming only one active promotion at a time
+            if (promotion.getType().equals("Free Shipping")) {
+                delivery = 0.0;
+            }
     	}
     	
-    	else {
-    		
-    		delivery = 5;
-    	}
-
-
-    	 */
-
-        int delivery = 5;
-    	return delivery;
+        return delivery;
     }
 	
     // This method updates the quantity of a product in the cart.
