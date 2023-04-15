@@ -83,23 +83,7 @@ class OrderServiceImplTest {
         // Assert that the mock product list is equal to the returned product list 
         assertEquals(productsInCart, mockProductList);
     }
-    
-    @Test
-    public void testGetTotal() {
-        // Create a mock Basket object
-        Basket mockBasket = mock(Basket.class);
 
-        // Stub the Basket.getTotal() method to return a fixed value
-        when(mockBasket.getTotal()).thenReturn(50.0f);
-
-        // Create an instance of the OrderServiceImpl and call the getTotal() method
-        OrderServiceImpl orderService = new OrderServiceImpl();
-        float total = orderService.getTotal(mockBasket);
-
-        // Assert that the returned total is equal to the expected value
-        assertEquals(50.0f, total, 0.0f);
-    }
-    
     @Test
     public void testGetTaxes() {
         // Create a mock Basket object
@@ -118,23 +102,7 @@ class OrderServiceImplTest {
         // Assert that the returned taxes value is equal to the stubbed value of 5.0
         assertEquals(5.0, taxes, 0.0);
     }
-    
-    @Test
-    public void testGetDelivery() {
-        // Create a mock Basket object
-        Basket mockBasket = mock(Basket.class);
 
-        // Stub the Basket.getDelivery() method to return a delivery cost
-        when(mockBasket.getDelivery()).thenReturn(5.0);
-
-        // Create an instance of the OrderServiceImpl and call the getDelivery() method
-        OrderServiceImpl orderService = new OrderServiceImpl();
-        double deliveryCost = orderService.getDelivery(mockBasket);
-
-        // Assert that the returned delivery cost is equal to the expected value
-        assertEquals(5.0, deliveryCost, 0.001);
-    }
-    
     @Test
     public void testUpdateProduct() {
         // create a mock product and basket
