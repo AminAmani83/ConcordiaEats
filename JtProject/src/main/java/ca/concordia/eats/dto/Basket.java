@@ -107,9 +107,9 @@ public class Basket {
         // Apply promotions if present
         if (!activePromotions.isEmpty()) {
             Promotion promotion = activePromotions.get(0); // Assuming only one active promotion at a time
-            if (promotion.getName().equals("SITEWIDE_DISCOUNT_10")) {
+            if (promotion.getType().equals("SITEWIDE_DISCOUNT_10")) {
                 total *= 0.9;
-            } else if (promotion.getName().equals("SITEWIDE_DISCOUNT_20")) {
+            } else if (promotion.getType().equals("SITEWIDE_DISCOUNT_20")) {
                 total *= 0.8;
             }
         }
