@@ -31,7 +31,7 @@
 
                 <div class="form-group">
                     <label for="price">Price</label>
-                    <input type="number" class="form-control border border-warning" required name="price" id="price"
+                    <input type="number" step="any" class="form-control border border-warning" required name="price" id="price"
                            min="1" placeholder="Price">
                 </div>
 
@@ -50,21 +50,16 @@
                               placeholder="Product Details" value="no product details"></textarea>
                 </div>
 
-                <p>Product Image</p>
-                <div class="custom-file">
-                    <input type="file" class="custom-file-input" name="productImage" accept="image/jpeg, image/png"
-                           id="productImage" onchange="loadfile(event)"/>
-                    <label class="custom-file-label border border-warning" for="productImage">Choose file</label>
-                </div>
-
                 <div class="form-group">
-                    <img src="<c:url value='/resources/Product Images/one.jpg'/>" alt="Hello" id="imgPreview"
-                         height="100px" width="100px"
-                         style="margin-top: 20px">
+                    <label for="imagePath">Product Image Path</label>
+                    <input type="text" class="form-control border border-success" name="imagePath"
+                           id="imagePath" value="${product.imagePath}" placeholder="Product Iamge Path">
+                </div>
+                
+                <div class="form-group">
+                    <input type="submit" value="Update Details" class="btn btn-primary">
                 </div>
 
-                <input type="hidden" name="imgName">
-                <input type="submit" class="btn btn-primary">
             </div>
         </div>
     </form>
