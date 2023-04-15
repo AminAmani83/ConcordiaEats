@@ -44,16 +44,16 @@
                            value="${ product.discountPercent }" min="0" max="1" placeholder="Price">
                 </div>
 
+                
+
+            </div>
+
+            <div class="col-sm-5">
                 <div class="form-group">
                     <label for="salesCount">Available Quantity</label>
                     <input type="number" class="form-control border border-success" required name="salesCount"
                            id="salesCount" value="${ product.salesCount }" min="1" placeholder="Quantity">
                 </div>
-
-            </div>
-
-            <div class="col-sm-5">
-
                 <div class="form-group">
                     <label for="description">Product Description</label>
                     <textarea class="form-control border border-success" rows="4" name="description" id="description"
@@ -65,26 +65,16 @@
                     <input type="checkbox" name="onSale" <c:if test="${product.onSale}">checked</c:if>  id="onSale" value="true"/>
                 </div>
 
-                <p>Product Image</p>
                 <div class="custom-file">
-                    <input type="file" class="custom-file-input" name="productImage" value="${ product.imagePath }"
-                           accept="image/jpeg, image/png" id="productImage" onchange="loadfile(event)"/>
-                    <label class="custom-file-label border border-success" for="productImage">Choose file</label>
-                    <script type="text/javascript">
-                        var loadFile = function (event) {
-                            var image = document.getElementById('imgPreview');
-                            image.src = URL.createObjectURL(event.target.files[0]);
-                        };
-                    </script>
+                    <label for="imagePath">Product Image Path</label>
+                    <input type="text" class="form-control border border-success" name="imagePath"
+                           id="imagePath" value="${product.imagePath}" placeholder="Product Iamge Path">
                 </div>
 
                 <div class="form-group">
-                    <img src="#" id="imgPreview" height="100px" width="100px"
-                         style="margin-top: 20px" alt=" ">
+                    <input type="submit" value="Update Details" class="btn btn-primary">
                 </div>
-
-                <input type="hidden" name="imgName">
-                <input type="submit" value="Update Details" class="btn btn-primary">
+                
             </div>
         </div>
     </form>

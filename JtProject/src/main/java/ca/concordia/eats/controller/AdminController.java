@@ -236,7 +236,7 @@ public class AdminController {
 	}
 
 	@RequestMapping(value = "/admin/products/updateData",method=RequestMethod.POST)
-	public String updateproduct(@ModelAttribute("product") Product product, @RequestParam("productImage") MultipartFile multipartFile, @RequestParam("categoryid") int categoryId ) 
+	public String updateproduct(@ModelAttribute("product") Product product, @RequestParam("categoryid") int categoryId ) 
 	{
 		Category category = productService.fetchCategoryById(categoryId);
 		product.setCategory(category);
