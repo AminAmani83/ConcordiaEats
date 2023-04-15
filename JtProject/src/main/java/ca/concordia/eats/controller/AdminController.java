@@ -236,22 +236,11 @@ public class AdminController {
 	}
 
 	@RequestMapping(value = "/admin/products/updateData",method=RequestMethod.POST)
-	public String updateproduct(@ModelAttribute("product") Product product, @RequestParam("productImage") MultipartFile multipartFile, @RequestParam("categoryid") int categoryId ) 
+	public String updateproduct(@ModelAttribute("product") Product product, @RequestParam("categoryid") int categoryId ) 
 	{
 		Category category = productService.fetchCategoryById(categoryId);
 		product.setCategory(category);
-//		String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-		String fileName = "";
-		product.setImagePath(fileName);
 		productService.updateProduct(product);
-//		String uploadDir = "/resources/Product Images/";
-//		 
-//        try {
-//			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			throw new RuntimeException("upload file failed", e);
-//		}
 		return "redirect:/admin/products";
 	}
 	
