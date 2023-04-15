@@ -46,6 +46,25 @@ User module
 - user name: jay
 - password: 123
 
+# Implementation
+
+The web application is implemented using 5 layers: View pages or JSP files, DTO (data transfer object), DAO (data acces object), Controller, Service (handling bussiness logic)
+
+# Tools and Technologies
+
+MySQL  
+Java  
+JDBC  
+Java Spring Framework  
+Bootstrap  
+HTML  
+CSS  
+JSP  
+Javascript  
+Apache Tomcat  
+Junit  
+Mockito
+
 # preview
 
 ## Admin Panel
@@ -125,14 +144,8 @@ Users can fill out the contact-us page and their info and questions will be sent
 
 ![contact-us](images/contact-us.png)
 
-### Checout
+### Checkout
 
 Users can enter their card info and chekcout
 
 ![checout](images/checkout.png)
-
-# Implementation
-
-The web application is implemented using 5 layers: View pages or JSP files, DTO (data transfer object), DAO (data acces object), Controller, Service (handling bussiness logic)
-
-The database is implementaed using a MySQL database.
