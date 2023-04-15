@@ -181,7 +181,18 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Category fetchCategoryById(int categoryId) {
-        return null;
+    	String sql = "SELECT id, name FROM springproject.category where id =? ";
+
+        return jdbcTemplate.queryForObject(
+                sql,
+                new RowMapper<Category>() {
+                    public Category mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    	Category category = new Category(rs.getInt("id"), rs.getString("name"));
+                        return category;
+                    }
+                },
+                new Object[]{categoryId}
+        );
     }
 
     @Override
