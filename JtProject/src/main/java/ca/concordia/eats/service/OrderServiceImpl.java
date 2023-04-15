@@ -59,7 +59,7 @@ public class OrderServiceImpl implements OrderService {
 	// This method returns the delivery fee for the order.
 	public double getDelivery(Basket sessionBasket) {
 	       
-			return sessionBasket.getDelivery();
+			return sessionBasket.getDelivery(promotionDao.fetchAllPromotions());
 	}
 	
 	// This method is responsible for creating a new order for the session user.
@@ -77,3 +77,4 @@ public class OrderServiceImpl implements OrderService {
         basket.updateProduct(product, quantity);	
 	}	
 }
+
