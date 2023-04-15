@@ -19,7 +19,7 @@
            
           <input id="column-left" type="text" name="first-name" placeholder="First Name" required/>
           <input id="column-right" type="text" name="last-name" placeholder="Surname" required/>
-          <input id="input-field" type="text" name="number" placeholder="Card Number" required pattern="^4[0-9]{12}(?:[0-9]{3})?$"/>
+          <input id="input-field" type="text" name="number" placeholder="Card Number" required pattern="[0-9]{16}"/>
           <input id="column-left" type="text" name="expiry" required="required" placeholder="MM / YY" pattern="(0[1-9]|1[0-2])\/([0-9]{2})"/>
 		  <input id="column-right" type="text" name="cvc" placeholder="CCV" required pattern="\d{3}"/>
 
@@ -28,7 +28,7 @@
       
           <input id="input-field" type="text" name="streetaddress" required="required" autocomplete="on" maxlength="45" placeholder="Streed Address"/>
           <input id="column-left" type="text" name="city" required="required" autocomplete="on" maxlength="20" placeholder="City"/>
-          <input id="column-right" type="text" name="zipcode" required="required" autocomplete="on" pattern="[0-9]*" maxlength="5" placeholder="ZIP code"/>
+          <input id="column-right" type="text" name="zipcode" required="required" autocomplete="on" pattern="[A-Za-z]\d[A-Za-z] \d[A-Za-z]\d" maxlength="7" placeholder="ZIP code or postal code"/>
           <input id="input-field" type="email" name="email" required="required" autocomplete="on" maxlength="40" placeholder="Email"/>
           <input id="input-button" type="submit" value="Submit"/>
         
