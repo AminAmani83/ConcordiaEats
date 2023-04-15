@@ -113,3 +113,10 @@ VALUES (1, 'burger', '2022-04-07 15:30:00'),
        (1, 'fries', '2022-04-07 16:45:00'),
        (1, 'pizza', '2022-04-07 12:00:00'),
        (1, 'sandwich', '2022-04-07 14:15:00'); 
+       
+update springproject.product set imagePath="https://tmbidigitalassetsazure.blob.core.windows.net/secure/RMS/attachments/37/1200x1200/Sausage-Sliders-with-Cran-Apple-Slaw_exps48783_SD2235819D06_24_2bC_RMS.jpg";
+update springproject.product set imagePath="https://media-cdn.tripadvisor.com/media/photo-s/17/53/ac/15/meat-lovers-pizza.jpg" where Id=2;
+update springproject.product set imagePath="https://pinchofyum.com/wp-content/uploads/Chicken-Sandwich-Feature-1.jpg" where Id=3;
+update springproject.product set imagePath="https://www.tiger-corporation.com/wp-content/uploads/2023/02/hero-img-recipe-spicy-tuna-3db6e125056f2bde01321a3da5d290da.jpg" where Id=4;
+
+ 
