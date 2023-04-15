@@ -1,21 +1,16 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <%@include file="common/bootstrap.jsp" %>
     <title>Shopping Cart</title>
+    <title>Shopping Card</title>
 </head>
 <body>
 <section class="wrapper">
     <div class="container-fostrap">
 <%@include file="common/header.jsp" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <div class="container-fluid" style="min-height: 500px;">
-
-	<br><c:if test="${delivery == 0.0}">
-        <b style="background-color: yellow;">There is currently an active promotion: Free Delivery!</b><br>
-    </c:if><br>
 
     <table class="table">
         <tr>
@@ -47,16 +42,16 @@
                            oninput="this.value = this.value.slice(0, 3)" style="width: 70px;">
                 </td>
                 <td>$
-                    <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="" maxFractionDigits="2" minFractionDigits="2"/> CAD
+                    <c:out value="${product.price}"/> CAD
                 </td>
                 <td>
 					<c:out value="${product.discountPercent}"/>%
 				</td>
 				<td>$
-					<fmt:formatNumber value="${product.price * product.discountPercent / 100}" type="currency" currencySymbol="" maxFractionDigits="2" minFractionDigits="2"/> CAD
+					<c:out value="${product.price * product.discountPercent / 100}"/> CAD
 				</td>
 				<td>$
-					<fmt:formatNumber value="${product.price - (product.price * product.discountPercent / 100)}" type="currency" currencySymbol="" maxFractionDigits="2" minFractionDigits="2"/> CAD
+					<c:out value="${product.price - (product.price * product.discountPercent / 100)}"/> CAD
 				</td>
                 <td>
                     <c:out value="${product.description}"/>
@@ -75,10 +70,11 @@
         </c:forEach>
         </tbody>
     </table>
-    <b>SubTotal:</b><fmt:formatNumber value=" ${total}" maxFractionDigits="2" />  CAD<br>
-	<b>Taxes:</b> <fmt:formatNumber value=" ${total * 0.15}" maxFractionDigits="2" /> CAD<br>
-	<b>Delivery:</b> <fmt:formatNumber value="${delivery} " maxFractionDigits="2" /> CAD<br>
-	<b>GrandTotal:</b> 	<fmt:formatNumber value="  ${total * 1.15 + delivery} " maxFractionDigits="2" /> CAD<br><br>
+    <b>SubTotal:</b> $ ${total} CAD<br>
+	<b>Taxes:</b> $ ${tax} CAD<br>
+	<b>Delivery:</b> $ ${delivery} CAD<br>
+	<b>GrandTotal:</b> $ ${total + tax + delivery} CAD<br><br>
+    <b>Total:</b> ${total} $
 
 <form action="../../../checkout" method="get">
 	<c:if test="${not empty allProducts}">
