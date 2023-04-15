@@ -23,7 +23,7 @@ import ca.concordia.eats.utils.ConnectionUtil;
 @Repository
 public class OrderDaoImpl implements OrderDao {
 	
-	 @Autowired
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 	 
     @Autowired
@@ -91,7 +91,6 @@ public class OrderDaoImpl implements OrderDao {
 	            System.out.println("Exception Occurred: " + ex.getMessage());
 	        }
 	    }
-
 
     /**
      * Helper method for removeAllPurchasesByCustomerId
