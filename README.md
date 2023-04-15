@@ -149,3 +149,9 @@ Users can fill out the contact-us page and their info and questions will be sent
 Users can enter their card info and chekcout
 
 ![checout](images/checkout.png)
+
+### Category Filter
+
+Users can filter products by category
+
+![filter](images/filter.png)
