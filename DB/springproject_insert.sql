@@ -57,16 +57,16 @@ INSERT INTO `springproject`.`category` (`name`) VALUES ('Specials');
 ALTER TABLE `springproject`.`product` AUTO_INCREMENT = 1;
 
 INSERT INTO `springproject`.`product` (`name`, `description`, `imagePath`, `categoryid`, `price`, `salesCount`, `isOnSale`, `discountPercent`) 
-VALUES ('Cheeseburger', 'A juicy beef patty with melted cheese on a soft bun.', 'https://example.com/images/cheeseburger.jpg', 1, 9.99, 50, 0, NULL);
+VALUES ('Cheeseburger', 'A juicy beef patty with melted cheese on a soft bun.', 'https://tmbidigitalassetsazure.blob.core.windows.net/secure/RMS/attachments/37/1200x1200/Sausage-Sliders-with-Cran-Apple-Slaw_exps48783_SD2235819D06_24_2bC_RMS.jpg', 1, 9.99, 50, 0, NULL);
 
 INSERT INTO `springproject`.`product` (`name`, `description`, `imagePath`, `categoryid`, `price`, `salesCount`, `isOnSale`, `discountPercent`) 
-VALUES ('Pepperoni Pizza', 'Classic pizza with tomato sauce, mozzarella cheese, and pepperoni.', 'https://example.com/images/pepperoni_pizza.jpg', 1, 12.99, 35, 1, 0.1);
+VALUES ('Pepperoni Pizza', 'Classic pizza with tomato sauce, mozzarella cheese, and pepperoni.', 'https://media-cdn.tripadvisor.com/media/photo-s/17/53/ac/15/meat-lovers-pizza.jpg', 1, 12.99, 35, 1, 0.1);
 
 INSERT INTO `springproject`.`product` (`name`, `description`, `imagePath`, `categoryid`, `price`, `salesCount`, `isOnSale`, `discountPercent`) 
-VALUES ('Fried Chicken Sandwich', 'Crispy fried chicken on a toasted bun with lettuce and mayo.', 'https://example.com/images/fried_chicken_sandwich.jpg', 2, 8.99, 20, 0, NULL);
+VALUES ('Fried Chicken Sandwich', 'Crispy fried chicken on a toasted bun with lettuce and mayo.', 'https://pinchofyum.com/wp-content/uploads/Chicken-Sandwich-Feature-1.jpg', 2, 8.99, 20, 0, NULL);
 
 INSERT INTO `springproject`.`product` (`name`, `description`, `imagePath`, `categoryid`, `price`, `salesCount`, `isOnSale`, `discountPercent`) 
-VALUES ('Spicy Tuna Roll', 'Sushi roll filled with spicy tuna, avocado, and cucumber.', 'https://example.com/images/spicy_tuna_roll.jpg', 3, 6.99, 15, 1, 0.5);
+VALUES ('Spicy Tuna Roll', 'Sushi roll filled with spicy tuna, avocado, and cucumber.', 'https://www.tiger-corporation.com/wp-content/uploads/2023/02/hero-img-recipe-spicy-tuna-3db6e125056f2bde01321a3da5d290da.jpg', 3, 6.99, 15, 1, 0.5);
 
 
 -- -----------------------------------------------------
@@ -114,9 +114,5 @@ VALUES (1, 'burger', '2022-04-07 15:30:00'),
        (1, 'pizza', '2022-04-07 12:00:00'),
        (1, 'sandwich', '2022-04-07 14:15:00'); 
        
-update springproject.product set imagePath="https://tmbidigitalassetsazure.blob.core.windows.net/secure/RMS/attachments/37/1200x1200/Sausage-Sliders-with-Cran-Apple-Slaw_exps48783_SD2235819D06_24_2bC_RMS.jpg";
-update springproject.product set imagePath="https://media-cdn.tripadvisor.com/media/photo-s/17/53/ac/15/meat-lovers-pizza.jpg" where Id=2;
-update springproject.product set imagePath="https://pinchofyum.com/wp-content/uploads/Chicken-Sandwich-Feature-1.jpg" where Id=3;
-update springproject.product set imagePath="https://www.tiger-corporation.com/wp-content/uploads/2023/02/hero-img-recipe-spicy-tuna-3db6e125056f2bde01321a3da5d290da.jpg" where Id=4;
-
- 
+       
+       
