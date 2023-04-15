@@ -1,23 +1,29 @@
 package ca.concordia.eats.dto;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import ca.concordia.eats.dto.Product;
+import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import ca.concordia.eats.dao.DAOException;
+import ca.concordia.eats.dao.PromotionDao;
+import ca.concordia.eats.dao.PromotionDaoImpl;
+import ca.concordia.eats.service.PromotionService;
 
 public class Basket {
-  
+    
     private int basketId;
     private float totalPrice;
     private List<Product> lineItems;
     private Map<Product, Integer> products = new HashMap<>();
-
     
     public Basket() {
     }
-
 
     public Basket(int basketId, float totalPrice, List<Product> lineItems) {
         this.basketId = basketId;
@@ -54,7 +60,6 @@ public class Basket {
     public void addProduct(Product product) {
     	
     	if (products.containsKey(product)) {
-    		
     		products.replace(product, products.get(product) + 1);
     		
         } else {
@@ -65,7 +70,6 @@ public class Basket {
 
     // This method removes a product from the cart.
     public void removeProduct(Product product) {
-    	
         products.remove(product);
     }
      
@@ -86,25 +90,30 @@ public class Basket {
     }
       
     // This method calculates and returns the total cost of all products in the cart.
-    public float getTotal() {
-    	
-    	float total = 0;
-    	
+   public float getTotal(List<Promotion> activePromotions) {
+        float total = 0;
+        
         for (Map.Entry<Product, Integer> entry : products.entrySet()) {
-        	
-        	Product product = entry.getKey();
-        	
+            Product product = entry.getKey();
             int quantity = entry.getValue();
             
             if (product.isOnSale()) {
-            	
-            	total += product.getPrice() * (1 - product.getDiscountPercent() / 100.0f) * quantity;
-            	
+                total += product.getPrice() * (1 - product.getDiscountPercent() / 100.0f) * quantity;
             } else {
-            	
-            	total += product.getPrice() * quantity;
+                total += product.getPrice() * quantity;
             }
         }
+
+        // Apply promotions if present
+        if (!activePromotions.isEmpty()) {
+            Promotion promotion = activePromotions.get(0); // Assuming only one active promotion at a time
+            if (promotion.getType().equals("SITEWIDE_DISCOUNT_10")) {
+                total *= 0.9;
+            } else if (promotion.getType().equals("SITEWIDE_DISCOUNT_20")) {
+                total *= 0.8;
+            }
+        }
+        
         return total;
     }
     
@@ -138,28 +147,18 @@ public class Basket {
     }
     
     // This method calculates and returns the delivery fee.
-    public double getDelivery() {
-    	/*
-    	PromotionType promotionType = new PromotionType();
+    public double getDelivery(List<Promotion> activePromotions) {
     	
-    	double delivery;
-    	String freeDelivery = promotionType.getType();
-    	
-    	if (freeDelivery == "free delivery") {
-    		
-    		delivery = 0;
+    	double delivery = 5.0;
+   
+    	if (!activePromotions.isEmpty()) {
+            Promotion promotion = activePromotions.get(0); // Assuming only one active promotion at a time
+            if (promotion.getType().equals("Free Shipping")) {
+                delivery = 0.0;
+            }
     	}
     	
-    	else {
-    		
-    		delivery = 5;
-    	}
-
-
-    	 */
-
-        int delivery = 5;
-    	return delivery;
+        return delivery;
     }
 	
     // This method updates the quantity of a product in the cart.

@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ca.concordia.eats.dto.*;
+import ca.concordia.eats.service.PromotionService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -21,9 +23,12 @@ import ca.concordia.eats.utils.ConnectionUtil;
 @Repository
 public class OrderDaoImpl implements OrderDao {
 	
-	 @Autowired
+    @Autowired
     private JdbcTemplate jdbcTemplate;
-
+	 
+    @Autowired
+    private PromotionDao promotionDao;
+	    
     Connection con;
 
     public OrderDaoImpl() throws IOException {
@@ -46,7 +51,7 @@ public class OrderDaoImpl implements OrderDao {
 	                    PreparedStatement preparedStatement = conn.prepareStatement(purchaseSql, Statement.RETURN_GENERATED_KEYS);
 	                    preparedStatement.setInt(1, user.getUserId());
 	                    preparedStatement.setString(2, String.valueOf(new Timestamp(System.currentTimeMillis())));
-	                    preparedStatement.setFloat(3, basket.getTotal());
+	                    preparedStatement.setFloat(3, basket.getTotal(promotionDao.fetchAllPromotions()));
 	                    preparedStatement.setInt(4, 0);
 	                    return preparedStatement;
 	                }, generatedKeyHolder);
@@ -91,7 +96,6 @@ public class OrderDaoImpl implements OrderDao {
 	            System.out.println("Exception Occurred: " + ex.getMessage());
 	        }
 	    }
-
 
     /**
      * Helper method for removeAllPurchasesByCustomerId

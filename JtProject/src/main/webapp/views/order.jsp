@@ -1,10 +1,10 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <%@include file="common/bootstrap.jsp" %>
     <title>Shopping Cart</title>
-    <title>Shopping Card</title>
 </head>
 <body>
 <section class="wrapper">
@@ -15,20 +15,25 @@
 <div class="container-fluid" style="min-height: 500px;">
 
 
-<table class="table">
-    <tr>
-        <th scope="col">Product Name</th>
-        <th scope="col">Preview</th>
-        <th scope="col">Quantity</th>
-        <th scope="col">Price</th>
-        <th scope="col">Discount (%)</th>
-        <th scope="col">You Save</th>
-        <th scope="col">You Pay</th>
-        <th scope="col">Description</th>
-        <th scope="col">Update</th>
-        <th scope="col">Delete</th>
-    </tr>
-    <tbody>
+	<br><c:if test="${delivery == 0.0}">
+        <b style="background-color: yellow;">There is currently an active promotion: Free Delivery!</b><br>
+    </c:if><br>
+
+    <table class="table">
+        <tr>
+            <th scope="col">Product Name</th>
+			<th scope="col">Preview</th>
+			<th scope="col">Quantity</th>
+			<th scope="col">Price</th>
+			<th scope="col">Discount (%)</th>
+			<th scope="col">You Save</th>
+			<th scope="col">You Pay</th>
+			<th scope="col">Description</th>
+			<th scope="col">Update</th>
+			<th scope="col">Delete</th>
+        </tr>
+        <tbody>
+
 
     <c:forEach items="${allProducts}" var="product">
         <tr>
@@ -82,8 +87,12 @@
 	<b>Taxes:</b> <fmt:formatNumber value=" ${tax}" maxFractionDigits="2" /> CAD<br>
 	<b>Delivery:</b> <fmt:formatNumber value="${delivery} " maxFractionDigits="2" /> CAD<br>
 	<b>GrandTotal:</b> 	<fmt:formatNumber value="  ${total + tax + delivery} " maxFractionDigits="2" /> CAD<br>
-	 CAD<br><br>
-    <b>Total:</b>	<fmt:formatNumber value=" ${total} " maxFractionDigits="2" />  $
+    <b>Total:</b>	<fmt:formatNumber value=" ${total * 1.15 + delivery} " maxFractionDigits="2" />  
+
+        
+        </tbody>
+    </table>
+   
 
 <form action="../../../checkout" method="get">
 	<c:if test="${not empty allProducts}">
