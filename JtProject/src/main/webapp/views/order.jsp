@@ -11,9 +11,7 @@
     <div class="container-fostrap">
 <%@include file="common/header.jsp" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
 <div class="container-fluid" style="min-height: 500px;">
-
 
 	<br><c:if test="${delivery == 0.0}">
         <b style="background-color: yellow;">There is currently an active promotion: Free Delivery!</b><br>
@@ -34,65 +32,53 @@
         </tr>
         <tbody>
 
-
-    <c:forEach items="${allProducts}" var="product">
-        <tr>
-            <td>
-                <c:out value="${product.name}"/>
-            </td>
-            <td><img
-                    src= "${product.imagePath}"
-                    height="100px" width="100px"></td>
-                <form action="../../../order/update/${product.id}" method="get">
-           <td>
-                <input type="number" class="form-control border border-success" required name="quantity"
-                       id="quantity" value="${ product.salesCount }" min="1" placeholder="Qty"
-                       oninput="this.value = this.value.slice(0, 3)" style="width: 70px;">
-            </td>
-            <td>$
-                <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="" maxFractionDigits="2" minFractionDigits="2"/> CAD
-            </td>
-            <td>
-                <c:out value="${product.discountPercent}"/>%
-            </td>
-            <td>$
-                <fmt:formatNumber value="${product.price * product.discountPercent / 100}" type="currency" currencySymbol="" maxFractionDigits="2" minFractionDigits="2"/> CAD
-            </td>
-            <td>$
-                <fmt:formatNumber value="${product.price - (product.price * product.discountPercent / 100)}" type="currency" currencySymbol="" maxFractionDigits="2" minFractionDigits="2"/> CAD
-            </td>
-            <td>
-                <c:out value="${product.description}"/>
-            </td>
-            <td>
-                     <input type="hidden" name="pid" value="${product.id}">
-                    <input type="submit" value="Update" class="btn btn-warning">
-                </form>
-            </td>
-            <td>
-                <form action="../../../order/delete/${product.id}" method="get">
-                    <input type="submit" value="Delete" class="btn btn-danger">
-                </form>
-            </td>
-        </tr>
-    </c:forEach>
-    </tbody>
-</table>
-
-
-
-
-
-    <b>SubTotal:</b><fmt:formatNumber value=" ${total}" maxFractionDigits="2" />  CAD<br>
-	<b>Taxes:</b> <fmt:formatNumber value=" ${tax}" maxFractionDigits="2" /> CAD<br>
-	<b>Delivery:</b> <fmt:formatNumber value="${delivery} " maxFractionDigits="2" /> CAD<br>
-	<b>GrandTotal:</b> 	<fmt:formatNumber value="  ${total + tax + delivery} " maxFractionDigits="2" /> CAD<br>
-    <b>Total:</b>	<fmt:formatNumber value=" ${total * 1.15 + delivery} " maxFractionDigits="2" />  
-
-        
+        <c:forEach items="${allProducts}" var="product">
+            <tr>
+                <td>
+                    <c:out value="${product.name}"/>
+                </td>
+                <td><img
+                        src= "${product.imagePath}"
+                        height="100px" width="100px"></td>
+                    <form action="../../../order/update/${product.id}" method="get">
+               <td>
+                    <input type="number" class="form-control border border-success" required name="quantity"
+                           id="quantity" value="${ product.salesCount }" min="1" placeholder="Qty"
+                           oninput="this.value = this.value.slice(0, 3)" style="width: 70px;">
+                </td>
+                <td>$
+                    <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="" maxFractionDigits="2" minFractionDigits="2"/> CAD
+                </td>
+                <td>
+					<c:out value="${product.discountPercent}"/>%
+				</td>
+				<td>$
+					<fmt:formatNumber value="${product.price * product.discountPercent / 100}" type="currency" currencySymbol="" maxFractionDigits="2" minFractionDigits="2"/> CAD
+				</td>
+				<td>$
+					<fmt:formatNumber value="${product.price - (product.price * product.discountPercent / 100)}" type="currency" currencySymbol="" maxFractionDigits="2" minFractionDigits="2"/> CAD
+				</td>
+                <td>
+                    <c:out value="${product.description}"/>
+                </td>
+                <td>
+                         <input type="hidden" name="pid" value="${product.id}">
+                        <input type="submit" value="Update" class="btn btn-warning">
+                    </form>
+                </td>
+                <td>
+                    <form action="../../../order/delete/${product.id}" method="get">
+                        <input type="submit" value="Delete" class="btn btn-danger">
+                    </form>
+                </td>
+            </tr>
+        </c:forEach>
         </tbody>
     </table>
-   
+    <b>SubTotal:</b><fmt:formatNumber value=" ${total}" maxFractionDigits="2" />  CAD<br>
+	<b>Taxes:</b> <fmt:formatNumber value=" ${total * 0.15}" maxFractionDigits="2" /> CAD<br>
+	<b>Delivery:</b> <fmt:formatNumber value="${delivery} " maxFractionDigits="2" /> CAD<br>
+	<b>GrandTotal:</b> 	<fmt:formatNumber value="  ${total * 1.15 + delivery} " maxFractionDigits="2" /> CAD<br><br>
 
 <form action="../../../checkout" method="get">
 	<c:if test="${not empty allProducts}">
