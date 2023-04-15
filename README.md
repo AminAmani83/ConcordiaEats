@@ -15,7 +15,7 @@
 ## Features
 
 - **Admin:** Product Management, Promotion Management, Customer Management, Category Management, Login verification
-- **Customer:** Favorites Panel, Profile Management, Basket and Order Management, Best Deals View
+- **Customer:** Registration, Favorites Panel, Profile Management, Basket and Order Management, Best Deals View
   Contact Us Page, Product Recommendation, Category Filter, Product Search, Product Rating, Login verification
 
 ## How To Run ?
@@ -83,6 +83,12 @@ Note: promotions apply to basket and not products
 
 ## Customer Experience
 
+### Home
+
+From this page, customers can add products to their basket, rate products, and mark them as favorites. Best deals based on customer history and discounts are shown on top of the page.
+
+![user home](images/user-home.png)
+
 ### Registration
 
 New customers can register to have their profile data saved
@@ -94,3 +100,39 @@ New customers can register to have their profile data saved
 Users can change their info
 
 ![profile](images/profile.png)
+
+### Favorite Products
+
+Items market with heart icon by customer as his favorite will be shown in his "Favorites" panel
+
+![favorite](images/favorite.png)
+
+### Rating
+
+Customers can rate the products they bought before
+
+![rate](images/rate.png)
+
+### Basket
+
+Customers can add items to their basket and see the price with promotions applied in real-time
+
+![basket](images/basket.png)
+
+### Contact Us
+
+Users can fill out the contact-us page and their info and questions will be sent to admins through email
+
+![contact-us](images/contact-us.png)
+
+### Checout
+
+Users can enter their card info and chekcout
+
+![checout](images/checkout.png)
+
+# Implementation
+
+The web application is implemented using 5 layers: View pages or JSP files, DTO (data transfer object), DAO (data acces object), Controller, Service (handling bussiness logic)
+
+The database is implementaed using a MySQL database.
