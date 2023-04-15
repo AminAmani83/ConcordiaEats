@@ -65,7 +65,7 @@
                     <input type="checkbox" name="onSale" <c:if test="${product.onSale}">checked</c:if>  id="onSale" value="true"/>
                 </div>
 
-                <div class="custom-file">
+                <div class="form-group">
                     <label for="imagePath">Product Image Path</label>
                     <input type="text" class="form-control border border-success" name="imagePath"
                            id="imagePath" value="${product.imagePath}" placeholder="Product Iamge Path">
