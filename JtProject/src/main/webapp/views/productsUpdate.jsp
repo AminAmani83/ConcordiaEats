@@ -28,7 +28,7 @@
                 <div class="form-group">
                     <label for="categoryid">Select Category</label>
                     <select class="form-control border border-success" name="categoryid" id="categoryid" readonly>
-                        <option value="${product.id}" name="${product.name}">${product.name}</option>
+                        <option value="${product.category.id}" name="${product.category.name}">${product.category.name}</option>
                     </select>
                 </div>
 
