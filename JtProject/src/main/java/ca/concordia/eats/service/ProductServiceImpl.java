@@ -3,15 +3,9 @@ package ca.concordia.eats.service;
 import ca.concordia.eats.dao.ProductDao;
 import ca.concordia.eats.dto.Category;
 import ca.concordia.eats.dto.Product;
-import ca.concordia.eats.dto.Promotion;
-import ca.concordia.eats.dto.Rating;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpSession;
-
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,8 +16,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     ProductDao productDao;
-    @Autowired
-    private HttpSession httpSession;
+
+    public ProductServiceImpl() {
+    }
+
+    // used for Integration Testing
+    public ProductServiceImpl(ProductDao productDao) {
+        this.productDao = productDao;
+    }
 
     @Override
     public List<Product> fetchAllProducts() {

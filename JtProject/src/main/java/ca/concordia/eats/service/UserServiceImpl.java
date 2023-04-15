@@ -1,16 +1,11 @@
 package ca.concordia.eats.service;
 
-import ca.concordia.eats.dto.Favorite;
-import ca.concordia.eats.dto.Rating;
-import ca.concordia.eats.dto.UserCredentials;
-import org.springframework.stereotype.Service;
-
 import ca.concordia.eats.dao.OrderDao;
 import ca.concordia.eats.dao.ProductDao;
 import ca.concordia.eats.dao.UserDao;
-import ca.concordia.eats.dto.User;
-import ca.concordia.eats.dto.Customer;
+import ca.concordia.eats.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -32,6 +27,14 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     ProductService productService;
+
+    // used for integration testing
+    public UserServiceImpl(UserDao userDao, OrderDao orderDao, ProductDao productDao, ProductService productService) {
+        this.userDao = userDao;
+        this.orderDao = orderDao;
+        this.productDao = productDao;
+        this.productService = productService;
+    }
 
     @Override
     public List<User> getAllUsers() {

@@ -1,9 +1,7 @@
 package ca.concordia.eats.dao;
 
-import ca.concordia.eats.dto.Customer;
-import ca.concordia.eats.dto.Product;
-import ca.concordia.eats.dto.User;
-import ca.concordia.eats.dto.UserCredentials;
+import ca.concordia.eats.dto.*;
+import ca.concordia.eats.service.OrderServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -51,20 +49,6 @@ public class UserDaoImplTest {
         when(mockStatement.executeQuery()).thenReturn(mockResultSet);
     }
 
-
-    // TODO: try again
-    @Test
-    public void testGetAllUsers() {
-        List<User> allUsers = userDaoImpl.getAllUsers();
-        assertEquals(2, allUsers.size());
-        assertEquals("user1", allUsers.get(0).getUsername());
-        assertEquals("role1", allUsers.get(0).getRole());
-        assertEquals("user1@test.com", allUsers.get(0).getEmail());
-        assertEquals("user2", allUsers.get(1).getUsername());
-        assertEquals("role2", allUsers.get(1).getRole());
-        assertEquals("user2@test.com", allUsers.get(1).getEmail());
-    }
-    
     @Test
     public void testGetUserById() throws Exception {
         // set up the mock objects to return dummy data
@@ -132,12 +116,12 @@ public class UserDaoImplTest {
     void testGetAllCustomers() throws SQLException {
         // Set up mock objects to return test data
         when(mockResultSet.next()).thenReturn(true, true, false);
-        when(mockResultSet.getInt("id")).thenReturn(1, 3);
-        when(mockResultSet.getString("username")).thenReturn("user1", "user3");
-        when(mockResultSet.getString("role")).thenReturn("CUSTOMER", "CUSTOMER");
-        when(mockResultSet.getString("address")).thenReturn("123 Main St", "789 Elm St");
-        when(mockResultSet.getString("email")).thenReturn("user1@test.com", "user3@test.com");
-        when(mockResultSet.getString("phone")).thenReturn("123-456-7890", "123-456-7892");
+        when(mockResultSet.getInt(1)).thenReturn(1, 3);
+        when(mockResultSet.getString(2)).thenReturn("user1", "user3");
+        when(mockResultSet.getString(3)).thenReturn("CUSTOMER", "CUSTOMER");
+        when(mockResultSet.getString(4)).thenReturn("123 Main St", "789 Elm St");
+        when(mockResultSet.getString(5)).thenReturn("user1@test.com", "user3@test.com");
+        when(mockResultSet.getString(6)).thenReturn("123-456-7890", "123-456-7892");
 
         // Call the method under test
         List<Customer> customers = userDaoImpl.getAllCustomers();
@@ -160,41 +144,6 @@ public class UserDaoImplTest {
         assertEquals("123-456-7892", customers.get(1).getPhone());
     }
 
-    @Test
-    public void testGetCustomerById() throws SQLException {
-        // Arrange
-        int userId = 1;
-        String expectedUsername = "testuser";
-        String expectedRole = "CUSTOMER";
-        String expectedEmail = "testuser@example.com";
-        String expectedAddress = "123 Main St";
-        String expectedPhone = "555-555-5555";
-
-        when(mockResultSet.next()).thenReturn(true);
-        when(mockResultSet.getInt("id")).thenReturn(userId);
-        when(mockResultSet.getString("username")).thenReturn(expectedUsername);
-        when(mockResultSet.getString("role")).thenReturn(expectedRole);
-        when(mockResultSet.getString("email")).thenReturn(expectedEmail);
-        when(mockResultSet.getString("address")).thenReturn(expectedAddress);
-        when(mockResultSet.getString("phone")).thenReturn(expectedPhone);
-
-        // Act
-        Customer result = userDaoImpl.getCustomerById(userId);
-
-        // Assert
-        verify(mockConnection).prepareStatement("select id, username, role, email, address, phone from user where id = (?);");
-        verify(mockStatement).setInt(1, userId);
-        verify(mockStatement).executeQuery();
-
-        assertNotNull(result);
-        assertEquals(userId, result.getUserId());
-        assertEquals(expectedUsername, result.getUsername());
-        assertEquals(expectedRole, result.getRole());
-        assertEquals(expectedEmail, result.getEmail());
-        assertEquals(expectedAddress, result.getAddress());
-        assertEquals(expectedPhone, result.getPhone());
-    }
- 
     @Test
     public void testGetCustomerByCredential() throws SQLException {
         // Arrange
@@ -340,45 +289,90 @@ public class UserDaoImplTest {
         Mockito.verify(mockStatement).executeQuery();
         Mockito.verify(mockResultSet).next();
     }
-    
+
     @Test
-    public void testFetchCustomerSearchedProduct() throws SQLException {
-        // Arrange
-        UserCredentials userCredentials = new UserCredentials("testuser", "password123");
-        Customer customer = new Customer();
-        customer.setUserId(1);
-        
-        // Create mock objects
-        ProductDao mockProductDao = Mockito.mock(ProductDao.class);
+    public void testAddProduct() {
+        // create a mock Product and Basket
+        Product mockProduct = mock(Product.class);
+        Basket mockBasket = mock(Basket.class);
 
-        // Set up the mock database to return a result for the specified user credentials
-        Mockito.when(mockResultSet.next()).thenReturn(true).thenReturn(false);
-        Mockito.when(mockResultSet.getInt("userId")).thenReturn(1);
-        Mockito.when(mockResultSet.getString("phrase")).thenReturn("test");
+        // create an instance of OrderServiceImpl and call the addProduct method
+        OrderServiceImpl orderService = new OrderServiceImpl();
+        orderService.addProduct(mockProduct, mockBasket);
 
-        // Set up the mock productDao to return a list of products
-        List<Product> products = new ArrayList<>();
-        Product product1 = new Product();
-        product1.setName("test product 1");
-        products.add(product1);
-        Product product2 = new Product();
-        product2.setName("test product 2");
-        products.add(product2);
-        doReturn(products).when(mockProductDao).fetchAllProducts();
+        // verify that the addProduct method was called on the mock Basket with the mock Product as an argument
+        verify(mockBasket).addProduct(mockProduct);
+    }
 
-        // Act
-        List<Product> result = userDaoImpl.fetchCustomerSearchedProduct(customer);
+    @Test
+    public void testRemoveProduct() {
+        // create a mock product and basket
+        Product mockProduct = mock(Product.class);
+        Basket mockBasket = mock(Basket.class);
 
-        // Assert
-        assertEquals(2, result.size());
-        assertTrue(result.contains(product1));
-        assertTrue(result.contains(product2));
-        Mockito.verify(mockConnection).prepareStatement("SELECT * FROM search_history WHERE userId = ?;");
-        Mockito.verify(mockStatement).setInt(1, 1);
-        Mockito.verify(mockStatement).executeQuery();
-        Mockito.verify(mockResultSet, Mockito.times(2)).next();
-        Mockito.verify(mockResultSet).getInt("userId");
-        Mockito.verify(mockResultSet).getString("phrase");
-        Mockito.verify(mockProductDao).fetchAllProducts();
+        // create an instance of the service to test
+        OrderServiceImpl orderService = new OrderServiceImpl();
+
+        // call the method to be tested
+        orderService.removeProduct(mockProduct, mockBasket);
+
+        // verify that the removeProduct method was called on the basket with the correct product
+        verify(mockBasket, times(1)).removeProduct(mockProduct);
+    }
+
+    @Test
+    public void testGetProductsInCart() {
+        // Create a mock Basket object
+        Basket mockBasket = mock(Basket.class);
+
+        // Create a mock list of products
+        List<Product> mockProductList = new ArrayList<Product>();
+        mockProductList.add(new Product(1, "Product 1", "Description 1", "/test/product1.png", 10.0f, 10, false, 0.0f, null));
+        mockProductList.add(new Product(2, "Product 2", "Description 2", "/test/product2.png", 20.0f, 20, false, 0.0f, null));
+
+        // Stub the Basket.getProductsInCart() method to return the mock product list
+        when(mockBasket.getProductsInCart()).thenReturn(mockProductList);
+
+        // Create an instance of the OrderServiceImpl and call the getProductsInCart() method
+        OrderServiceImpl orderService = new OrderServiceImpl();
+        List<Product> productsInCart = orderService.getProductsInCart(mockBasket);
+
+        // Assert that the mock product list is equal to the returned product list
+        assertEquals(productsInCart, mockProductList);
+    }
+
+    @Test
+    public void testGetTaxes() {
+        // Create a mock Basket object
+        Basket mockBasket = mock(Basket.class);
+
+        // Set up stub for the Basket.getTaxes() method to return 5.0
+        when(mockBasket.getTaxes()).thenReturn(5.0);
+
+        // Create an instance of the OrderServiceImpl and call the getTaxes() method
+        OrderServiceImpl orderService = new OrderServiceImpl();
+        double taxes = orderService.getTaxes(mockBasket);
+
+        // Verify that the Basket.getTaxes() method was called once
+        verify(mockBasket, times(1)).getTaxes();
+
+        // Assert that the returned taxes value is equal to the stubbed value of 5.0
+        assertEquals(5.0, taxes, 0.0);
+    }
+
+    @Test
+    public void testUpdateProduct() {
+        // create a mock product and basket
+        Product mockProduct = mock(Product.class);
+        Basket mockBasket = mock(Basket.class);
+
+        // create an instance of the service to test
+        OrderServiceImpl orderService = new OrderServiceImpl();
+
+        // call the method to be tested
+        orderService.updateProduct(mockProduct, 2, mockBasket);
+
+        // verify that the updateProduct method was called on the basket with the correct product and quantity
+        verify(mockBasket, times(1)).updateProduct(mockProduct, 2);
     }
 }

@@ -1,28 +1,19 @@
 package ca.concordia.eats.dao;
 
-import ca.concordia.eats.dto.*;
+import ca.concordia.eats.dto.Category;
+import ca.concordia.eats.dto.Product;
+import ca.concordia.eats.dto.SearchHistory;
+import ca.concordia.eats.dto.User;
 import ca.concordia.eats.utils.ConnectionUtil;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
-import javax.servlet.http.HttpSession;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Properties;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.io.FileReader;
 import java.io.IOException;
+import java.sql.*;
+import java.util.*;
 
 @Repository
 public class ProductDaoImpl implements ProductDao {
@@ -41,6 +32,12 @@ public class ProductDaoImpl implements ProductDao {
      * @throws IOException
      */
     public ProductDaoImpl() throws IOException {
+        this.con = ConnectionUtil.getConnection();
+    }
+
+    // Used for Integration Testing
+    public ProductDaoImpl(JdbcTemplate jdbcTemplate) throws IOException {
+        this.jdbcTemplate = jdbcTemplate;
         this.con = ConnectionUtil.getConnection();
     }
 
