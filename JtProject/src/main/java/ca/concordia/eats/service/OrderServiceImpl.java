@@ -50,6 +50,11 @@ public class OrderServiceImpl implements OrderService {
 		return sessionBasket.getTotal(promotionDao.fetchAllPromotions());
 	}
 	
+	// This method returns the sub-total cost of the products in the session basket.
+	public float getSubTotal(Basket sessionBasket) {   
+		return sessionBasket.getSubTotal();
+	}
+	
 	// This method returns the taxes for the products in the session basket.
 	public double getTaxes(Basket sessionBasket) {
 	       
