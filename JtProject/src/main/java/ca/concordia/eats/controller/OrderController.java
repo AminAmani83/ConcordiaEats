@@ -42,6 +42,7 @@ public class OrderController {
 
         model.addAttribute("allProducts", orderService.getProductsInCart(sessionBasket));
         model.addAttribute("total", String.valueOf(orderService.getTotal(sessionBasket)));
+        model.addAttribute("subTotal", String.valueOf(orderService.getSubTotal(sessionBasket)));
         model.addAttribute("tax", String.valueOf(orderService.getTaxes(sessionBasket)));
         model.addAttribute("delivery", String.valueOf(orderService.getDelivery(sessionBasket)));
         model.addAttribute("noCategoryFilter", true);
@@ -61,6 +62,7 @@ public class OrderController {
 
         model.addAttribute("allProducts", orderService.getProductsInCart(sessionBasket));
         model.addAttribute("total", String.valueOf(orderService.getTotal(sessionBasket)));
+        model.addAttribute("subTotal", String.valueOf(orderService.getSubTotal(sessionBasket)));
         model.addAttribute("tax", String.valueOf(orderService.getTaxes(sessionBasket)));
         model.addAttribute("delivery", String.valueOf(orderService.getDelivery(sessionBasket)));
         model.addAttribute("noCategoryFilter", true);
@@ -78,6 +80,7 @@ public class OrderController {
 
         model.addAttribute("allProducts", orderService.getProductsInCart(sessionBasket));
         model.addAttribute("total", String.valueOf(orderService.getTotal(sessionBasket)));
+        model.addAttribute("subTotal", String.valueOf(orderService.getSubTotal(sessionBasket)));
         model.addAttribute("tax", String.valueOf(orderService.getTaxes(sessionBasket)));
         model.addAttribute("delivery", String.valueOf(orderService.getDelivery(sessionBasket)));
         model.addAttribute("noCategoryFilter", true);
