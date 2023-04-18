@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `springproject`.`purchase` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `userId` INT NOT NULL,
   `timeStamp` TIMESTAMP(6) NOT NULL,
-  `total_price` DECIMAL(6,2) NOT NULL,
+  `total_price` DECIMAL(8,2) NOT NULL,
   `promotionId` INT NULL,
   PRIMARY KEY (`id`),
   INDEX `FK_purchase_promotions_idx` (`promotionId` ASC) INVISIBLE,

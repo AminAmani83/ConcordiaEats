@@ -1,16 +1,20 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <%@include file="common/bootstrap.jsp" %>
     <title>Shopping Cart</title>
-    <title>Shopping Card</title>
 </head>
 <body>
 <section class="wrapper">
     <div class="container-fostrap">
 <%@include file="common/header.jsp" %>
 <div class="container-fluid" style="min-height: 500px;">
+    
+ 	<br><c:if test="${delivery == 0.0}">
+        <b style="background-color: yellow;">There is currently an active promotion: Free Delivery!</b><br>
+    </c:if><br>
 
     <table class="table">
         <tr>
@@ -48,10 +52,10 @@
 					<c:out value="${product.discountPercent}"/>%
 				</td>
 				<td>$
-					<c:out value="${product.price * product.discountPercent / 100}"/> CAD
+					<c:out value="${Math.round((product.price * product.discountPercent / 100) * 100)/100}"/> CAD
 				</td>
 				<td>$
-					<c:out value="${product.price - (product.price * product.discountPercent / 100)}"/> CAD
+					<c:out value="${Math.round((product.price - (product.price * (product.discountPercent / 100))) * 100)/100}"/> CAD
 				</td>
                 <td>
                     <c:out value="${product.description}"/>
@@ -70,22 +74,33 @@
         </c:forEach>
         </tbody>
     </table>
-    <b>SubTotal:</b> $ ${total} CAD<br>
-	<b>Taxes:</b> $ ${tax} CAD<br>
+    <b>SubTotal:</b> $ ${Math.round(total * 100)/100} CAD<br>
+	<b>Taxes:</b> $ ${Math.round(total * 0.15 * 100)/100} CAD<br>
 	<b>Delivery:</b> $ ${delivery} CAD<br>
-	<b>GrandTotal:</b> $ ${total + tax + delivery} CAD<br><br>
-    <b>Total:</b> ${total} $
+	<b>------------------------------</b><br>
+	<b>GrandTotal:</b> $ ${Math.round((total * 1.15 + delivery) * 100)/100} CAD<br><br>
+	
+	<c:if test="${total/subTotal == -1}">
+    <b>PromotionCheck:</b> $ ${total/subTotal} CAD<br>
+	</c:if>
 
 <form action="../../../checkout" method="get">
 	<c:if test="${not empty allProducts}">
-    	<input type="submit" value="Checkout" class="btn btn-danger"><br><br>
+    	<input type="submit" value="Checkout" class="btn btn-primary"><br><br>
   	</c:if>
   	<c:if test="${empty allProducts}">
-    	<button type="button" class="btn btn-danger" onclick="alert('Your shopping cart is empty!')">Checkout</button><br><br>
+    	<button type="button" class="btn btn-primary" onclick="alert('Your shopping cart is empty!')">Checkout</button><br><br>
  	</c:if>
   	<a href="/index">Continue Shopping</a>
 </form>
 
+    <br><c:if test="${total/subTotal < 1 && total/subTotal > 0.88}">
+        <b style="background-color: yellow;">There is currently an active promotion: 10% discount on your entire order!</b><br>
+    </c:if><br>
+    
+    <br><c:if test="${total/subTotal < 0.81}">
+        <b style="background-color: yellow;">There is currently an active promotion: 20% discount on your entire order!</b><br>
+    </c:if><br>
 
 </div>
     <%@include file="common/footer.jsp" %>

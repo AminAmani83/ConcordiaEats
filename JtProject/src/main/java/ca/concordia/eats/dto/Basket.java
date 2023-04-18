@@ -116,6 +116,29 @@ public class Basket {
         
         return total;
     }
+	
+   // This method calculates and returns the sub-total cost of all products in the cart.
+   public float getSubTotal() {
+   	
+   	float subTotal = 0;
+   	
+       for (Map.Entry<Product, Integer> entry : products.entrySet()) {
+       	
+       	Product product = entry.getKey();
+       	
+           int quantity = entry.getValue();
+           
+           if (product.isOnSale()) {
+           	
+           	subTotal += product.getPrice() * (1 - product.getDiscountPercent() / 100.0f) * quantity;
+           	
+           } else {
+           	
+           	subTotal += product.getPrice() * quantity;
+           }
+       }
+       return subTotal;
+   }
     
     // This method calculates and returns the taxes for the entire order.
     public double getTaxes() {

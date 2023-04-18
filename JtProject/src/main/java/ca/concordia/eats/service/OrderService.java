@@ -19,6 +19,8 @@ public interface OrderService {
 
     float getTotal(Basket sessionBasket);
 	
+    float getSubTotal(Basket sessionBasket);
+	
     double getTaxes(Basket sessionBasket);
     
     double getDelivery(Basket sessionBasket);
