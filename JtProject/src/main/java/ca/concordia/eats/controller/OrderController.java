@@ -28,6 +28,9 @@ public class OrderController {
         Customer customer = (Customer) session.getAttribute("user");
         model.addAttribute("allProducts", orderService.getProductsInCart(sessionBasket));
         model.addAttribute("total", String.valueOf(orderService.getTotal(sessionBasket)));
+        model.addAttribute("subTotal", String.valueOf(orderService.getSubTotal(sessionBasket)));
+        model.addAttribute("tax", String.valueOf(orderService.getTaxes(sessionBasket)));
+        model.addAttribute("delivery", String.valueOf(orderService.getDelivery(sessionBasket)));
         model.addAttribute("noCategoryFilter", true);
         model.addAttribute("favoriteProducts", customer.getFavorite().getCustomerFavoritedProducts());
         model.addAttribute("productCardFavSrc", "order");
