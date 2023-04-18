@@ -18,6 +18,7 @@
 
     <table class="table">
         <tr>
+            <th scope="col"></th>
             <th scope="col">Product Name</th>
 			<th scope="col">Preview</th>
 			<th scope="col">Quantity</th>
@@ -33,6 +34,22 @@
 
         <c:forEach items="${allProducts}" var="product">
             <tr>
+                <td>
+                    <c:choose>
+                        <c:when test="${favoriteProducts.contains(product)}">
+                            <a href="/product/remove-favorite?productid=${product.id}&src=${productCardFavSrc}"
+                               title="Remove from Your Favorites">
+                                <i class="fas fa-heart text-danger"></i>
+                            </a>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="/product/make-favorite?productid=${product.id}&src=${productCardFavSrc}"
+                               title="Add to Your Favorites">
+                                <i class="far fa-heart text-danger"></i>
+                            </a>
+                        </c:otherwise>
+                    </c:choose>
+                </td>
                 <td>
                     <c:out value="${product.name}"/>
                 </td>

@@ -25,9 +25,12 @@ public class OrderController {
     @GetMapping("/order")
     public String shoppingCart(HttpSession session, Model model) {
         Basket sessionBasket = (Basket) session.getAttribute("basket");
+        Customer customer = (Customer) session.getAttribute("user");
         model.addAttribute("allProducts", orderService.getProductsInCart(sessionBasket));
         model.addAttribute("total", String.valueOf(orderService.getTotal(sessionBasket)));
         model.addAttribute("noCategoryFilter", true);
+        model.addAttribute("favoriteProducts", customer.getFavorite().getCustomerFavoritedProducts());
+        model.addAttribute("productCardFavSrc", "order");
         return "order";
     }
 
@@ -36,6 +39,7 @@ public class OrderController {
     public String addProductToCart(@PathVariable("productId") Integer productId, HttpSession session, Model model) {
         Product product = productService.fetchProductById(productId);
         Basket sessionBasket = (Basket) session.getAttribute("basket");
+        Customer customer = (Customer) session.getAttribute("user");
         if (product != null) {
             orderService.addProduct(product, sessionBasket);
         }
@@ -46,6 +50,8 @@ public class OrderController {
         model.addAttribute("tax", String.valueOf(orderService.getTaxes(sessionBasket)));
         model.addAttribute("delivery", String.valueOf(orderService.getDelivery(sessionBasket)));
         model.addAttribute("noCategoryFilter", true);
+        model.addAttribute("favoriteProducts", customer.getFavorite().getCustomerFavoritedProducts());
+        model.addAttribute("productCardFavSrc", "order");
 
         return "order";
     }
@@ -56,6 +62,7 @@ public class OrderController {
                                       HttpSession session, Model model) {
         Product product = productService.fetchProductById(productId);
         Basket sessionBasket = (Basket) session.getAttribute("basket");
+        Customer customer = (Customer) session.getAttribute("user");
         if (product != null) {
             orderService.updateProduct(product, quantity, sessionBasket);
         }
@@ -66,6 +73,8 @@ public class OrderController {
         model.addAttribute("tax", String.valueOf(orderService.getTaxes(sessionBasket)));
         model.addAttribute("delivery", String.valueOf(orderService.getDelivery(sessionBasket)));
         model.addAttribute("noCategoryFilter", true);
+        model.addAttribute("favoriteProducts", customer.getFavorite().getCustomerFavoritedProducts());
+        model.addAttribute("productCardFavSrc", "order");
         return "order";
     }
 
@@ -74,6 +83,7 @@ public class OrderController {
     public String removeProductFromCart(@PathVariable("productId") Integer productId, HttpSession session, Model model) {
         Product product = productService.fetchProductById(productId);
         Basket sessionBasket = (Basket) session.getAttribute("basket");
+        Customer customer = (Customer) session.getAttribute("user");
         if (product != null) {
             orderService.removeProduct(product, sessionBasket);
         }
@@ -84,6 +94,8 @@ public class OrderController {
         model.addAttribute("tax", String.valueOf(orderService.getTaxes(sessionBasket)));
         model.addAttribute("delivery", String.valueOf(orderService.getDelivery(sessionBasket)));
         model.addAttribute("noCategoryFilter", true);
+        model.addAttribute("favoriteProducts", customer.getFavorite().getCustomerFavoritedProducts());
+        model.addAttribute("productCardFavSrc", "order");
         return "order";
     }
 

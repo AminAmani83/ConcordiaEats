@@ -61,6 +61,20 @@
                                         <%@include file="common/starsRating.jsp" %>
                                         <%@include file="common/rateAction.jsp" %>
                                         <p>$${bestSellerProduct.price}</p>
+                                        <c:choose>
+                                            <c:when test="${favoriteProducts.contains(bestSellerProduct)}">
+                                                <a href="/product/remove-favorite?productid=${bestSellerProduct.id}&src=${productCardFavSrc}"
+                                                   title="Remove from Your Favorites">
+                                                    <i class="fas fa-heart text-danger"></i>
+                                                </a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="/product/make-favorite?productid=${bestSellerProduct.id}&src=${productCardFavSrc}"
+                                                   title="Add to Your Favorites">
+                                                    <i class="far fa-heart text-danger"></i>
+                                                </a>
+                                            </c:otherwise>
+                                        </c:choose>
                                         <p>${bestSellerProduct.description}</p>
                                         <form action="order/add/${bestSellerProduct.id}" method="get">
                                             <input type="submit" value="Add to Basket" class="btn btn-danger">
@@ -87,6 +101,20 @@
                                         <%@include file="common/starsRating.jsp" %>
                                         <%@include file="common/rateAction.jsp" %>
                                         <p>$${recommendedProduct.price}</p>
+                                        <c:choose>
+                                            <c:when test="${favoriteProducts.contains(recommendedProduct)}">
+                                                <a href="/product/remove-favorite?productid=${recommendedProduct.id}&src=${productCardFavSrc}"
+                                                   title="Remove from Your Favorites">
+                                                    <i class="fas fa-heart text-danger"></i>
+                                                </a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="/product/make-favorite?productid=${recommendedProduct.id}&src=${productCardFavSrc}"
+                                                   title="Add to Your Favorites">
+                                                    <i class="far fa-heart text-danger"></i>
+                                                </a>
+                                            </c:otherwise>
+                                        </c:choose>
                                         <p>${recommendedProduct.description}</p>
                                         <form action="order/add/${recommendedProduct.id}" method="get">
                                             <input type="submit" value="Add to Basket" class="btn btn-danger">
@@ -118,6 +146,20 @@
                                         <%@include file="common/starsRating.jsp" %>
                                         <%@include file="common/rateAction.jsp" %>
                                         <p>$${bestSellerProduct.price}</p>
+                                        <c:choose>
+                                            <c:when test="${favoriteProducts.contains(bestSellerProduct)}">
+                                                <a href="/product/remove-favorite?productid=${bestSellerProduct.id}&src=${productCardFavSrc}"
+                                                   title="Remove from Your Favorites">
+                                                    <i class="fas fa-heart text-danger"></i>
+                                                </a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="/product/make-favorite?productid=${bestSellerProduct.id}&src=${productCardFavSrc}"
+                                                   title="Add to Your Favorites">
+                                                    <i class="far fa-heart text-danger"></i>
+                                                </a>
+                                            </c:otherwise>
+                                        </c:choose>
                                         <p>${bestSellerProduct.description}</p>
                                         <form action="order/add/${bestSellerProduct.id}" method="get">
                                             <input type="submit" value="Add to Basket" class="btn btn-danger">
@@ -145,6 +187,20 @@
                                         <%@include file="common/starsRating.jsp" %>
                                         <%@include file="common/rateAction.jsp" %>
                                         <p>$${highestRatedProduct.price}</p>
+                                        <c:choose>
+                                            <c:when test="${favoriteProducts.contains(highestRatedProduct)}">
+                                                <a href="/product/remove-favorite?productid=${highestRatedProduct.id}&src=${productCardFavSrc}"
+                                                   title="Remove from Your Favorites">
+                                                    <i class="fas fa-heart text-danger"></i>
+                                                </a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="/product/make-favorite?productid=${highestRatedProduct.id}&src=${productCardFavSrc}"
+                                                   title="Add to Your Favorites">
+                                                    <i class="far fa-heart text-danger"></i>
+                                                </a>
+                                            </c:otherwise>
+                                        </c:choose>
                                         <p>${highestRatedProduct.description}</p>
                                         <form action="order/add/${highestRatedProduct.id}" method="get">
                                             <input type="submit" value="Add to Basket" class="btn btn-danger">
@@ -176,6 +232,20 @@
                                         <%@include file="common/starsRating.jsp" %>
                                         <%@include file="common/rateAction.jsp" %>
                                         <p>$${highestRatedProduct.price}</p>
+                                        <c:choose>
+                                            <c:when test="${favoriteProducts.contains(highestRatedProduct)}">
+                                                <a href="/product/remove-favorite?productid=${highestRatedProduct.id}&src=${productCardFavSrc}"
+                                                   title="Remove from Your Favorites">
+                                                    <i class="fas fa-heart text-danger"></i>
+                                                </a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="/product/make-favorite?productid=${highestRatedProduct.id}&src=${productCardFavSrc}"
+                                                   title="Add to Your Favorites">
+                                                    <i class="far fa-heart text-danger"></i>
+                                                </a>
+                                            </c:otherwise>
+                                        </c:choose>
                                         <p>${highestRatedProduct.description}</p>
                                         <form action="order/add/${highestRatedProduct.id}" method="get">
                                             <input type="submit" value="Add to Basket" class="btn btn-danger">
@@ -203,6 +273,20 @@
                                         <%@include file="common/starsRating.jsp" %>
                                         <%@include file="common/rateAction.jsp" %>
                                         <p>$${bestSellerProduct.price}</p>
+                                        <c:choose>
+                                            <c:when test="${favoriteProducts.contains(bestSellerProduct)}">
+                                                <a href="/product/remove-favorite?productid=${bestSellerProduct.id}&src=${productCardFavSrc}"
+                                                   title="Remove from Your Favorites">
+                                                    <i class="fas fa-heart text-danger"></i>
+                                                </a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="/product/make-favorite?productid=${bestSellerProduct.id}&src=${productCardFavSrc}"
+                                                   title="Add to Your Favorites">
+                                                    <i class="far fa-heart text-danger"></i>
+                                                </a>
+                                            </c:otherwise>
+                                        </c:choose>
                                         <p>${bestSellerProduct.description}</p>
                                         <form action="order/add/${bestSellerProduct.id}" method="get">
                                             <input type="submit" value="Add to Basket" class="btn btn-danger">
@@ -234,6 +318,20 @@
                                         <%@include file="common/starsRating.jsp" %>
                                         <%@include file="common/rateAction.jsp" %>
                                         <p>$${bestSellerProduct.price}</p>
+                                        <c:choose>
+                                            <c:when test="${favoriteProducts.contains(bestSellerProduct)}">
+                                                <a href="/product/remove-favorite?productid=${bestSellerProduct.id}&src=${productCardFavSrc}"
+                                                   title="Remove from Your Favorites">
+                                                    <i class="fas fa-heart text-danger"></i>
+                                                </a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="/product/make-favorite?productid=${bestSellerProduct.id}&src=${productCardFavSrc}"
+                                                   title="Add to Your Favorites">
+                                                    <i class="far fa-heart text-danger"></i>
+                                                </a>
+                                            </c:otherwise>
+                                        </c:choose>
                                         <p>${bestSellerProduct.description}</p>
                                         <form action="order/add/${bestSellerProduct.id}" method="get">
                                             <input type="submit" value="Add to Basket" class="btn btn-danger">
@@ -265,6 +363,20 @@
                                         <%@include file="common/starsRating.jsp" %>
                                         <%@include file="common/rateAction.jsp" %>
                                         <p>$${bestSellerProduct.price}</p>
+                                        <c:choose>
+                                            <c:when test="${favoriteProducts.contains(bestSellerProduct)}">
+                                                <a href="/product/remove-favorite?productid=${bestSellerProduct.id}&src=${productCardFavSrc}"
+                                                   title="Remove from Your Favorites">
+                                                    <i class="fas fa-heart text-danger"></i>
+                                                </a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="/product/make-favorite?productid=${bestSellerProduct.id}&src=${productCardFavSrc}"
+                                                   title="Add to Your Favorites">
+                                                    <i class="far fa-heart text-danger"></i>
+                                                </a>
+                                            </c:otherwise>
+                                        </c:choose>
                                         <p>${bestSellerProduct.description}</p>
                                         <form action="order/add/${bestSellerProduct.id}" method="get">
                                             <input type="submit" value="Add to Basket" class="btn btn-danger">
@@ -292,6 +404,20 @@
                                         <%@include file="common/starsRating.jsp" %>
                                         <%@include file="common/rateAction.jsp" %>
                                         <p>$${recommendedProduct.price}</p>
+                                        <c:choose>
+                                            <c:when test="${favoriteProducts.contains(recommendedProduct)}">
+                                                <a href="/product/remove-favorite?productid=${recommendedProduct.id}&src=${productCardFavSrc}"
+                                                   title="Remove from Your Favorites">
+                                                    <i class="fas fa-heart text-danger"></i>
+                                                </a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="/product/make-favorite?productid=${recommendedProduct.id}&src=${productCardFavSrc}"
+                                                   title="Add to Your Favorites">
+                                                    <i class="far fa-heart text-danger"></i>
+                                                </a>
+                                            </c:otherwise>
+                                        </c:choose>
                                         <p>${recommendedProduct.description}</p>
                                         <form action="order/add/${recommendedProduct.id}" method="get">
                                             <input type="submit" value="Add to Basket" class="btn btn-danger">
@@ -319,6 +445,20 @@
                                         <%@include file="common/starsRating.jsp" %>
                                         <%@include file="common/rateAction.jsp" %>
                                         <p>$${highestRatedProduct.price}</p>
+                                        <c:choose>
+                                            <c:when test="${favoriteProducts.contains(highestRatedProduct)}">
+                                                <a href="/product/remove-favorite?productid=${highestRatedProduct.id}&src=${productCardFavSrc}"
+                                                   title="Remove from Your Favorites">
+                                                    <i class="fas fa-heart text-danger"></i>
+                                                </a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="/product/make-favorite?productid=${highestRatedProduct.id}&src=${productCardFavSrc}"
+                                                   title="Add to Your Favorites">
+                                                    <i class="far fa-heart text-danger"></i>
+                                                </a>
+                                            </c:otherwise>
+                                        </c:choose>
                                         <p>${highestRatedProduct.description}</p>
                                         <form action="order/add/${highestRatedProduct.id}" method="get">
                                             <input type="submit" value="Add to Basket" class="btn btn-danger">
