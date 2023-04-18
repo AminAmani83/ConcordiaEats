@@ -3,7 +3,7 @@
         <div class="card-header">
             <div class="row">
                 <div class="col-2"></div>
-                <div class="col-8"><span>On Sale!</span></div>
+                <div class="col-8 text-danger"><span>${product.isOnSale() == true ? 'On Sale!' : ''}</span></div>
                 <div class="col-2">
                     <c:choose>
                         <c:when test="${favoriteProducts.contains(product)}">

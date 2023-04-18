@@ -17,7 +17,7 @@
 <title>User Management</title>
 </head>
 <body class="bg-light">
-<%@include file="adminHeader.jsp" %>
+<%@include file="common/adminHeader.jsp" %>
 	<div class="container-fluid">
 
 		

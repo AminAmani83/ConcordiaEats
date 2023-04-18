@@ -11,7 +11,7 @@
           crossorigin="anonymous">
 </head>
 <body class="bg-light">
-<%@include file="adminHeader.jsp" %>
+<%@include file="common/adminHeader.jsp" %>
 <div class="container">
     <div class="row">
         <div class="col-md-12">
