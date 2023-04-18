@@ -82,7 +82,10 @@ public class AdminController {
 			model.addAttribute("username", usernameForClass);
 			model.addAttribute("allProducts", allProducts);
 			model.addAttribute("allCategories", nonEmptyCategories);
-			model.addAttribute("favoriteProducts", customer.getFavorite().getCustomerFavoritedProducts());
+			List<Product> customerFavoritedProducts = customer.getFavorite().getCustomerFavoritedProducts();
+			boolean customerFavProductIsOnSale = customerFavoritedProducts.stream().anyMatch(Product::isOnSale);
+			model.addAttribute("customerFavProductIsOnSale", customerFavProductIsOnSale);
+			model.addAttribute("favoriteProducts", customerFavoritedProducts);
 			model.addAttribute("purchasedProducts", productService.fetchPastPurchasedProducts(customer.getUserId()));
 			model.addAttribute("productCardFavSrc", "index");
 

@@ -1,6 +1,7 @@
 package ca.concordia.eats.controller;
 
 import ca.concordia.eats.dto.Customer;
+import ca.concordia.eats.dto.Product;
 import ca.concordia.eats.dto.UserCredentials;
 import ca.concordia.eats.service.UserService;
 import ca.concordia.eats.utils.ConnectionUtil;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Connection;
+import java.util.List;
 
 @Controller
 public class UserController {
@@ -70,6 +72,10 @@ public class UserController {
 
         Customer customer = (Customer) session.getAttribute("user");
         UserCredentials userCredentials = userService.fetchUserCredentialsById(customer.getUserId());
+
+        List<Product> customerFavoritedProducts = customer.getFavorite().getCustomerFavoritedProducts();
+        boolean customerFavProductIsOnSale = customerFavoritedProducts.stream().anyMatch(Product::isOnSale);
+        model.addAttribute("customerFavProductIsOnSale", customerFavProductIsOnSale);
 
         model.addAttribute("username", userCredentials.getUsername());
         model.addAttribute("password", userCredentials.getPassword());

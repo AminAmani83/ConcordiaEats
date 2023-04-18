@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @Controller
 public class OrderController {
@@ -26,6 +28,11 @@ public class OrderController {
     public String shoppingCart(HttpSession session, Model model) {
         Basket sessionBasket = (Basket) session.getAttribute("basket");
         Customer customer = (Customer) session.getAttribute("user");
+
+        List<Product> customerFavoritedProducts = customer.getFavorite().getCustomerFavoritedProducts();
+        boolean customerFavProductIsOnSale = customerFavoritedProducts.stream().anyMatch(Product::isOnSale);
+        model.addAttribute("customerFavProductIsOnSale", customerFavProductIsOnSale);
+
         model.addAttribute("allProducts", orderService.getProductsInCart(sessionBasket));
         model.addAttribute("total", String.valueOf(orderService.getTotal(sessionBasket)));
         model.addAttribute("subTotal", String.valueOf(orderService.getSubTotal(sessionBasket)));
@@ -46,6 +53,10 @@ public class OrderController {
         if (product != null) {
             orderService.addProduct(product, sessionBasket);
         }
+
+        List<Product> customerFavoritedProducts = customer.getFavorite().getCustomerFavoritedProducts();
+        boolean customerFavProductIsOnSale = customerFavoritedProducts.stream().anyMatch(Product::isOnSale);
+        model.addAttribute("customerFavProductIsOnSale", customerFavProductIsOnSale);
 
         model.addAttribute("allProducts", orderService.getProductsInCart(sessionBasket));
         model.addAttribute("total", String.valueOf(orderService.getTotal(sessionBasket)));
@@ -70,6 +81,10 @@ public class OrderController {
             orderService.updateProduct(product, quantity, sessionBasket);
         }
 
+        List<Product> customerFavoritedProducts = customer.getFavorite().getCustomerFavoritedProducts();
+        boolean customerFavProductIsOnSale = customerFavoritedProducts.stream().anyMatch(Product::isOnSale);
+        model.addAttribute("customerFavProductIsOnSale", customerFavProductIsOnSale);
+
         model.addAttribute("allProducts", orderService.getProductsInCart(sessionBasket));
         model.addAttribute("total", String.valueOf(orderService.getTotal(sessionBasket)));
         model.addAttribute("subTotal", String.valueOf(orderService.getSubTotal(sessionBasket)));
@@ -90,6 +105,10 @@ public class OrderController {
         if (product != null) {
             orderService.removeProduct(product, sessionBasket);
         }
+
+        List<Product> customerFavoritedProducts = customer.getFavorite().getCustomerFavoritedProducts();
+        boolean customerFavProductIsOnSale = customerFavoritedProducts.stream().anyMatch(Product::isOnSale);
+        model.addAttribute("customerFavProductIsOnSale", customerFavProductIsOnSale);
 
         model.addAttribute("allProducts", orderService.getProductsInCart(sessionBasket));
         model.addAttribute("total", String.valueOf(orderService.getTotal(sessionBasket)));

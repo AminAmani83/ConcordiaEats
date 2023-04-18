@@ -51,6 +51,10 @@ public class MainController {
         if (session.getAttribute("user") == null) return "userLogin";
         Customer customer = (Customer) session.getAttribute("user");
 
+        List<Product> customerFavoritedProducts = customer.getFavorite().getCustomerFavoritedProducts();
+        boolean customerFavProductIsOnSale = customerFavoritedProducts.stream().anyMatch(Product::isOnSale);
+        model.addAttribute("customerFavProductIsOnSale", customerFavProductIsOnSale);
+
         model.addAttribute("favoriteProducts", productService.fetchCustomerFavoriteProducts(customer.getUserId()));
         model.addAttribute("purchasedProducts", productService.fetchPastPurchasedProducts(customer.getUserId()));
         model.addAttribute("productCardFavSrc", "favorites");
@@ -73,6 +77,10 @@ public class MainController {
                     .filter(p -> Arrays.asList(categoryFilterNames.get()).contains(p.getCategory().getName()))
                     .collect(Collectors.toList());
         }
+
+        List<Product> customerFavoritedProducts = customer.getFavorite().getCustomerFavoritedProducts();
+        boolean customerFavProductIsOnSale = customerFavoritedProducts.stream().anyMatch(Product::isOnSale);
+        model.addAttribute("customerFavProductIsOnSale", customerFavProductIsOnSale);
 
         model.addAttribute("products", products);
         model.addAttribute("allCategories", nonEmptyCategories);
