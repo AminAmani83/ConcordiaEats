@@ -12,8 +12,8 @@
 <%@include file="common/header.jsp" %>
 <div class="container-fluid" style="min-height: 500px;">
     
-    <br><c:if test="${total/subTotal < 1}">
-        <b style="background-color: yellow;">There is currently an active promotion: 10% or 20% discount on your entire order!</b><br>
+ 	<br><c:if test="${delivery == 0.0}">
+        <b style="background-color: yellow;">There is currently an active promotion: Free Delivery!</b><br>
     </c:if><br>
 
     <table class="table">
@@ -94,10 +94,13 @@
   	<a href="/index">Continue Shopping</a>
 </form>
 
-	<br><c:if test="${delivery == 0.0}">
-        <b style="background-color: yellow;">There is currently an active promotion: Free Delivery!</b><br>
+    <br><c:if test="${total/subTotal < 1 && total/subTotal > 0.88}">
+        <b style="background-color: yellow;">There is currently an active promotion: 10% discount on your entire order!</b><br>
     </c:if><br>
-
+    
+    <br><c:if test="${total/subTotal < 0.81}">
+        <b style="background-color: yellow;">There is currently an active promotion: 20% discount on your entire order!</b><br>
+    </c:if><br>
 
 </div>
     <%@include file="common/footer.jsp" %>
